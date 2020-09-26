@@ -2115,3 +2115,9 @@
 2020-09-26 23:01:33,606 [INFO] Activator:179 - !SESSION log4j initialized
 2020-09-26 23:02:13,195 [INFO] RetryExec:97 - I/O exception (java.net.SocketException) caught when processing request to {}->http://sw-center.st.com:80: Socket closed
 2020-09-26 23:02:13,199 [INFO] RetryExec:113 - Retrying request to {}->http://sw-center.st.com:80
+2020-09-26 23:10:06,604 [INFO] Activator:178 - 
+
+
+2020-09-26 23:10:06,608 [INFO] Activator:179 - !SESSION log4j initialized
+2020-09-26 23:10:34,939 [INFO] RetryExec:97 - I/O exception (java.net.SocketException) caught when processing request to {s}->https://download.eclipse.org:443: Socket closed
+2020-09-26 23:10:34,952 [INFO] RetryExec:113 - Retrying request to {s}->https://download.eclipse.org:443

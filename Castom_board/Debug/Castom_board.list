@@ -3272,7 +3272,6 @@ int main(void)
         		HAL_Delay(500);
 			#endif
 
-
         	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
  8001c9c:	2200      	movs	r2, #0
  8001c9e:	2101      	movs	r1, #1
