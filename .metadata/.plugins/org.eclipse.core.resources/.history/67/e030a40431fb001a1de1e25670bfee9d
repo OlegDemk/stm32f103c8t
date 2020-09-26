@@ -1,0 +1,62 @@
+/*
+ * Humidity_and_Temperature_AM2302_sensor.c
+ *
+ *  Created on: Sep 17, 2020
+ *      Author: odemki
+ */
+
+#include "stdio.h"
+#include "stm32f1xx_hal.h"
+#include "Si7021_driver.h"
+// ---------------------------------------------------------------
+__STATIC_INLINE void DelayMicro(__IO uint32_t micros)
+{
+	micros *= (SystemCoreClock / 1000000) / 9;
+	/* Wait till done */
+	while (micros--);
+}
+// ---------------------------------------------------------------
+void AM2302_init(void)
+{
+	HAL_Delay(2000);
+	GPIOB->ODR |= GPIO_ODR_ODR11;   //высокий уровень
+
+	//return 0;
+}
+// ---------------------------------------------------------------
+void AM2302_GetData(uint8_t *data)
+{
+	uint8_t i, j = 0;
+	//reset port
+	GPIOA->ODR &= ~GPIO_ODR_ODR3;//низкий уровень
+	GPIOA->ODR |= GPIO_ODR_ODR3;//высокий уровень
+	DelayMicro(100000);
+
+	GPIOA->ODR &= ~GPIO_ODR_ODR3;//низкий уровень
+	DelayMicro(18000);
+	GPIOA->ODR |= GPIO_ODR_ODR3;//высокий уровень
+
+	//дождемся ответа датчика
+	DelayMicro(39);//20-40 мкс
+	//если датчик нам не ответил притягиванием шины, то ошибка
+	if(GPIOA->IDR & GPIO_IDR_IDR3) {
+	  while(1)
+	  {
+	  }
+	}
+	DelayMicro(80);
+	//если датчик не отпустил шину, то ошибка
+	if(!(GPIOA->IDR & GPIO_IDR_IDR3)) {
+		while(1)
+	    {
+		}
+	}
+
+//	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+//	DelayMicro(10000);
+//	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+//	DelayMicro(30);
+//	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+
+}
+// ---------------------------------------------------------------

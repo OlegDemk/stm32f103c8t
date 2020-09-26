@@ -1,0 +1,470 @@
+/*
+ * GPS_NEO_6M.c
+ *
+ *  Created on: Sep 10, 2020
+ *      Author: odemki
+ */
+
+#include "stdio.h"
+#include "stm32f1xx_hal.h"
+#include "string.h"               // For work with "strtok" function
+#include "stdlib.h"               // For work with "atoi" function
+
+extern UART_HandleTypeDef huart1;
+extern uint8_t flag;
+
+struct GPS
+{
+	char latDg[2];			// Latitude in degrees
+	char latMS[7];			// Latitude in minutes and so on ...
+	char lonDg[3];  		// Longitude in degrees
+	char lonMS[7];			// Longitude in minutes and so on ...
+
+	char clock[12];         // Real time string
+
+	uint8_t number_of_satellites_GPGGA;
+
+} GPS_data;
+
+
+//---------------------------------------------------------------------
+// Function print all non parsed data from GSM module
+void simple_read_stream_data_from_GPS (uint8_t *GPS_buff, int size_buff)    // <<<<<<<<< NAME FUNCTION !!!!!
+{
+	if(flag == 1)
+	{
+		HAL_UART_Transmit(&huart1, GPS_buff, 512, 200);
+		memset(GPS_buff, 0, 512);
+		flag = 0;
+	}
+}
+//---------------------------------------------------------------------
+// Checksum
+int nmea0183_checksum(char *msg)
+{
+	int checksum = 0;
+	int j = 0;
+
+	for(j = 1; j < strlen(msg) - 4; j++)
+	{
+		checksum = checksum^(unsigned)msg[j];
+	}
+	return checksum;
+}
+
+//---------------------------------------------------------------------
+void parsing_GPGLL_line(nmeaSnt)
+{
+
+	uint8_t cnt = 0;
+
+	char smNmbr[3];
+	char *rawSum;
+
+	char *latRaw;
+	char *hemNS;
+	char *lonRaw;
+	char *hemEW;
+	char *utcRaw;
+
+	char latDg[2];
+	char latMS[7];
+	char lonDg[3];
+	char lonMS[7];
+
+	char strUTC[8];
+	char hH[2];
+	char mM[2];
+	char sS[2];
+
+	rawSum = strstr(nmeaSnt, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
+	memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
+	smNmbr[2]='\0';											// Add and of line '\0' sing
+	uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
+	char hex[2];
+	sprintf(hex, "%x", intSum);
+
+	if(strstr(smNmbr, hex) != NULL)
+	{
+		// $GPGLL	 1111.11	a  ууууy.уу	   a  hhmmss.ss	  A*hh
+		// $GPGLL, 5532.8492, N, 03729.0987, E, 004241.469, A*33
+		cnt = 0;              														  // Count of elements
+		for(char *pV = strtok(nmeaSnt, ","); pV != NULL; pV = strtok(NULL, ","))      // Find
+		{
+			switch (cnt)
+			{
+				case 1:
+					latRaw = strdup(pV);
+					break;
+				case 2:
+					hemNS = strdup(pV);
+					break;
+				case 3:
+					lonRaw = strdup(pV);
+					break;
+				case 4:
+					hemEW = strdup(pV);
+					break;
+				case 5:
+					utcRaw = strdup(pV);			// time
+					break;
+			}
+		cnt++;
+		}
+		// Copy coordinate in string variable
+		memcpy(latDg, &latRaw[0], 2);
+		//latDg[2] = '\0';
+
+		memcpy(latMS, &latRaw[2], 7);		  // Широта в мінутах секундах
+		//latMS[7] = '\0';
+
+		memcpy(lonDg, &lonRaw[0], 3);       // Довгота в градусах
+		//lonDg[3] = '\0';
+
+		memcpy(lonMS, &lonRaw[3], 7);       // Довгота в мінутах секундах
+		//lonMS[7] = '\0';
+
+		// Запис даних позиціонування в структуру
+		memcpy(GPS_data.latDg, &latDg[0], 2);      // Copy
+		GPS_data.latDg[2] = '\0';
+		memcpy(GPS_data.latMS, &latMS[0], 7);
+		GPS_data.latMS[7] = '\0';
+		memcpy(GPS_data.lonDg, &lonDg[0], 3);
+		GPS_data.lonDg[3] = '\0';
+		memcpy(GPS_data.lonMS, &lonMS[0], 7);
+		GPS_data.lonMS[7] = '\0';
+
+		// Global Time   (Grinvish time)
+		char strLonMS[7];
+		sprintf(strLonMS, "%s", lonMS);	  					// convert lonMS in string and save it on strLonMS
+		//converting the UTC time in the hh:mm:ss format
+		memcpy(hH, &utcRaw[0], 2);
+		// Convert in Kyiv time
+		uint8_t correvt_hours = atoi(hH);					// Convert string in number
+		correvt_hours = correvt_hours +3;
+		itoa(correvt_hours, hH, 10);						// Convert number to string
+
+		hH[2] = '\0';
+		memcpy(mM, &utcRaw[2], 2);
+		mM[2] = '\0';
+		memcpy(sS, &utcRaw[4], 2);
+		sS[2] = '\0';
+
+		strcpy(strUTC, hH);
+		strcat(strUTC, ":");
+		strcat(strUTC, mM);
+		strcat(strUTC, ":");
+		strcat(strUTC, sS);      // <------  problem
+		strUTC[8] = '\0';
+
+		// Copy time data in struct variabble
+		memcpy(GPS_data.clock, strUTC, 8);
+	}
+}
+//---------------------------------------------------------------------
+void parsing_GPGGA_line(nmeaSnt)
+{
+	char smNmbr[3];
+	char *rawSum;
+
+	char *time_point_GPGGA;
+	char *latRaw_point_GPGGA;
+	char *hemNS_point_GPGGA;
+	char *lonRaw_point_GPGGA;
+	char *hemEW_point_GPGGA;
+	char *signal_quality_point_GPGGA;
+	char *number_of_satellites_point_GPGGA;
+	uint8_t cnt = 0;
+
+	rawSum = strstr(nmeaSnt, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
+	memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
+	smNmbr[2]='\0';											// Add and of line '\0' sing
+	uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
+	char hex[2];
+	sprintf(hex, "%x", intSum);
+
+	if(strstr(smNmbr, hex) != NULL)
+	{
+		// $GPGGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh
+		// In this line parsed only count of satellites
+		cnt = 0;              														  // Count of elements
+		for(char *pV = strtok(nmeaSnt, ","); pV != NULL; pV = strtok(NULL, ","))      // Find
+		{
+			switch (cnt)
+			{
+				case 1:
+					time_point_GPGGA = strdup(pV);
+					break;
+				case 2:
+					latRaw_point_GPGGA = strdup(pV);
+					break;
+				case 3:
+					hemNS_point_GPGGA = strdup(pV);
+					break;
+				case 4:
+					lonRaw_point_GPGGA = strdup(pV);
+					break;
+				case 5:
+					hemEW_point_GPGGA = strdup(pV);
+					break;
+				case 6:
+					signal_quality_point_GPGGA = strdup(pV);
+					break;
+				case 7:
+					number_of_satellites_point_GPGGA = strdup(pV);
+					break;
+				// it is not all case
+			}
+			cnt++;
+		}
+
+		GPS_data.number_of_satellites_GPGGA = (uint8_t*)number_of_satellites_point_GPGGA[1];		// save only it
+	}
+
+}
+//---------------------------------------------------------------------
+void parsing_GPVTG_line(nmeaSnt)
+{
+	char smNmbr[3];
+	char *rawSum;
+
+	char *not_use_1_point_GPVTG;
+	char *not_use_2_point_GPVTG;
+	char *not_use_3_point_GPVTG;
+	char *not_use_4_point_GPVTG;
+	char *not_use_5_point_GPVTG;
+	char *not_use_6_point_GPVTG;
+	char *velosity_km_h_point_GPVTG;
+	char *not_use_7_point_GPVTG;
+
+	uint8_t cnt = 0;
+
+	rawSum = strstr(nmeaSnt, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
+	memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
+	smNmbr[2]='\0';											// Add and of line '\0' sing
+	uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
+	char hex[2];
+	sprintf(hex, "%x", intSum);
+
+
+	if(strstr(smNmbr, hex) != NULL)
+		{
+			// $GPVTG	x.x	T	x.x	M	s.ss	N	s.ss	K	*hh
+			// In this line parsed only velosity
+			cnt = 0;              														  // Count of elements
+			for(char *pV = strtok(nmeaSnt, ","); pV != NULL; pV = strtok(NULL, ","))      // Find
+			{
+				switch (cnt)
+				{
+					case 1:
+						not_use_1_point_GPVTG = strdup(pV);
+						break;
+					case 2:
+						not_use_2_point_GPVTG = strdup(pV);
+						break;
+					case 3:
+						not_use_3_point_GPVTG = strdup(pV);
+						break;
+					case 4:
+						not_use_4_point_GPVTG = strdup(pV);
+						break;
+					case 5:
+						not_use_5_point_GPVTG = strdup(pV);
+						break;
+					case 6:
+						not_use_6_point_GPVTG = strdup(pV);
+						break;
+					case 7:
+						velosity_km_h_point_GPVTG = strdup(pV);
+						break;
+					case 8:
+						not_use_7_point_GPVTG = strdup(pV);
+						break;
+				}
+				cnt++;
+			}
+
+			//GPS_data.number_of_satellites_GPGGA = (uint8_t*)number_of_satellites_point_GPGGA[1];		// save only it
+		}
+}
+
+//---------------------------------------------------------------------
+// Parsing
+void parsing_GPS(uint8_t *GPS_buff, int size_buff)
+{
+	char nmeaSnt[80];
+	char buffStr[512];
+
+	if(flag == 1)    										 // If data from GPS module in buffer
+	{
+		memset(buffStr, 0, 512);        					 // Clean buffStr
+		sprintf(buffStr, "%s", GPS_buff);					 // Save in buffStr string from biff
+
+//		char string[512];
+//		memset(string, 0, 512);
+//		int size = sizeof(buffStr);
+//		memcpy(string, buffStr, size);
+
+		// пошук GPGLL в string
+		char *str_GPGLL;
+
+		str_GPGLL = strstr(buffStr, "$GPGLL");  // $GPGLL,4948.72578,N,02359.72468,E,151729.00,A,A*6C\r
+		if(str_GPGLL != NULL)
+		{
+			int size = sizeof(nmeaSnt);
+			memset(nmeaSnt, 0, size);
+
+			//копіювати всі символи до \r з str_GPGLL в nmeaSnt
+			int size_nmeaSnt = sizeof(nmeaSnt);
+			int i=0;
+
+			for(i=0; (str_GPGLL[i] != '*') && (i < 49); i++)
+			{
+				nmeaSnt[i]=str_GPGLL[i];    // прочитано 50 байт
+			}
+
+			// Check check sum //////////////////////////////////////////
+//			char smNmbr[3];
+//			char *rawSum;
+//
+//			rawSum = strstr(str_GPGLL, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
+//			memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
+//			smNmbr[2]='\0';											// Add and of line '\0' sing
+//
+//			uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
+//			char hex[2];
+//			sprintf(hex, "%x", intSum);
+//
+//			if(strstr(smNmbr, hex) != NULL)
+//			{
+//				// ok
+//				while(1)
+//				{
+//
+//				}
+//			}
+
+			// Parsing string ////////////////////////////////////////////
+//			cnt = 0;              														  // Count of elements
+//					for(char *pV = strtok(nmeaSnt, ","); pV != NULL; pV = strtok(NULL, ","))      // Find
+//					{
+//						switch (cnt)
+//						{
+//							case 1:
+//								latRaw = strdup(pV);
+//								break;
+//							case 2:
+//								hemNS = strdup(pV);
+//								break;
+//							case 3:
+//								lonRaw = strdup(pV);
+//								break;
+//							case 4:
+//								hemEW = strdup(pV);
+//								break;
+//							case 5:
+//								utcRaw = strdup(pV);			// time
+//								break;
+//						}
+//					cnt++;
+//					}
+//					// Copy coordinate in string variable
+//					memcpy(latDg, &latRaw[0], 2);
+//					//latDg[2] = '\0';
+//
+//					memcpy(latMS, &latRaw[2], 7);		  // Широта в мінутах секундах
+//					//latMS[7] = '\0';
+//
+//					memcpy(lonDg, &lonRaw[0], 3);       // Довгота в градусах
+//					//lonDg[3] = '\0';
+//
+//					memcpy(lonMS, &lonRaw[3], 7);       // Довгота в мінутах секундах
+//					//lonMS[7] = '\0';
+//
+//					// Запис даних позиціонування в структуру
+//					memcpy(GPS_data.latDg, &latDg[0], 2);      // Copy
+//					GPS_data.latDg[2] = '\0';
+//					memcpy(GPS_data.latMS, &latMS[0], 7);
+//					GPS_data.latMS[7] = '\0';
+//					memcpy(GPS_data.lonDg, &lonDg[0], 3);
+//					GPS_data.lonDg[3] = '\0';
+//					memcpy(GPS_data.lonMS, &lonMS[0], 7);
+//					GPS_data.lonMS[7] = '\0';
+//
+//					// Global Time   (Grinvish time)
+//					char strLonMS[7];
+//					sprintf(strLonMS, "%s", lonMS);	  					// convert lonMS in string and save it on strLonMS
+//					//converting the UTC time in the hh:mm:ss format
+//					memcpy(hH, &utcRaw[0], 2);
+//					// Convert in Kyiv time
+//					uint8_t correvt_hours = atoi(hH);					// Convert string in number
+//					correvt_hours = correvt_hours +3;
+//					itoa(correvt_hours, hH, 10);						// Convert number to string
+//
+//					hH[2] = '\0';
+//					memcpy(mM, &utcRaw[2], 2);
+//					mM[2] = '\0';
+//					memcpy(sS, &utcRaw[4], 2);
+//					sS[2] = '\0';
+//
+//					strcpy(strUTC, hH);
+//					strcat(strUTC, ":");
+//					strcat(strUTC, mM);
+//					strcat(strUTC, ":");
+//					strcat(strUTC, sS);      // <------  problem
+//					strUTC[8] = '\0';
+//
+//					// Copy time data in struct variabble
+//					memcpy(GPS_data.clock, strUTC, 8);
+
+
+
+		}
+
+
+		int f=0;
+		f++;
+
+//		while((token = strsep(&string, "\n")) != NULL)
+//		{
+//			memset(nmeaSnt, 0, 80);
+//			sprintf(nmeaSnt, "%s", token);
+//
+//			// Find GPGLL in nmeaSnt string
+//			if((strstr(nmeaSnt, "$GPGLL") != 0) && strlen(nmeaSnt) > 49 && strstr(nmeaSnt, "*") != 0)
+//			{
+//				parsing_GPGLL_line(nmeaSnt);
+//
+//			}
+//			// Find GPGGA in nmeaSnt string
+//			if((strstr(nmeaSnt, "$GPGGA") != 0) && strlen(nmeaSnt) > 49 && strstr(nmeaSnt, "*") != 0)
+//			{
+//				parsing_GPGGA_line(nmeaSnt);
+//			}
+//			// Find GPVTG in nmeaSnt string    // don't work
+//			if((strstr(nmeaSnt, "GPVTG") != 0) && strlen(nmeaSnt) > 49 && strstr(nmeaSnt, "*") != 0)
+//			{
+//				parsing_GPVTG_line(nmeaSnt);
+//			}
+//
+//			// Place for ad parsing functions
+//
+//		}
+		flag = 0;			// Data was read
+		//free(string);
+	}
+}
+//---------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+//

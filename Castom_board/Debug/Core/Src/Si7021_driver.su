@@ -1,0 +1,16 @@
+Si7021_driver.c:20:14:process_temp_code	24	static
+Si7021_driver.c:25:14:process_humi_code	32	static
+Si7021_driver.c:37:17:convert_to_uint16	16	static
+Si7021_driver.c:42:15:r_reg	40	static
+Si7021_driver.c:66:15:w_reg	40	static
+Si7021_driver.c:87:8:r_single_Si7021	32	static
+Si7021_driver.c:116:8:r_both_Si7021	32	static
+Si7021_driver.c:146:8:r_firmware_rev_Si7021	24	static
+Si7021_driver.c:165:8:set_resolution_Si7021	24	static
+Si7021_driver.c:208:21:r_resolution_Si7021	8	static
+Si7021_driver.c:216:8:set_heater_current_Si7021	24	static
+Si7021_driver.c:232:8:r_heater_current_Si7021	8	static
+Si7021_driver.c:240:8:VDD_warning_Si7021	8	static
+Si7021_driver.c:251:8:enable_heater_Si7021	24	static
+Si7021_driver.c:274:8:rst_Si7021	24	static
+Si7021_driver.c:284:8:get_register	16	static

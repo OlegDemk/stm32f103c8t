@@ -1,0 +1,2 @@
+Humidity_and_Temperature_SI7021_sensor.c:15:6:read_firmware	40	static
+Humidity_and_Temperature_SI7021_sensor.c:30:6:read_T_and_H_SI7021	96	static

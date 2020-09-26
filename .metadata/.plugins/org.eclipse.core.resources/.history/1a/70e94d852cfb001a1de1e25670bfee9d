@@ -1,0 +1,72 @@
+/*
+ * Humidity_and_Temperature_AM2302_sensor.c
+ *
+ *  Created on: Sep 17, 2020
+ *      Author: odemki
+ */
+
+#include "stdio.h"
+#include "stm32f1xx_hal.h"
+#include "Si7021_driver.h"
+// ---------------------------------------------------------------
+__STATIC_INLINE void DelayMicro(__IO uint32_t micros)
+{
+	micros *= (SystemCoreClock / 1000000) / 9;
+	/* Wait till done */
+	while (micros--);
+}
+// ---------------------------------------------------------------
+void AM2302_init(void)
+{
+	HAL_Delay(2000);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+
+	//return 0;
+}
+// ---------------------------------------------------------------
+void AM2302_GetData(uint8_t *data)
+{
+	uint8_t i, j = 0;
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+	DelayMicro(100000);
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_RESET);
+	DelayMicro(18000);
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, GPIO_PIN_SET);
+
+	DelayMicro(39);
+	uint8_t state = 3;
+	state = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_3)
+    if(state == GPIO_PIN_SET)
+    {
+    	while(1)
+    	{
+    		//error
+    	}
+
+    }
+//    if(GPIOA->IDR & GPIO_IDR_IDR3)
+//    {
+//    	// error
+//    	while(1)
+//    	{
+//
+//    	}
+//    }
+//    DelayMicro(80);
+//    if(!(GPIOA->IDR & GPIO_IDR_IDR3))
+//    {
+//    	// error
+//        	while(1)
+//        	{
+//
+//        	}
+//    }
+//    DelayMicro(80);
+
+
+
+	//return 0;
+
+}
+// ---------------------------------------------------------------
