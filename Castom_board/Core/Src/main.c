@@ -120,7 +120,23 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  struct
+  {
+	  char gps_lat[11];
+	  char gps_lat_letter[2];
+	  char gps_lon[12];
+	  char gps_lon_letter[2];
+	  char gps_time[6];
+      uint8_t gps_speed;
+	  uint8_t gps_number_of_satellites_GPGGA;
 
+	  int temperature_si7021;
+	  int humidity_si7021;
+
+	  int temperature_am3202;
+	  int humidity_am3202;
+
+  } global_data;
   /* USER CODE END Init */
 
   /* Configure the system clock */

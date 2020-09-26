@@ -27,23 +27,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  00020080  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00014bf8  00000000  00000000  000200a9  2**0
+ 12 .debug_info   00014cda  00000000  00000000  000200a9  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 00002d1a  00000000  00000000  00034ca1  2**0
+ 13 .debug_abbrev 00002d1a  00000000  00000000  00034d83  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00001220  00000000  00000000  000379c0  2**3
+ 14 .debug_aranges 00001220  00000000  00000000  00037aa0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 000010c8  00000000  00000000  00038be0  2**3
+ 15 .debug_ranges 000010c8  00000000  00000000  00038cc0  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  000167eb  00000000  00000000  00039ca8  2**0
+ 16 .debug_macro  000167eb  00000000  00000000  00039d88  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   0000eba2  00000000  00000000  00050493  2**0
+ 17 .debug_line   0000eba4  00000000  00000000  00050573  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    0007768a  00000000  00000000  0005f035  2**0
+ 18 .debug_str    00077706  00000000  00000000  0005f117  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  000d66bf  2**0
+ 19 .comment      0000007b  00000000  00000000  000d681d  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000051a8  00000000  00000000  000d673c  2**2
+ 20 .debug_frame  000051a8  00000000  00000000  000d6898  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -3140,7 +3140,7 @@ void I2C_1_scaner(void)
 int main(void)
 {
  8001be8:	b580      	push	{r7, lr}
- 8001bea:	f5ad 7d00 	sub.w	sp, sp, #512	; 0x200
+ 8001bea:	f5ad 7d0e 	sub.w	sp, sp, #568	; 0x238
  8001bee:	af00      	add	r7, sp, #0
   /* USER CODE END 1 */
 
@@ -3149,8 +3149,8 @@ int main(void)
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
  8001bf0:	f000 ff36 	bl	8002a60 <HAL_Init>
-  /* USER CODE BEGIN Init */
 
+  } global_data;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -3203,13 +3203,13 @@ int main(void)
 	#if GPS
 	  uint8_t GPS_buff[512];      						// main buffer for stream from GPS
 	  memset(GPS_buff ,0 ,sizeof(GPS_buff));
- 8001c2a:	463b      	mov	r3, r7
+ 8001c2a:	1d3b      	adds	r3, r7, #4
  8001c2c:	f44f 7200 	mov.w	r2, #512	; 0x200
  8001c30:	2100      	movs	r1, #0
  8001c32:	4618      	mov	r0, r3
  8001c34:	f004 fe9a 	bl	800696c <memset>
 	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
- 8001c38:	463b      	mov	r3, r7
+ 8001c38:	1d3b      	adds	r3, r7, #4
  8001c3a:	f44f 7200 	mov.w	r2, #512	; 0x200
  8001c3e:	4619      	mov	r1, r3
  8001c40:	4826      	ldr	r0, [pc, #152]	; (8001cdc <main+0xf4>)
@@ -3261,7 +3261,7 @@ int main(void)
 
 			#if GPS
         		parsing_GPS(GPS_buff, 512);
- 8001c88:	463b      	mov	r3, r7
+ 8001c88:	1d3b      	adds	r3, r7, #4
  8001c8a:	f44f 7100 	mov.w	r1, #512	; 0x200
  8001c8e:	4618      	mov	r0, r3
  8001c90:	f7ff fc34 	bl	80014fc <parsing_GPS>
