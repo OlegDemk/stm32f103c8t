@@ -37,6 +37,8 @@
 #include "Flash_W25Q.h"
 #include "w25qxx.h"
 
+#include "fingerprint_GT_511C3.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +49,9 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 void test_flash_W25Q(void);
+static void setPWM(TIM_HandleTypeDef, uint32_t, uint16_t, uint16_t);
+void generate_sound(void);
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -54,10 +59,12 @@ void test_flash_W25Q(void);
 #define ON 1
 #define OFF 0
 
-#define OLED ON
+#define OLED OFF
 #define H_a_T_SI7021 ON
 #define I2C_SCANNER ON
-#define GPS ON
+#define GPS OFF
+#define SOUND OFF
+#define FINGERPRINT ON
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -65,9 +72,11 @@ I2C_HandleTypeDef hi2c1;
 
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart3_rx;
 
@@ -95,6 +104,8 @@ static void MX_I2C1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_TIM1_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -120,23 +131,23 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  struct
-  {
-	  char gps_lat[11];
-	  char gps_lat_letter[2];
-	  char gps_lon[12];
-	  char gps_lon_letter[2];
-	  char gps_time[6];
-      uint8_t gps_speed;
-	  uint8_t gps_number_of_satellites_GPGGA;
-
-	  int temperature_si7021;
-	  int humidity_si7021;
-
-	  int temperature_am3202;
-	  int humidity_am3202;
-
-  } global_data;
+//  struct
+//  {
+//	  char gps_lat[11];
+//	  char gps_lat_letter[2];
+//	  char gps_lon[12];
+//	  char gps_lon_letter[2];
+//	  char gps_time[6];
+//      uint8_t gps_speed;
+//	  uint8_t gps_number_of_satellites_GPGGA;
+//
+//	  char temperature_si7021[4];
+//	  int humidity_si7021;
+//
+//	  int temperature_am3202;
+//	  int humidity_am3202;
+//
+//  } global_data;
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -154,30 +165,38 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_SPI2_Init();
+  MX_TIM1_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
 
 
-  #if I2C_SCANNER
-  	  I2C_1_scaner();
-  #endif
+#if I2C_SCANNER
+  I2C_1_scaner();
+#endif
 
-  #if H_a_T_SI7021
-  	  read_T_and_H_SI7021();
-  #endif
+#if H_a_T_SI7021
+  read_T_and_H_SI7021();
+#endif
 
-  #if OLED
-	  init_oled();
-	  test_oled();
-  #endif
+#if OLED
+  init_oled();
+	  //test_oled();
+#endif
 
-	  HAL_TIM_Base_Start_IT(&htim2);
+HAL_TIM_Base_Start_IT(&htim2);
 
-	#if GPS
-	  uint8_t GPS_buff[512];      						// main buffer for stream from GPS
-	  memset(GPS_buff ,0 ,sizeof(GPS_buff));
-	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
-	#endif
+
+#if GPS
+	uint8_t GPS_buff[512];      						// main buffer for stream from GPS
+	memset(GPS_buff ,0 ,sizeof(GPS_buff));
+	HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
+#endif
+
+#if SOUND
+	generate_sound();
+#endif
+
 
   //AM2302_init();
 
@@ -185,22 +204,16 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+
   while (1)
   {
-
         if(interrupt_flag == 1)
         {
-        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
+        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
         	read_T_and_H_SI7021();
-
-
         	test_flash_W25Q();
-
 
 			#if GPS
         		parsing_GPS(GPS_buff, 512);
@@ -209,17 +222,18 @@ int main(void)
         		HAL_Delay(500);
 			#endif
 
-        	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
+			#if OLED
+        		OLED_prinr_all_data();
+			#endif
 
+        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
-        	//HAL_Delay(100);
+			#if FINGERPRINT
+        		//fingerprint_test();
+			#endif
+
         	interrupt_flag = 0;
         }
-
 
     /* USER CODE END WHILE */
 
@@ -339,6 +353,81 @@ static void MX_SPI2_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 15600;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 4000;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 2000;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
+  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
+  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
+  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
+  sBreakDeadTimeConfig.DeadTime = 0;
+  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
+  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
+  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
+  if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+  HAL_TIM_MspPostInit(&htim1);
+
+}
+
+/**
   * @brief TIM2 Initialization Function
   * @param None
   * @retval None
@@ -417,6 +506,39 @@ static void MX_USART1_UART_Init(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * @brief USART3 Initialization Function
   * @param None
   * @retval None
@@ -475,37 +597,23 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6
-                          |GPIO_PIN_7, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|CS_M25Q_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(CS_M25Q_GPIO_Port, CS_M25Q_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PA3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA4 PA5 PA6 PA7 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7;
+  /*Configure GPIO pin : PC13 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : PB0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : CS_M25Q_Pin */
   GPIO_InitStruct.Pin = CS_M25Q_Pin;
@@ -525,13 +633,53 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         if(htim->Instance == TIM2) //check if the interrupt comes from TIM2
         {
         	//read_T_and_H_SI7021();
-
         	interrupt_flag = 1;
-
-
         }
 }
 // ----------------------------------------------------------------------------
+// Function for generate
+void buzzer_fricvency_setings(TIM_HandleTypeDef timer, uint32_t channel, uint16_t period, uint16_t pulse)
+{
+	 HAL_TIM_PWM_Stop(&timer, channel); // stop generation of pwm
+	 TIM_OC_InitTypeDef sConfigOC;
+	 timer.Init.Prescaler = 720;
+	 timer.Init.Period = period; // set the period duration
+	 HAL_TIM_PWM_Init(&timer); // reinititialise with new period value
+	 sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	 sConfigOC.Pulse = pulse; // set the pulse duration
+	 sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	 sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	 HAL_TIM_PWM_ConfigChannel(&timer, &sConfigOC, channel);
+	 HAL_TIM_PWM_Start(&timer, channel); // start pwm generation
+}
+//------------------------------------------------------------------------------
+void generate_sound(void)
+{
+	uint16_t pulse = 2;
+	uint32_t period = 1;
+	uint16_t max = 200;
+	uint16_t min = 1;
+	for(period = min; period < max; period++)
+	{
+		  pulse = period/2;
+		  buzzer_fricvency_setings(htim1, TIM_CHANNEL_1, period, pulse);
+		  HAL_Delay(1);
+	}
+	if(period >= max)
+	{
+		  for(period = max; period > min; period--)
+		  	  {
+		  		  pulse = period/2;
+		  		  buzzer_fricvency_setings(htim1, TIM_CHANNEL_1, period, pulse);
+		  		  HAL_Delay(1);
+		  	  }
+	}
+	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1); // stop generation of pwm
+}
+// ----------------------------------------------------------------------------
+
+
+
 /* USER CODE END 4 */
 
 /**

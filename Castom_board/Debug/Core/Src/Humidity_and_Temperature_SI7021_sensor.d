@@ -26,7 +26,7 @@ Core/Src/Humidity_and_Temperature_SI7021_sensor.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/Si7021_driver.h
+ ../Core/Inc/Si7021_driver.h ../Core/Inc/main.h
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 
@@ -81,3 +81,5 @@ Core/Src/Humidity_and_Temperature_SI7021_sensor.o: \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 
 ../Core/Inc/Si7021_driver.h:
+
+../Core/Inc/main.h:

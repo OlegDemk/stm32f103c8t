@@ -7,6 +7,8 @@
 #include "ssd1306.h"
 #include "fonts.h"
 
+#include "main.h"
+
 extern TIM_HandleTypeDef htim1;
 
 // -----------------------------------------------------------------------------------
@@ -50,3 +52,21 @@ void test_oled(void)
 	}
 }
 // -----------------------------------------------------------------------------------
+void OLED_prinr_all_data(void)
+{
+	// Print temperature and humidity 'si7021'
+	ssd1306_SetCursor(0, 0);
+	ssd1306_WriteString(temperature_si7021, Font_7x10, White);
+
+	ssd1306_SetCursor(70, 0);
+	ssd1306_WriteString(humidity_si7021, Font_7x10, White);
+
+    // Print data from GPS module
+	ssd1306_SetCursor(0, 40);
+	ssd1306_WriteString(gps_lat, Font_7x10, White);
+
+	ssd1306_UpdateScreen();
+
+}
+
+

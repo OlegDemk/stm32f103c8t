@@ -9,6 +9,7 @@
 #include "stm32f1xx_hal.h"
 #include "string.h"               // For work with "strtok" function
 #include "stdlib.h"               // For work with "atoi" function
+#include "main.h"
 
 extern UART_HandleTypeDef huart1;
 extern uint8_t flag;
@@ -102,6 +103,10 @@ void parsing_GPGLL_line(char *str_GPGLL)
 							GPS_data.lat[g] = nmeaSnt[i+g];
 						}
 						GPS_data.lat[10] = '\0';
+
+						// Save in global variable
+						strcpy(gps_lat, GPS_data.lat);
+
 						i = i+g;
 						break;
 

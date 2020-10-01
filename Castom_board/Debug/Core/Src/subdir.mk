@@ -9,6 +9,7 @@ C_SRCS += \
 ../Core/Src/Humidity_and_Temperature_AM2302_sensor.c \
 ../Core/Src/Humidity_and_Temperature_SI7021_sensor.c \
 ../Core/Src/Si7021_driver.c \
+../Core/Src/fingerprint_GT_511C3.c \
 ../Core/Src/fonts.c \
 ../Core/Src/i2c_scaner.c \
 ../Core/Src/main.c \
@@ -27,6 +28,7 @@ OBJS += \
 ./Core/Src/Humidity_and_Temperature_AM2302_sensor.o \
 ./Core/Src/Humidity_and_Temperature_SI7021_sensor.o \
 ./Core/Src/Si7021_driver.o \
+./Core/Src/fingerprint_GT_511C3.o \
 ./Core/Src/fonts.o \
 ./Core/Src/i2c_scaner.o \
 ./Core/Src/main.o \
@@ -45,6 +47,7 @@ C_DEPS += \
 ./Core/Src/Humidity_and_Temperature_AM2302_sensor.d \
 ./Core/Src/Humidity_and_Temperature_SI7021_sensor.d \
 ./Core/Src/Si7021_driver.d \
+./Core/Src/fingerprint_GT_511C3.d \
 ./Core/Src/fonts.d \
 ./Core/Src/i2c_scaner.d \
 ./Core/Src/main.d \
@@ -69,6 +72,8 @@ Core/Src/Humidity_and_Temperature_SI7021_sensor.o: ../Core/Src/Humidity_and_Temp
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Humidity_and_Temperature_SI7021_sensor.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Core/Src/Si7021_driver.o: ../Core/Src/Si7021_driver.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Si7021_driver.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
+Core/Src/fingerprint_GT_511C3.o: ../Core/Src/fingerprint_GT_511C3.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/fingerprint_GT_511C3.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Core/Src/fonts.o: ../Core/Src/fonts.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/fonts.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Core/Src/i2c_scaner.o: ../Core/Src/i2c_scaner.c

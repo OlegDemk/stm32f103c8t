@@ -50,6 +50,8 @@ extern "C" {
 
 /* USER CODE END EM */
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
 
@@ -61,7 +63,19 @@ void Error_Handler(void);
 #define CS_M25Q_Pin GPIO_PIN_12
 #define CS_M25Q_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+char gps_lat[11];
+char gps_lat_letter[2];
+char gps_lon[12];
+char gps_lon_letter[2];
+char gps_time[6];
+uint8_t gps_speed;
+uint8_t gps_number_of_satellites_GPGGA;
 
+char temperature_si7021[6];
+char humidity_si7021[6];
+
+int temperature_am3202;
+int humidity_am3202;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

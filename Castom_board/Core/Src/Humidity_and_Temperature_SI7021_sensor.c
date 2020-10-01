@@ -9,6 +9,8 @@
 #include "stm32f1xx_hal.h"
 #include "Si7021_driver.h"
 
+#include "main.h"
+
 extern UART_HandleTypeDef huart1;
 // H and T
 // --------------------------------------------------------------------------------
@@ -30,7 +32,7 @@ void read_firmware(void)
 void read_T_and_H_SI7021(void)
 {
 	uint8_t size=0;
-	char str[40]={0};
+	char str[10]={0};
 	int8_t STATUS = -1;
 	float data = 0;
 
@@ -49,10 +51,15 @@ void read_T_and_H_SI7021(void)
 	float tmpFrac = (data - tmpInt1);
 	int tmpInt2 = trunc(tmpFrac * 10000);
 
-	// Print in COM port
-	sprintf(str,"TEMPERATURE: %s%d.%04d C \r\n", tmpSign, tmpInt1, tmpInt2);      										// convert   in  str
+	// Print Temperature in COM port
+	sprintf(str,"T:%s%d.%04d C\r\n", tmpSign, tmpInt1, tmpInt2);      										// convert   in  str
 	size=sizeof(str);
 	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
+	memset(str, 0 , sizeof(str));
+
+	// Save in global variable
+	sprintf(str,"T:%s%d C\0", tmpSign, tmpInt1);
+	strcpy(temperature_si7021, str);
 	memset(str, 0 , sizeof(str));
 
 	//// Read humidity `///////////////////////////////////
@@ -72,9 +79,14 @@ void read_T_and_H_SI7021(void)
 	tmpInt2 = trunc(tmpFrac * 10000);
 
 	// Print in COM port
-	sprintf(str,"HUMIDITY: %d.%04d %% \r\n", tmpInt1, tmpInt2);      										// convert   in  str
+	sprintf(str,"H:%d.%01d %% \r\n", tmpInt1, tmpInt2);      										// convert   in  str
 	size=sizeof(str);
 	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
+	memset(str, 0 , sizeof(str));
+
+	// Save in global variable
+	sprintf(str,"H:%d %% \0", tmpInt1);
+	strcpy(humidity_si7021, str);
 	memset(str, 0 , sizeof(str));
 }
 // --------------------------------------------------------------------------------

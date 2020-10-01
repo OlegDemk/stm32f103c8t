@@ -1,32 +1,153 @@
-23:21:52 **** Incremental Build of configuration Debug for project Castom_board ****
+14:01:26 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o"
+arm-none-eabi-gcc "../Core/Src/Flash_W25Q.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Flash_W25Q.d" -MT"Core/Src/Flash_W25Q.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Flash_W25Q.o"
+arm-none-eabi-gcc "../Core/Src/GPS_NEO_6M.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/GPS_NEO_6M.d" -MT"Core/Src/GPS_NEO_6M.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/GPS_NEO_6M.o"
+arm-none-eabi-gcc "../Core/Src/Humidity_and_Temperature_AM2302_sensor.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Humidity_and_Temperature_AM2302_sensor.d" -MT"Core/Src/Humidity_and_Temperature_AM2302_sensor.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Humidity_and_Temperature_AM2302_sensor.o"
+arm-none-eabi-gcc "../Core/Src/Humidity_and_Temperature_SI7021_sensor.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Humidity_and_Temperature_SI7021_sensor.d" -MT"Core/Src/Humidity_and_Temperature_SI7021_sensor.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Humidity_and_Temperature_SI7021_sensor.o"
+arm-none-eabi-gcc "../Core/Src/Si7021_driver.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Si7021_driver.d" -MT"Core/Src/Si7021_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Si7021_driver.o"
+arm-none-eabi-gcc "../Core/Src/fonts.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/fonts.d" -MT"Core/Src/fonts.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/fonts.o"
+arm-none-eabi-gcc "../Core/Src/i2c_scaner.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/i2c_scaner.d" -MT"Core/Src/i2c_scaner.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/i2c_scaner.o"
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 ../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:162:6: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
-      I2C_1_scaner();
+../Core/Src/main.c:175:3: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
+   I2C_1_scaner();
+   ^~~~~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:52:13: warning: 'setPWM' declared 'static' but never defined [-Wunused-function]
+ static void setPWM(TIM_HandleTypeDef, uint32_t, uint16_t, uint16_t);
+             ^~~~~~
+arm-none-eabi-gcc "../Core/Src/oled_ssd1306.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/oled_ssd1306.d" -MT"Core/Src/oled_ssd1306.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/oled_ssd1306.o"
+arm-none-eabi-gcc "../Core/Src/ssd1306.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ssd1306.d" -MT"Core/Src/ssd1306.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/ssd1306.o"
+arm-none-eabi-gcc "../Core/Src/stm32f1xx_hal_msp.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f1xx_hal_msp.d" -MT"Core/Src/stm32f1xx_hal_msp.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_hal_msp.o"
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c: In function 'read_firmware':
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:29:2: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+  memset(str, 0 , sizeof(str));
+  ^~~~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:29:2: warning: incompatible implicit declaration of built-in function 'memset'
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:29:2: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c: In function 'read_T_and_H_SI7021':
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:58:2: warning: incompatible implicit declaration of built-in function 'memset'
+  memset(str, 0 , sizeof(str));
+  ^~~~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:58:2: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:61:23: warning: embedded '\0' in format [-Wformat-contains-nul]
+  sprintf(str,"T:%s%d C\0", tmpSign, tmpInt1);
+                       ^~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:62:2: warning: implicit declaration of function 'strcpy' [-Wimplicit-function-declaration]
+  strcpy(temperature_si7021, str);
+  ^~~~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:62:2: warning: incompatible implicit declaration of built-in function 'strcpy'
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:62:2: note: include '<string.h>' or provide a declaration of 'strcpy'
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:88:23: warning: embedded '\0' in format [-Wformat-contains-nul]
+  sprintf(str,"H:%d %% \0", tmpInt1);
+                       ^~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:55:28: warning: ' C
+   ' directive writing 4 bytes into a region of size 2 [-Wformat-overflow=]
+  sprintf(str,"T:%s%d.%04d C\r\n", tmpSign, tmpInt1, tmpInt2);                // convert   in  str
+                          ~~^~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:55:2: note: 'sprintf' output 13 or more bytes into a destination of size 10
+  sprintf(str,"T:%s%d.%04d C\r\n", tmpSign, tmpInt1, tmpInt2);                // convert   in  str
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:82:32: warning: 'sprintf' writing a terminating nul past the end of the destination [-Wformat-overflow=]
+  sprintf(str,"H:%d.%01d %% \r\n", tmpInt1, tmpInt2);                // convert   in  str
+                                ^
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:82:2: note: 'sprintf' output between 11 and 31 bytes into a destination of size 10
+  sprintf(str,"H:%d.%01d %% \r\n", tmpInt1, tmpInt2);                // convert   in  str
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'test_flash_W25Q':
+../Core/Src/Flash_W25Q.c:67:6: warning: unused variable 'g' [-Wunused-variable]
+  int g=0;
+      ^
+../Core/Src/i2c_scaner.c: In function 'I2C_1_scaner':
+../Core/Src/i2c_scaner.c:60:7: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+       memset(str3, 0 , sizeof(str3));   // Clean str3
+       ^~~~~~
+../Core/Src/i2c_scaner.c:60:7: warning: incompatible implicit declaration of built-in function 'memset'
+../Core/Src/i2c_scaner.c:60:7: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/i2c_scaner.c:76:5: warning: incompatible implicit declaration of built-in function 'memset'
+     memset(str3, 0 , sizeof(str3));
+     ^~~~~~
+../Core/Src/i2c_scaner.c:76:5: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/i2c_scaner.c:85:3: warning: incompatible implicit declaration of built-in function 'memset'
+   memset(str3, 0 , sizeof(str3));
+   ^~~~~~
+../Core/Src/i2c_scaner.c:85:3: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/i2c_scaner.c:91:2: warning: incompatible implicit declaration of built-in function 'memset'
+  memset(str3, 0 , sizeof(str3));
+  ^~~~~~
+../Core/Src/i2c_scaner.c:91:2: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/i2c_scaner.c:36:10: warning: unused variable 'i' [-Wunused-variable]
+  uint8_t i=0;
+          ^
+../Core/Src/i2c_scaner.c:35:10: warning: unused variable 'size_mas' [-Wunused-variable]
+  uint8_t size_mas=sizeof(str3);
+          ^~~~~~~~
+arm-none-eabi-gcc "../Core/Src/stm32f1xx_it.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f1xx_it.d" -MT"Core/Src/stm32f1xx_it.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_it.o"
+arm-none-eabi-gcc "../Core/Src/system_stm32f1xx.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/system_stm32f1xx.d" -MT"Core/Src/system_stm32f1xx.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/system_stm32f1xx.o"
+arm-none-eabi-gcc "../Core/Src/w25qxx.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/w25qxx.d" -MT"Core/Src/w25qxx.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/w25qxx.o"
+../Core/Src/GPS_NEO_6M.c: In function 'parsing_GPGLL_line':
+../Core/Src/GPS_NEO_6M.c:87:11: warning: unused variable 'cnt' [-Wunused-variable]
+   uint8_t cnt = 0;              // Count of elements
+           ^~~
+../Core/Src/GPS_NEO_6M.c:63:6: warning: unused variable 'size_nmeaSnt' [-Wunused-variable]
+  int size_nmeaSnt = sizeof(nmeaSnt);
       ^~~~~~~~~~~~
-../Core/Src/main.c:178:4: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
-    memset(GPS_buff ,0 ,sizeof(GPS_buff));
-    ^~~~~~
-../Core/Src/main.c:178:4: warning: incompatible implicit declaration of built-in function 'memset'
-../Core/Src/main.c:178:4: note: include '<string.h>' or provide a declaration of 'memset'
-../Core/Src/main.c:139:5: warning: unused variable 'global_data' [-Wunused-variable]
-   } global_data;
-     ^~~~~~~~~~~
+../Core/Src/GPS_NEO_6M.c: In function 'parsing_GPGGA_line':
+../Core/Src/GPS_NEO_6M.c:201:12: warning: unused variable 'cnt' [-Wunused-variable]
+    uint8_t cnt = 0;              // Count of elements
+            ^~~
+../Core/Src/GPS_NEO_6M.c:182:8: warning: variable 'nothing' set but not used [-Wunused-but-set-variable]
+   char nothing[2]={2};
+        ^~~~~~~
+../Core/Src/GPS_NEO_6M.c:181:8: warning: variable 'time' set but not used [-Wunused-but-set-variable]
+   char time[6]={0};
+        ^~~~
+../Core/Src/GPS_NEO_6M.c:169:7: warning: unused variable 'size_nmeaSnt' [-Wunused-variable]
+   int size_nmeaSnt = sizeof(nmeaSnt);
+       ^~~~~~~~~~~~
+../Core/Src/GPS_NEO_6M.c: In function 'parsing_GPVTG_line':
+../Core/Src/GPS_NEO_6M.c:304:8: warning: unused variable 'count' [-Wunused-variable]
+    int count = 0;
+        ^~~~~
+../Core/Src/GPS_NEO_6M.c:303:8: warning: unused variable 'i' [-Wunused-variable]
+    int i = 0;
+        ^
+../Core/Src/GPS_NEO_6M.c:301:12: warning: unused variable 'cnt' [-Wunused-variable]
+    uint8_t cnt = 0;              // Count of elements
+            ^~~
+../Core/Src/GPS_NEO_6M.c:277:6: warning: unused variable 'size_nmeaSnt' [-Wunused-variable]
+  int size_nmeaSnt = sizeof(nmeaSnt);
+      ^~~~~~~~~~~~
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Castom_board.elf
  
 arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
 arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
-Finished building: Castom_board.bin
- 
    text	   data	    bss	    dec	    hex	filename
-  33188	    136	   3096	  36420	   8e44	Castom_board.elf
+  27332	    128	   2256	  29716	   7414	Castom_board.elf
 Finished building: default.size.stdout
+ 
+Finished building: Castom_board.bin
  
 Finished building: Castom_board.list
  
 
-23:21:58 Build Finished. 0 errors, 4 warnings. (took 5s.988ms)
+14:01:33 Build Finished. 0 errors, 29 warnings. (took 6s.614ms)
 
