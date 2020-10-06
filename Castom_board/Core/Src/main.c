@@ -49,16 +49,12 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 void test_flash_W25Q(void);
-static void setPWM(TIM_HandleTypeDef, uint32_t, uint16_t, uint16_t);
 void generate_sound(void);
 
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-#define ON 1
-#define OFF 0
-
 #define OLED ON
 #define H_a_T_SI7021 ON
 #define I2C_SCANNER ON

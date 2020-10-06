@@ -63,6 +63,9 @@ void Error_Handler(void);
 #define CS_M25Q_Pin GPIO_PIN_12
 #define CS_M25Q_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
+#define ON 1
+#define OFF 0
+
 char gps_lat[11];
 char gps_lat_letter[2];
 char gps_lon[12];

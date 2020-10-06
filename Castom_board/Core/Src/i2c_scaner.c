@@ -20,8 +20,8 @@ uint8_t addres_devise=0x00;      //ADRESS_MPU6050=0x68; -> return 0  ,   DRESS_M
 uint8_t addr=0;
 uint16_t sizebuf_I2C=1;								// size how many data we receive from devise
 uint8_t buff=0;										// data for receive
-uint32_t timeout=1000;						// timeout for receive
-uint16_t STATUS=0;								// Status connect to device (if STATUS==0 - device
+uint32_t timeout=1000;						        // timeout for receive
+uint16_t STATUS=0;								    // Status connect to device (if STATUS==0 - device
 
 //----------------------------------------------------------------------------------------------------
 void I2C_1_scaner(void)
@@ -68,6 +68,10 @@ void I2C_1_scaner(void)
 				    break;
 
 				    // place where add new connected device
+
+
+
+				    //
 				}
 			}
 

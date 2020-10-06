@@ -57,24 +57,21 @@ int nmea0183_checksum(char *msg)
 //---------------------------------------------------------------------
 void parsing_GPGLL_line(char *str_GPGLL)
 {
-	char nmeaSnt[49];
+	char nmeaSnt[49];										// Main buffer for GPGLL line
 	int size = sizeof(nmeaSnt);
 	memset(nmeaSnt, 0, size);
 
 	//Copy to  "*" з str_GPGLL в nmeaSnt
-	int size_nmeaSnt = sizeof(nmeaSnt);
 	int i=0;
-
 	for(i=0; (str_GPGLL[i] != '*') && (i < 50)  ; i++)
 	{
-		nmeaSnt[i]=str_GPGLL[i];    // Read 49 bytes
+		nmeaSnt[i]=str_GPGLL[i];    						// copy bytes from str_GPGLL in nmeaSnt
 	}
-
-	// Check check sum //////////////////////////////////////////////////////////////
+	// Check check sum
 	char smNmbr[3]={0};     								// array for checksum
 	char *rawSum;
 
-	// Find "*"
+	// Find "*"  (after '*' are checksum two numbers)
 	rawSum = strstr(str_GPGLL, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
 	memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
 	smNmbr[2]='\0';											// Add and of line '\0' sing
@@ -83,21 +80,19 @@ void parsing_GPGLL_line(char *str_GPGLL)
 	char hex[3];
 	sprintf(hex, "%x", intSum);
 
-	if(strstr(smNmbr, hex) != NULL)
+	if(strstr(smNmbr, hex) != NULL)                         // Check if checksum line equal checksum after '*'
 	{
-		// Parsing string //////////////////////////////////////////////////////////////
-		uint8_t cnt = 0;            		// Count of elements
-
+		// Parsing string
 		int i = 0;
-		int count = 0;
+		int count = 0;                                      // Count of elements
 
-		while(nmeaSnt[i] != '\0')
+		while(nmeaSnt[i] != '\0')							// not and of line
 		{
-			while(nmeaSnt[i] == ',')
+			while(nmeaSnt[i] == ',')						// ',' pointed on start element
 			{
 				int g=0;
-				i++;
 				char str[12]={0};
+				i++;										// Count of chars in nmeaSnt[i] array
 
 				switch (count)
 				{
@@ -114,34 +109,35 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						strcpy(gps_lat, str);
 
 						// Convert lat in coordinate for google mups
-						// 1. відділити градуси від мінут
+						// 1. Separate degrees from minutes
 						float integer_part_lat = 0;
 						float fractional_part_lat = 0;
 						char integer_part_char_lat[3]={0};
 						char fractional_part_char_lat[9]={0};
 						uint8_t k=0;
+
 						for(k=0; k<=11; k++)
 						{
 							if(k<=1)
 							{
-								integer_part_char_lat[k] = GPS_data.lat[k];
+								integer_part_char_lat[k] = GPS_data.lat[k];        	  // Degrees
 							}
 							else
 							{
-								fractional_part_char_lat[k-2] = GPS_data.lat[k];
+								fractional_part_char_lat[k-2] = GPS_data.lat[k];      // Minutes
 							}
 						}
 
-						// 2. перетворити стрінги в числа
+						// 2. Convert string in numbers
 						integer_part_lat = atoi(integer_part_char_lat);          // save int part
 						fractional_part_lat = atof(fractional_part_char_lat);	 // float part
- 						// 3. Конвертувати в градуси
+ 						// 3. Convert in degrees
 						fractional_part_lat = (fractional_part_lat/60);
 						integer_part_lat = integer_part_lat + fractional_part_lat;
-						// 4. Конвертувати в стрінгу і Записати в глобальну змінну
+						// 4. Convert in string and save it in global variable
                         gcvt(integer_part_lat, 11, gps_latitude );
                         gps_latitude[9] = '\0';
-                        //
+
 						i = i+g;
 						break;
 
@@ -167,12 +163,12 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						strcpy(gps_lon, str);
 
 						// Convert lon in coordinate for google mups
-						// 1. відділити градуси від мінут
+						// // 1. Separate degrees from minutes
 						float integer_part_lon = 0;
 						float fractional_part_lon = 0;
 						char integer_part_char_lon[3]={0};
 						char fractional_part_char_lon[10]={0};
-						k=0;
+
 						for(k=0; k<=11; k++)
 						{
 							if(k<=2)
@@ -185,16 +181,15 @@ void parsing_GPGLL_line(char *str_GPGLL)
 							}
 						}
 
-						// 2. перетворити стрінги в числа
+						// 2. Convert string in numbers
 						integer_part_lon = atoi(integer_part_char_lon);          // save int part
 						fractional_part_lon = atof(fractional_part_char_lon);	 // float part
-					 	// 3. Конвертувати в градуси
+						// 3. Convert in degrees
 						fractional_part_lon = (fractional_part_lon/60);
 						integer_part_lon = integer_part_lon + fractional_part_lon;
-						// 4. Конвертувати в стрінгу і Записати в глобальну змінну
+						// 4. Convert in string and save it in global variable
 					    gcvt(integer_part_lon, 11, gps_lontitude );
 					    gps_lontitude[10] = '\0';
-					    //
 
 						i = i+g;
 						break;
@@ -216,12 +211,11 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						GPS_data.time[6] = '\0';
 						i = i+g;
 
-						// Save in global variable
+						// Save time in global variable
 						memset(str, 0 , sizeof(str));
 						sprintf(str,"%s", GPS_data.time);
 						strcpy(gps_time, str);
 						break;
-
 				}
 				count++;
 			}
@@ -232,29 +226,21 @@ void parsing_GPGLL_line(char *str_GPGLL)
 //---------------------------------------------------------------------
 void parsing_GPGGA_line(char *str_GPGGA)
 {
-        //$GPGGA,154423.00,4948.74034,N,02359.70944,E,1,05A,154422.00,4948.74052,N,02359.70973,E,1,05,3.71,351.1,M,34.8,M,,*53\r\n
-		// In this line parsed only count of satellites
-
-		//GPS_data.number_of_satellites_GPGGA = (uint8_t*)number_of_satellites_point_GPGGA[1];		// save only it
-
 	    char nmeaSnt[70];
 		int size = sizeof(nmeaSnt);
 		memset(nmeaSnt, 0, size);
 
 		//Copy to  "*" з str_GPGGA в nmeaSnt
-		int size_nmeaSnt = sizeof(nmeaSnt);
 		int i=0;
 
-		for(i=0; (str_GPGGA[i] != '*') && (i < 70)  ; i++)   // 70   // 68
+		for(i=0; (str_GPGGA[i] != '*') && (i < 70)  ; i++)
 		{
 			nmeaSnt[i]=str_GPGGA[i];
 		}
 
-		// Check check sum //////////////////////////////////////////////////////////////
+		// Check check sum
 		char smNmbr[3]={0};     								// array for checksum
 		char *rawSum;
-
-		char time[6]={0};
 		char not_used[12] = {0};
 
 		// Find "*"
@@ -262,19 +248,15 @@ void parsing_GPGGA_line(char *str_GPGGA)
 		memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
 		smNmbr[2]='\0';											// Add and of line '\0' sing
 
-
-          // Проблема . Чексума не сходиться
-		////////////////////////////////////////////
+        // PROBLEM: Checksum !=
 		char hex[3];
 		memset(hex, 0 , sizeof(hex));
 		uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 		sprintf(hex, "%x", intSum);
 
-////////////////////////////////////////////////////
 //		if(strstr(smNmbr, hex) != NULL)
 //		{
-			// Parsing string //////////////////////////////////////////////////////////////
-			uint8_t cnt = 0;            		// Count of elements
+			// Parsing string
 
 			i = 0;
 			int count = 0;
@@ -290,9 +272,9 @@ void parsing_GPGGA_line(char *str_GPGGA)
 						case 0:                     // Time
 							for(g=0; g<6; g++)
 							{
-								time[g] = nmeaSnt[i+g];
+								not_used[g] = nmeaSnt[i+g];
 							}
-							time[6] = '\0';
+							not_used[6] = '\0';
 							i = i+g;
 
 							break;
@@ -359,11 +341,8 @@ void parsing_GPGGA_line(char *str_GPGGA)
 							memset(str, 0 , sizeof(str));
 							sprintf(str,"%s", GPS_data.number_of_satellites_GPGGA);
 							strcpy(gps_number_of_satellites, str);
-
 							i = i+g;
-
 							break;
-
 					}
 					count++;
 				}
@@ -376,7 +355,6 @@ void parsing_GPGGA_line(char *str_GPGGA)
 //---------------------------------------------------------------------
 void parsing_GPVTG_line(char *str_GPVTG)
 {
-    // $GPVTG,,T,,M,0.036,N,0.066,K,A*26\r\n
 	char nmeaSnt[49];
 	int size = sizeof(nmeaSnt);
 	memset(nmeaSnt, 0, size);
@@ -384,7 +362,6 @@ void parsing_GPVTG_line(char *str_GPVTG)
 	char str[6]={0};
 
 	//Copy to  "*" з str_GPVTG в nmeaSnt
-	int size_nmeaSnt = sizeof(nmeaSnt);
 	int i=0;
 
 	for(i=0; (str_GPVTG[i] != '*') && (i < 50)  ; i++)
@@ -392,25 +369,23 @@ void parsing_GPVTG_line(char *str_GPVTG)
 		nmeaSnt[i]=str_GPVTG[i];    // Read 49 bytes
 	}
 
-	// Check check sum //////////////////////////////////////////////////////////////
+	// Check check sum
 	char smNmbr[3]={0};     								// array for checksum
 	char *rawSum;
-	char not_used[12] = {0};
-	//char speed[6] = {0};
 
 	// Find "*"
 	rawSum = strstr(str_GPVTG, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
 	memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
 	smNmbr[2]='\0';											// Add and of line '\0' sing
 
+	// PROBLEM: Checksum !=
 	uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 	char hex[3];
 	sprintf(hex, "%x", intSum);
 
 //	if(strstr(smNmbr, hex) != NULL)
 //	{
-			// Parsing string //////////////////////////////////////////////////////////////
-			uint8_t cnt = 0;            		// Count of elements
+			// Parsing string
 
 			i = 0;
 			int count = 0;
@@ -424,7 +399,6 @@ void parsing_GPVTG_line(char *str_GPVTG)
 				if(count == 7)
 				{
 					i++;
-					uint8_t size = sizeof(GPS_data.speed);
 					uint8_t k = 0;
 					for(k = 0; k<=5; k++)
 					{
@@ -448,20 +422,13 @@ void parsing_GPVTG_line(char *str_GPVTG)
 
 
 //---------------------------------------------------------------------
-// Parsing
+// Parsing only three lines from NMIA
+// 1. From GPGLL - coordinates
+// 2. From GPGGA - number of satellites
+// 3. From GPVTG - speed
 void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 {
-	//////////////////////////////////
-//
-//	char test[6]={1,2,3,4,5,6};
-//	uint8_t result = 0;
-//	result = nmea0183_checksum(test);
-//
-//    int o=0;
-
-/////////////////////////////
-
-	char buffStr[512];
+	char buffStr[512];										 // Main buffer in this function
 
 	if(flag == 1)    										 // If data from GPS module in buffer
 	{
@@ -472,27 +439,28 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 		char *str_GPGGA;
 		char *str_GPVTG;
 
-		// Find $GPGLL // work
+		// Find $GPGLL in buffStr
 		str_GPGLL = strstr(buffStr, "$GPGLL");    // $GPGLL,4948.72578,N,02359.72468,E,151729.00,A,A*6C\r
 		if(str_GPGLL != NULL)
 		{
 			parsing_GPGLL_line(str_GPGLL);
 		}
 
-		// Find $GPGGA // Don't work
-		str_GPGGA = strstr(buffStr, "$GPGGA");
+		// Find $GPGGA in buffStr
+		str_GPGGA = strstr(buffStr, "$GPGGA");    //$GPGGA,154423.00,4948.74034,N,02359.70944,E,1,05A,154422.00,4948.74052,N,02359.70973,E,1,05,3.71,351.1,M,34.8,M,,*53\r\n
 		if(str_GPGGA != NULL)
 		{
 			parsing_GPGGA_line(str_GPGGA);
 		}
 
-		str_GPVTG = strstr(buffStr, "$GPVTG");
+		// Find $GPVTG in buffStr
+		str_GPVTG = strstr(buffStr, "$GPVTG");    // $GPVTG,,T,,M,0.036,N,0.066,K,A*26\r\n
 		if(str_GPVTG != NULL)
 		{
 			parsing_GPVTG_line(str_GPVTG);
 		}
 
-		flag = 0;			// Data was read
+		flag = 0;			// Flag = 0 means: Data was readed
 	}
 }
 //---------------------------------------------------------------------

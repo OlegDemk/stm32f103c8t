@@ -4574,3 +4574,6 @@ java.lang.Exception: Cannot execute this command while the selected thread is ru
 
 !ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2020-10-06 12:45:58.636
 !MESSAGE Existing sessions are:
+
+!ENTRY org.eclipse.cdt.dsf 4 10001 2020-10-06 23:02:30.129
+!MESSAGE Target not available.
