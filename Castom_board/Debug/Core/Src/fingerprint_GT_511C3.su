@@ -1,2 +1,3 @@
-fingerprint_GT_511C3.c:13:5:CalcChkSumOfCmdAckPkt	32	static
-fingerprint_GT_511C3.c:25:5:fingerprint_test	48	static
+fingerprint_GT_511C3.c:17:5:CalcChkSumOfCmdAckPkt	32	static
+fingerprint_GT_511C3.c:29:7:SendCommand	16	static
+fingerprint_GT_511C3.c:51:5:fingerprint_test	4	static

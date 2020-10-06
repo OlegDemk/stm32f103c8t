@@ -5410,3 +5410,326 @@
 2020-10-01 14:36:32,813 [INFO] ProjectBuilder:3155 - Time for Generating toolchain IDE Files: 2258mS.
 2020-10-01 14:36:32,814 [INFO] ProjectBuilder:2044 - Time for Copy CMSIS : 0mS.
 2020-10-01 14:36:32,815 [INFO] ProjectBuilder:2044 - Time for Copy CMSIS : 0mS.
+2020-10-01 16:42:03,354 [INFO] MainUpdater:2268 - connection check result : 10
+2020-10-01 16:42:03,355 [INFO] MainUpdater:2268 - connection check result : 10
+2020-10-01 16:42:03,432 [INFO] MicroXplorer:384 - Change Database Path : 
+2020-10-01 16:42:03,432 [INFO] MicroXplorer:414 - Change Database Version : DB.6.0.0
+2020-10-01 16:42:03,432 [WARN] ThirdParty:775 - waiting for thirdparty lock release [close project]
+2020-10-01 16:42:03,432 [INFO] ThirdParty:777 - entering critical section [close project]
+2020-10-01 16:42:03,432 [INFO] ThirdParty:790 - exiting critical section [close project]
+2020-10-01 16:42:03,433 [INFO] PinOutPanel:1418 - setPackage(No Configuration,No Configuration)
+2020-10-01 16:42:03,435 [INFO] UtilMem:74 - Begin LoadConfig() Used Memory: 486593256 Bytes (1073741824)
+2020-10-01 16:42:03,435 [INFO] MicroXplorer:384 - Change Database Path : 
+2020-10-01 16:42:03,436 [INFO] MicroXplorer:414 - Change Database Version : DB.6.0.0
+2020-10-01 16:42:03,436 [INFO] OpenFileManager:274 - Change cursor
+2020-10-01 16:42:03,448 [INFO] RulesReader:52 - Compatibility file has been processed (209 Rules)
+2020-10-01 16:42:03,897 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A3' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.1: no header file found
+2020-10-01 16:42:03,898 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A2' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.1: no header file found
+2020-10-01 16:42:03,898 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS02A1' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.1: no header file found
+2020-10-01 16:42:03,909 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A3' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.0: no header file found
+2020-10-01 16:42:03,909 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A2' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.0: no header file found
+2020-10-01 16:42:03,909 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS02A1' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.0: no header file found
+2020-10-01 16:42:03,909 [INFO] RtosManager:456 - Registered RTOS mode: class=CMSIS, group=RTOS, mode=CMSIS_V1, owner=FREERTOS
+2020-10-01 16:42:03,910 [INFO] RtosManager:456 - Registered RTOS mode: class=CMSIS, group=RTOS2, mode=CMSIS_V2, owner=FREERTOS
+2020-10-01 16:42:03,910 [INFO] RtosManager:456 - Registered RTOS mode: class=RTOS, group=Core, mode=CMSIS_V1, owner=FREERTOS
+2020-10-01 16:42:03,910 [INFO] RtosManager:456 - Registered RTOS mode: class=RTOS, group=Core, mode=CMSIS_V2, owner=FREERTOS
+2020-10-01 16:42:03,910 [WARN] ModelIntegratedComponent:188 - Missing modes for component 1598688333340
+2020-10-01 16:42:03,910 [WARN] ApiManager:274 - Cannot register API 'Wireless:BlueNRG-2' from pack STMicroelectronics.X-CUBE-BLE2.2.0.0: no header file found
+2020-10-01 16:42:03,911 [WARN] ApiManager:274 - Cannot register API 'Board Extension:GNSS1A1' from pack STMicroelectronics.X-CUBE-GNSS1.5.0.0: no header file found
+2020-10-01 16:42:03,911 [WARN] ApiManager:274 - Cannot register API 'Board Support:Custom' from pack STMicroelectronics.X-CUBE-GNSS1.5.0.0: no header file found
+2020-10-01 16:42:03,911 [WARN] ApiManager:274 - Cannot register API 'Data Exchange:lib_gnss' from pack STMicroelectronics.X-CUBE-GNSS1.5.0.0: no header file found
+2020-10-01 16:42:03,912 [WARN] ApiManager:274 - Cannot register API 'Board Extension:S2868A1' from pack STMicroelectronics.X-CUBE-SUBG2.2.0.0: no header file found
+2020-10-01 16:42:03,912 [WARN] ApiManager:274 - Cannot register API 'Board Extension:S2868A2' from pack STMicroelectronics.X-CUBE-SUBG2.2.0.0: no header file found
+2020-10-01 16:42:03,912 [WARN] ApiManager:274 - Cannot register API 'Board Extension:S2915A1' from pack STMicroelectronics.X-CUBE-SUBG2.2.0.0: no header file found
+2020-10-01 16:42:03,912 [WARN] ApiManager:274 - Cannot register API 'Wireless:BlueNRG-MS' from pack STMicroelectronics.X-CUBE-BLE1.6.0.0: no header file found
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Instance) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Direction) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (PeriphInc) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (MemInc) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (PeriphDataAlignment) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (MemDataAlignment) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Mode) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,997 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Priority) has Id (USART3_RX) currently not set
+2020-10-01 16:42:03,998 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Parameter (ADCFreqValue) has invalid value (36000000)
+2020-10-01 16:42:03,998 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Invalid parameter (FamilyName)
+2020-10-01 16:42:03,998 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Parameter (MCOFreq_Value) has invalid value (72000000)
+2020-10-01 16:42:03,998 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Parameter (USBFreq_Value) has invalid value (72000000)
+2020-10-01 16:42:04,044 [INFO] UtilMem:74 - End LoadConfig() Used Memory: 568389040 Bytes (1073741824)
+2020-10-01 16:42:04,044 [WARN] ThirdParty:741 - waiting for thirdparty lock release [change project]
+2020-10-01 16:42:04,045 [INFO] ThirdParty:743 - entering critical section [change project]
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 8.1.1
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_HOST 2.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 8.1.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics FreeRTOS 0.0.1
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 1.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE2 2.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-ALGOBUILD 1.1.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 3.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-GNSS1 5.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics MBEDTLS 2.16.2
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-SUBG2 2.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE1 6.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics lwIP 2.1.2
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics lwIP 2.0.3
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics MBEDTLS 2.14.1
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_HOST 1.0.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOUCHGFX 4.14.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.1.0
+2020-10-01 16:42:04,045 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AI 5.1.2
+2020-10-01 16:42:04,046 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-NFC4 2.0.0
+2020-10-01 16:42:04,046 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.2.0
+2020-10-01 16:42:04,046 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 2.0.0
+2020-10-01 16:42:04,046 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.3.0
+2020-10-01 16:42:04,046 [INFO] ThirdParty:749 - exiting critical section [change project]
+2020-10-01 16:42:04,081 [INFO] PinOutPanel:1418 - setPackage(No Configuration,No Configuration)
+2020-10-01 16:42:04,082 [INFO] PinOutPanel:1418 - setPackage(STM32F103C8Tx,LQFP48)
+2020-10-01 16:42:04,227 [INFO] UtilMem:74 - Before build in PCC Used Memory: 608006424 Bytes (1073741824)
+2020-10-01 16:42:04,289 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 16:42:04,309 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 16:42:04,321 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 16:42:04,323 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 16:42:04,351 [INFO] UtilMem:74 - After build in PCC Used Memory: 648900888 Bytes (1073741824)
+2020-10-01 16:42:04,361 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,361 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,361 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,361 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,361 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,361 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,362 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,363 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,364 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,364 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,364 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,364 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 16:42:04,365 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 16:42:04,366 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 16:42:04,491 [INFO] OpenFileManager:294 - Restore cursor
+2020-10-01 16:42:04,522 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 16:42:04,523 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 16:42:04,523 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 16:42:04,523 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 22:47:58,445 [INFO] MainUpdater:2268 - connection check result : 10
+2020-10-01 22:47:58,446 [INFO] MainUpdater:2268 - connection check result : 10
+2020-10-01 22:47:58,525 [INFO] MicroXplorer:384 - Change Database Path : 
+2020-10-01 22:47:58,525 [INFO] MicroXplorer:414 - Change Database Version : DB.6.0.0
+2020-10-01 22:47:58,525 [WARN] ThirdParty:775 - waiting for thirdparty lock release [close project]
+2020-10-01 22:47:58,526 [INFO] ThirdParty:777 - entering critical section [close project]
+2020-10-01 22:47:58,526 [INFO] ThirdParty:790 - exiting critical section [close project]
+2020-10-01 22:47:58,527 [INFO] PinOutPanel:1418 - setPackage(No Configuration,No Configuration)
+2020-10-01 22:47:58,530 [INFO] UtilMem:74 - Begin LoadConfig() Used Memory: 547941152 Bytes (1073741824)
+2020-10-01 22:47:58,530 [INFO] MicroXplorer:384 - Change Database Path : 
+2020-10-01 22:47:58,530 [INFO] MicroXplorer:414 - Change Database Version : DB.6.0.0
+2020-10-01 22:47:58,531 [INFO] OpenFileManager:274 - Change cursor
+2020-10-01 22:47:59,211 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A3' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.1: no header file found
+2020-10-01 22:47:59,211 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A2' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.1: no header file found
+2020-10-01 22:47:59,211 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS02A1' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.1: no header file found
+2020-10-01 22:47:59,222 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A3' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.0: no header file found
+2020-10-01 22:47:59,222 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS01A2' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.0: no header file found
+2020-10-01 22:47:59,222 [WARN] ApiManager:274 - Cannot register API 'Board Extension:IKS02A1' from pack STMicroelectronics.X-CUBE-MEMS1.8.1.0: no header file found
+2020-10-01 22:47:59,222 [INFO] RtosManager:456 - Registered RTOS mode: class=CMSIS, group=RTOS, mode=CMSIS_V1, owner=FREERTOS
+2020-10-01 22:47:59,223 [INFO] RtosManager:456 - Registered RTOS mode: class=CMSIS, group=RTOS2, mode=CMSIS_V2, owner=FREERTOS
+2020-10-01 22:47:59,223 [INFO] RtosManager:456 - Registered RTOS mode: class=RTOS, group=Core, mode=CMSIS_V1, owner=FREERTOS
+2020-10-01 22:47:59,223 [INFO] RtosManager:456 - Registered RTOS mode: class=RTOS, group=Core, mode=CMSIS_V2, owner=FREERTOS
+2020-10-01 22:47:59,223 [WARN] ModelIntegratedComponent:188 - Missing modes for component 1598688333340
+2020-10-01 22:47:59,223 [WARN] ApiManager:274 - Cannot register API 'Wireless:BlueNRG-2' from pack STMicroelectronics.X-CUBE-BLE2.2.0.0: no header file found
+2020-10-01 22:47:59,224 [WARN] ApiManager:274 - Cannot register API 'Board Extension:GNSS1A1' from pack STMicroelectronics.X-CUBE-GNSS1.5.0.0: no header file found
+2020-10-01 22:47:59,224 [WARN] ApiManager:274 - Cannot register API 'Board Support:Custom' from pack STMicroelectronics.X-CUBE-GNSS1.5.0.0: no header file found
+2020-10-01 22:47:59,224 [WARN] ApiManager:274 - Cannot register API 'Data Exchange:lib_gnss' from pack STMicroelectronics.X-CUBE-GNSS1.5.0.0: no header file found
+2020-10-01 22:47:59,224 [WARN] ApiManager:274 - Cannot register API 'Board Extension:S2868A1' from pack STMicroelectronics.X-CUBE-SUBG2.2.0.0: no header file found
+2020-10-01 22:47:59,224 [WARN] ApiManager:274 - Cannot register API 'Board Extension:S2868A2' from pack STMicroelectronics.X-CUBE-SUBG2.2.0.0: no header file found
+2020-10-01 22:47:59,224 [WARN] ApiManager:274 - Cannot register API 'Board Extension:S2915A1' from pack STMicroelectronics.X-CUBE-SUBG2.2.0.0: no header file found
+2020-10-01 22:47:59,225 [WARN] ApiManager:274 - Cannot register API 'Wireless:BlueNRG-MS' from pack STMicroelectronics.X-CUBE-BLE1.6.0.0: no header file found
+2020-10-01 22:47:59,293 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Instance) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,293 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Direction) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,293 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (PeriphInc) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,293 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (MemInc) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (PeriphDataAlignment) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (MemDataAlignment) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Mode) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (DMA) : Parameter (Priority) has Id (USART3_RX) currently not set
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Parameter (ADCFreqValue) has invalid value (36000000)
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Invalid parameter (FamilyName)
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Parameter (MCOFreq_Value) has invalid value (72000000)
+2020-10-01 22:47:59,294 [INFO] ImportTextPane:162 - (OptionalMessage_ERROR) IP (RCC) : Parameter (USBFreq_Value) has invalid value (72000000)
+2020-10-01 22:47:59,340 [INFO] UtilMem:74 - End LoadConfig() Used Memory: 665330968 Bytes (1073741824)
+2020-10-01 22:47:59,340 [WARN] ThirdParty:741 - waiting for thirdparty lock release [change project]
+2020-10-01 22:47:59,340 [INFO] ThirdParty:743 - entering critical section [change project]
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 8.1.1
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_HOST 2.0.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-MEMS1 8.1.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics FreeRTOS 0.0.1
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 1.0.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE2 2.0.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-ALGOBUILD 1.1.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 3.0.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-GNSS1 5.0.0
+2020-10-01 22:47:59,340 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics MBEDTLS 2.16.2
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-SUBG2 2.0.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-BLE1 6.0.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics lwIP 2.1.2
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics lwIP 2.0.3
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics MBEDTLS 2.14.1
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_HOST 1.0.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-TOUCHGFX 4.14.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.1.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-AI 5.1.2
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics X-CUBE-NFC4 2.0.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.2.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics USB_DEVICE 2.0.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:968 - CMSIS Pack Vendor :STMicroelectronics PDM2PCM 3.3.0
+2020-10-01 22:47:59,341 [INFO] ThirdParty:749 - exiting critical section [change project]
+2020-10-01 22:47:59,381 [INFO] PinOutPanel:1418 - setPackage(No Configuration,No Configuration)
+2020-10-01 22:47:59,382 [INFO] PinOutPanel:1418 - setPackage(STM32F103C8Tx,LQFP48)
+2020-10-01 22:47:59,525 [INFO] UtilMem:74 - Before build in PCC Used Memory: 704950400 Bytes (1073741824)
+2020-10-01 22:47:59,590 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 22:47:59,613 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 22:47:59,628 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 22:47:59,629 [INFO] SharedServices:71 - Folder for power plug-in: /home/odemki/.stm32cubemx/plugins/power
+2020-10-01 22:47:59,657 [INFO] UtilMem:74 - After build in PCC Used Memory: 745844864 Bytes (1073741824)
+2020-10-01 22:47:59,667 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,667 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,667 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,667 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,667 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,668 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,669 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,670 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,670 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,670 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,670 [INFO] IPUIPlugin:64 - create IPUIPlugin
+2020-10-01 22:47:59,672 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 22:47:59,672 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 22:47:59,800 [INFO] OpenFileManager:294 - Restore cursor
+2020-10-01 22:47:59,834 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 22:47:59,834 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 22:47:59,835 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 22:47:59,835 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 22:48:14,206 [INFO] NvicIntPanel:90 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,456x188,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2020-10-01 22:48:44,766 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 611490176 Bytes (1073741824)
+2020-10-01 22:48:47,339 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 655530368 Bytes (1073741824)
+2020-10-01 22:48:47,516 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: SPI
+2020-10-01 22:48:47,516 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: NVIC
+2020-10-01 22:48:47,516 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: USART
+2020-10-01 22:48:47,516 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: USART
+2020-10-01 22:48:47,516 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: USART
+2020-10-01 22:48:47,516 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: DMA
+2020-10-01 22:48:47,517 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: TIM1_8F1
+2020-10-01 22:48:47,517 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: TIM1_8F1
+2020-10-01 22:48:47,517 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: SYS
+2020-10-01 22:48:47,517 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: GPIO
+2020-10-01 22:48:47,517 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: RCC
+2020-10-01 22:48:47,517 [INFO] BlockDiagram:2729 - set Specific Code input for plugin: I2C
+2020-10-01 22:48:47,517 [INFO] CodeGenerator:622 - code generatio: config db path: /opt/st/stm32cubeide_1.4.0/plugins/com.st.stm32cube.common.mx_6.0.0.202007160824//db/
+2020-10-01 22:48:47,519 [WARN] IP:1936 - I2C_Coeff_DF not found: check if there is a RefParameter without a condition.
+2020-10-01 22:48:47,519 [WARN] IP:1936 - Analog_Filter not found: check if there is a RefParameter without a condition.
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : hdmavalue: null
+2020-10-01 22:48:47,528 [INFO] Argument:280 - 	 sub Args: 
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : Instancevalue: DMA1_Channel3
+2020-10-01 22:48:47,528 [INFO] Argument:288 - Argument : Instancevalue: DMA1_Channel3
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : Initvalue: null
+2020-10-01 22:48:47,528 [INFO] Argument:280 - 	 sub Args: 
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2020-10-01 22:48:47,528 [INFO] Argument:288 - Argument : Directionvalue: DMA_PERIPH_TO_MEMORY
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2020-10-01 22:48:47,528 [INFO] Argument:288 - Argument : PeriphIncvalue: DMA_PINC_DISABLE
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2020-10-01 22:48:47,528 [INFO] Argument:288 - Argument : MemIncvalue: DMA_MINC_ENABLE
+2020-10-01 22:48:47,528 [INFO] Argument:278 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_BYTE
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : PeriphDataAlignmentvalue: DMA_PDATAALIGN_BYTE
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_BYTE
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : MemDataAlignmentvalue: DMA_MDATAALIGN_BYTE
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : Modevalue: DMA_CIRCULAR
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : Modevalue: DMA_CIRCULAR
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : Priorityvalue: DMA_PRIORITY_HIGH
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : Priorityvalue: DMA_PRIORITY_HIGH
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : Lockvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : Lockvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : Statevalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : Statevalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : Parentvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : Parentvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : XferCpltCallbackvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : XferCpltCallbackvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : XferHalfCpltCallbackvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : XferHalfCpltCallbackvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : XferErrorCallbackvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : XferErrorCallbackvalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:278 - Argument : ErrorCodevalue: null
+2020-10-01 22:48:47,529 [INFO] Argument:288 - Argument : ErrorCodevalue: null
+2020-10-01 22:48:47,677 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/license.tmp_save
+2020-10-01 22:48:47,738 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/license.tmp
+2020-10-01 22:48:47,762 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/gpio.tmp_save
+2020-10-01 22:48:47,843 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/gpio.tmp
+2020-10-01 22:48:47,855 [ERROR] IPConfigManager:1435 - ERROR: the RefConfig I2C_Analogue is not available in your config.xml file
+2020-10-01 22:48:47,855 [ERROR] IPConfigManager:1435 - ERROR: the RefConfig I2C_DigitalFolter is not available in your config.xml file
+2020-10-01 22:48:48,066 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-01 22:48:48,074 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/dma.tmp_save
+2020-10-01 22:48:48,140 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/dma.tmp
+2020-10-01 22:48:48,143 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/dma_GV.tmp_save
+2020-10-01 22:48:48,207 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/dma_GV.tmp
+2020-10-01 22:48:48,207 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-01 22:48:48,208 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-01 22:48:48,209 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-01 22:48:48,209 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-01 22:48:48,230 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Src/stm32f1xx_it.c_save
+2020-10-01 22:48:48,347 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Src/stm32f1xx_it.c
+2020-10-01 22:48:48,359 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Inc/stm32f1xx_it.h_save
+2020-10-01 22:48:48,444 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Inc/stm32f1xx_it.h
+2020-10-01 22:48:48,467 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Src/stm32f1xx_hal_msp.c_save
+2020-10-01 22:48:48,601 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Src/stm32f1xx_hal_msp.c
+2020-10-01 22:48:48,603 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/system.tmp_save
+2020-10-01 22:48:48,665 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/MXTmpFiles/system.tmp
+2020-10-01 22:48:48,682 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Inc/stm32f1xx_hal_conf.h_save
+2020-10-01 22:48:48,784 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Inc/stm32f1xx_hal_conf.h
+2020-10-01 22:48:48,805 [WARN] IPConfigManager:2884 - IP not found : TIM
+2020-10-01 22:48:48,806 [WARN] IPConfigManager:2884 - IP not found : gpio
+2020-10-01 22:48:48,806 [WARN] CodeGenerator:2866 - IP not found : TIM
+2020-10-01 22:48:48,806 [WARN] CodeGenerator:2866 - IP not found : gpio
+2020-10-01 22:48:48,823 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Inc/main.h_save
+2020-10-01 22:48:48,910 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Inc/main.h
+2020-10-01 22:48:48,927 [INFO] CodeEngine:188 - oldGeneratedFile, /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Src/main.c_save
+2020-10-01 22:48:49,092 [INFO] CodeEngine:206 - Generated code: /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/Core/Src/main.c
+2020-10-01 22:48:49,490 [INFO] ProjectBuilder:2168 - Time for Copy HAL[1] : 65mS.
+2020-10-01 22:48:49,492 [INFO] ProjectBuilder:2988 - Project Generator version: 3.10.0-B14
+2020-10-01 22:48:50,101 [INFO] ConfigFileManager:1183 - The Die is : DIE410
+2020-10-01 22:48:50,109 [INFO] ApiDbMcu:456 - Load IP Config File for FATFS
+2020-10-01 22:48:50,140 [INFO] ApiDbMcu:456 - Load IP Config File for FREERTOS
+2020-10-01 22:48:50,157 [INFO] ApiDbMcu:456 - Load IP Config File for USB_DEVICE
+2020-10-01 22:48:51,198 [INFO] ProjectBuilder:3155 - Time for Generating toolchain IDE Files: 1706mS.
+2020-10-01 22:48:51,198 [INFO] ProjectBuilder:2044 - Time for Copy CMSIS : 0mS.
+2020-10-01 22:48:51,199 [INFO] ProjectBuilder:2044 - Time for Copy CMSIS : 0mS.
+2020-10-03 13:03:16,446 [INFO] Activator:178 - 
+
+
+2020-10-03 13:03:16,450 [INFO] Activator:179 - !SESSION log4j initialized

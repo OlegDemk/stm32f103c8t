@@ -68,8 +68,11 @@ char gps_lat_letter[2];
 char gps_lon[12];
 char gps_lon_letter[2];
 char gps_time[6];
-uint8_t gps_speed;
-uint8_t gps_number_of_satellites_GPGGA;
+char gps_speed[5];
+char gps_number_of_satellites[2];
+
+char gps_latitude[10];
+char gps_lontitude[11];
 
 char temperature_si7021[6];
 char humidity_si7021[6];

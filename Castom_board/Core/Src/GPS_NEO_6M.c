@@ -22,7 +22,9 @@ struct GPS
 	char lon_letter[2];
 	char time[6];
 
-	uint8_t number_of_satellites_GPGGA;
+	char speed[4];
+
+	char number_of_satellites_GPGGA[2];
 
 } GPS_data;
 
@@ -95,6 +97,8 @@ void parsing_GPGLL_line(char *str_GPGLL)
 			{
 				int g=0;
 				i++;
+				char str[12]={0};
+
 				switch (count)
 				{
 					case 0:
@@ -105,8 +109,39 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						GPS_data.lat[10] = '\0';
 
 						// Save in global variable
-						strcpy(gps_lat, GPS_data.lat);
+						memset(str, 0 , sizeof(str));
+						sprintf(str,"%s", GPS_data.lat);
+						strcpy(gps_lat, str);
 
+						// Convert lat in coordinate for google mups
+						// 1. відділити градуси від мінут
+						float integer_part_lat = 0;
+						float fractional_part_lat = 0;
+						char integer_part_char_lat[3]={0};
+						char fractional_part_char_lat[9]={0};
+						uint8_t k=0;
+						for(k=0; k<=11; k++)
+						{
+							if(k<=1)
+							{
+								integer_part_char_lat[k] = GPS_data.lat[k];
+							}
+							else
+							{
+								fractional_part_char_lat[k-2] = GPS_data.lat[k];
+							}
+						}
+
+						// 2. перетворити стрінги в числа
+						integer_part_lat = atoi(integer_part_char_lat);          // save int part
+						fractional_part_lat = atof(fractional_part_char_lat);	 // float part
+ 						// 3. Конвертувати в градуси
+						fractional_part_lat = (fractional_part_lat/60);
+						integer_part_lat = integer_part_lat + fractional_part_lat;
+						// 4. Конвертувати в стрінгу і Записати в глобальну змінну
+                        gcvt(integer_part_lat, 11, gps_latitude );
+                        gps_latitude[9] = '\0';
+                        //
 						i = i+g;
 						break;
 
@@ -125,6 +160,42 @@ void parsing_GPGLL_line(char *str_GPGLL)
 							GPS_data.lon[g] = nmeaSnt[i+g];
 						}
 						GPS_data.lon[11] = '\0';
+
+						// Save in global variable
+						memset(str, 0 , sizeof(str));
+						sprintf(str,"%s", GPS_data.lon);
+						strcpy(gps_lon, str);
+
+						// Convert lon in coordinate for google mups
+						// 1. відділити градуси від мінут
+						float integer_part_lon = 0;
+						float fractional_part_lon = 0;
+						char integer_part_char_lon[3]={0};
+						char fractional_part_char_lon[10]={0};
+						k=0;
+						for(k=0; k<=11; k++)
+						{
+							if(k<=2)
+							{
+								integer_part_char_lon[k] = GPS_data.lon[k];
+							}
+							else
+							{
+								fractional_part_char_lon[k-3] = GPS_data.lon[k];
+							}
+						}
+
+						// 2. перетворити стрінги в числа
+						integer_part_lon = atoi(integer_part_char_lon);          // save int part
+						fractional_part_lon = atof(fractional_part_char_lon);	 // float part
+					 	// 3. Конвертувати в градуси
+						fractional_part_lon = (fractional_part_lon/60);
+						integer_part_lon = integer_part_lon + fractional_part_lon;
+						// 4. Конвертувати в стрінгу і Записати в глобальну змінну
+					    gcvt(integer_part_lon, 11, gps_lontitude );
+					    gps_lontitude[10] = '\0';
+					    //
+
 						i = i+g;
 						break;
 
@@ -144,6 +215,11 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						}
 						GPS_data.time[6] = '\0';
 						i = i+g;
+
+						// Save in global variable
+						memset(str, 0 , sizeof(str));
+						sprintf(str,"%s", GPS_data.time);
+						strcpy(gps_time, str);
 						break;
 
 				}
@@ -179,8 +255,7 @@ void parsing_GPGGA_line(char *str_GPGGA)
 		char *rawSum;
 
 		char time[6]={0};
-		char nothing[2]={2};
-		//char latitude[] = {0};
+		char not_used[12] = {0};
 
 		// Find "*"
 		rawSum = strstr(str_GPGGA, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
@@ -190,17 +265,18 @@ void parsing_GPGGA_line(char *str_GPGGA)
 
           // Проблема . Чексума не сходиться
 		////////////////////////////////////////////
-		uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 		char hex[3];
+		memset(hex, 0 , sizeof(hex));
+		uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 		sprintf(hex, "%x", intSum);
 
 ////////////////////////////////////////////////////
-		if(strstr(smNmbr, hex) != NULL)
-		{
+//		if(strstr(smNmbr, hex) != NULL)
+//		{
 			// Parsing string //////////////////////////////////////////////////////////////
 			uint8_t cnt = 0;            		// Count of elements
 
-			int i = 0;
+			i = 0;
 			int count = 0;
 
 			while(nmeaSnt[i] != '\0')
@@ -211,57 +287,89 @@ void parsing_GPGGA_line(char *str_GPGGA)
 					i++;
 					switch (count)
 					{
-						case 0:
+						case 0:                     // Time
 							for(g=0; g<6; g++)
 							{
 								time[g] = nmeaSnt[i+g];
 							}
 							time[6] = '\0';
 							i = i+g;
+
 							break;
 
-						case 1:
-							for (g =0; g<1; g++)
+						case 1:   					// Lat
+							for (g =0; g<10; g++)
 							{
-								nothing[g] = nmeaSnt[i+g];
+								not_used[g] = nmeaSnt[i+g];
 							}
-							nothing[2] = '\0';
+							not_used[10] = '\0';
 							i = i+g;
 							break;
-//
-//						case 2:
-//							for(g=0; g<11; g++)
-//							{
-//								GPS_data.lon[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.lon[11] = '\0';
-//							i = i+g;
-//							break;
-//
-//						case 3:
-//							for(g=0; g<1; g++)
-//							{
-//								GPS_data.lon_letter[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.lon_letter[2] = '\0';
-//							i = i+g;
-//							break;
-//
-//						case 4:
-//							for(g=0; g<6; g++)
-//							{
-//								GPS_data.time[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.time[6] = '\0';
-//							i = i+g;
-//							break;
+
+						case 2:						// N
+							for(g=0; g<1; g++)
+							{
+								not_used[g] = nmeaSnt[i+g];
+							}
+							not_used[1] = '\0';
+							i = i+g;
+							break;
+
+						case 3:                     // Lat
+							for(g=0; g<11; g++)
+							{
+								not_used[g] = nmeaSnt[i+g];
+							}
+							not_used[11] = '\0';
+							i = i+g;
+							break;
+
+						case 4:                      // E
+							for(g=0; g<1; g++)
+							{
+								not_used[g] = nmeaSnt[i+g];
+							}
+							not_used[1] = '\0';
+							i = i+g;
+							break;
+
+						case 5:                      // Fix Quality
+							for(g=0; g<1; g++)
+							{
+								not_used[g] = nmeaSnt[i+g];
+							}
+							not_used[1] = '\0';
+							i = i+g;
+							break;
+
+						case 6:                      // Number of Satellites
+							memset(not_used, 0 , sizeof(not_used));    // clean buffer
+							for(g=0; g<2; g++)
+							{
+								not_used[g] = nmeaSnt[i+g];
+							}
+							not_used[2] = '\0';
+
+							// Save in structure
+							char str[3]={0};
+							sprintf(str,"%s", not_used);
+							strcpy(GPS_data.number_of_satellites_GPGGA, str);
+
+							// Save in global variable
+							memset(str, 0 , sizeof(str));
+							sprintf(str,"%s", GPS_data.number_of_satellites_GPGGA);
+							strcpy(gps_number_of_satellites, str);
+
+							i = i+g;
+
+							break;
 
 					}
 					count++;
 				}
 				i++;
 			}
-		}
+	//	}
 }
 
 
@@ -272,6 +380,8 @@ void parsing_GPVTG_line(char *str_GPVTG)
 	char nmeaSnt[49];
 	int size = sizeof(nmeaSnt);
 	memset(nmeaSnt, 0, size);
+
+	char str[6]={0};
 
 	//Copy to  "*" з str_GPVTG в nmeaSnt
 	int size_nmeaSnt = sizeof(nmeaSnt);
@@ -285,6 +395,8 @@ void parsing_GPVTG_line(char *str_GPVTG)
 	// Check check sum //////////////////////////////////////////////////////////////
 	char smNmbr[3]={0};     								// array for checksum
 	char *rawSum;
+	char not_used[12] = {0};
+	//char speed[6] = {0};
 
 	// Find "*"
 	rawSum = strstr(str_GPVTG, "*");                       	// Find "*" in nmeaSnt. (Find start checksum number)
@@ -295,75 +407,41 @@ void parsing_GPVTG_line(char *str_GPVTG)
 	char hex[3];
 	sprintf(hex, "%x", intSum);
 
-	if(strstr(smNmbr, hex) != NULL)
-	{
+//	if(strstr(smNmbr, hex) != NULL)
+//	{
 			// Parsing string //////////////////////////////////////////////////////////////
 			uint8_t cnt = 0;            		// Count of elements
 
-			int i = 0;
+			i = 0;
 			int count = 0;
 
-//			while(nmeaSnt[i] != '\0')
-//			{
-//				while(nmeaSnt[i] == ',')
-//				{
-//					int g=0;
-//					i++;
-//					switch (count)
-//					{
-//						case 0:
-//							for(g=0; g<10; g++)
-//							{
-//								GPS_data.lat[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.lat[10] = '\0';
-//							i = i+g;
-//							break;
-//
-//						case 1:
-//							for (g =0; g<1; g++)
-//							{
-//								GPS_data.lat_letter[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.lat_letter[2] = '\0';
-//							i = i+g;
-//							break;
-//
-//						case 2:
-//							for(g=0; g<11; g++)
-//							{
-//								GPS_data.lon[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.lon[11] = '\0';
-//							i = i+g;
-//							break;
-//
-//						case 3:
-//							for(g=0; g<1; g++)
-//							{
-//								GPS_data.lon_letter[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.lon_letter[2] = '\0';
-//							i = i+g;
-//							break;
-//
-//						case 4:
-//							for(g=0; g<6; g++)
-//							{
-//								GPS_data.time[g] = nmeaSnt[i+g];
-//							}
-//							GPS_data.time[6] = '\0';
-//							i = i+g;
-//							break;
-//
-//					}
-//					count++;
-//				}
-//				i++;
-//			}
-		}
-			//GPS_data.number_of_satellites_GPGGA = (uint8_t*)number_of_satellites_point_GPGGA[1];		// save only it
+			while(nmeaSnt[i] != '\0')
+			{
+				if(nmeaSnt[i] == ',')
+				{
+					count++;
+				}
+				if(count == 7)
+				{
+					i++;
+					uint8_t size = sizeof(GPS_data.speed);
+					uint8_t k = 0;
+					for(k = 0; k<=5; k++)
+					{
+						GPS_data.speed[k] = nmeaSnt[i+k];
+						if(nmeaSnt[i+k] = '.')              // don't use number after comma
+						{
+							// Save in global variable
+							memset(str, 0 , sizeof(str));
+							sprintf(str,"%s", GPS_data.speed);
+							strcpy(gps_speed, str);
 
+							break;
+						}
+					}
+				}
+				i++;
+			}
 }
 
 //---------------------------------------------------------------------
