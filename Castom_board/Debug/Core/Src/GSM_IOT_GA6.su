@@ -1,0 +1,2 @@
+GSM_IOT_GA6.c:16:6:call_from_GSM_module	4	static
+GSM_IOT_GA6.c:39:6:send_sms_from_GSM	4	static

@@ -1,41 +1,52 @@
-23:44:43 **** Incremental Build of configuration Debug for project Castom_board ****
+12:12:15 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/i2c_scaner.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/i2c_scaner.d" -MT"Core/Src/i2c_scaner.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/i2c_scaner.o"
-../Core/Src/i2c_scaner.c: In function 'I2C_1_scaner':
-../Core/Src/i2c_scaner.c:60:7: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
-       memset(str3, 0 , sizeof(str3));   // Clean str3
-       ^~~~~~
-../Core/Src/i2c_scaner.c:60:7: warning: incompatible implicit declaration of built-in function 'memset'
-../Core/Src/i2c_scaner.c:60:7: note: include '<string.h>' or provide a declaration of 'memset'
-../Core/Src/i2c_scaner.c:80:5: warning: incompatible implicit declaration of built-in function 'memset'
-     memset(str3, 0 , sizeof(str3));
-     ^~~~~~
-../Core/Src/i2c_scaner.c:80:5: note: include '<string.h>' or provide a declaration of 'memset'
-../Core/Src/i2c_scaner.c:89:3: warning: incompatible implicit declaration of built-in function 'memset'
-   memset(str3, 0 , sizeof(str3));
-   ^~~~~~
-../Core/Src/i2c_scaner.c:89:3: note: include '<string.h>' or provide a declaration of 'memset'
-../Core/Src/i2c_scaner.c:95:2: warning: incompatible implicit declaration of built-in function 'memset'
-  memset(str3, 0 , sizeof(str3));
-  ^~~~~~
-../Core/Src/i2c_scaner.c:95:2: note: include '<string.h>' or provide a declaration of 'memset'
-../Core/Src/i2c_scaner.c:36:10: warning: unused variable 'i' [-Wunused-variable]
-  uint8_t i=0;
-          ^
-../Core/Src/i2c_scaner.c:35:10: warning: unused variable 'size_mas' [-Wunused-variable]
-  uint8_t size_mas=sizeof(str3);
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/stm32f1xx_it.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f1xx_it.d" -MT"Core/Src/stm32f1xx_it.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_it.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:199:6: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
+      I2C_1_scaner();
+      ^~~~~~~~~~~~
+../Core/Src/main.c:317:6: warning: implicit declaration of function 'init_gsm_module' [-Wimplicit-function-declaration]
+   if(init_gsm_module())
+      ^~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'init_gsm_module':
+../Core/Src/main.c:1001:10: warning: unused variable 'answer_5' [-Wunused-variable]
+  uint8_t answer_5 = 0;
           ^~~~~~~~
+../Core/Src/main.c:1000:10: warning: unused variable 'answer_4' [-Wunused-variable]
+  uint8_t answer_4 = 0;
+          ^~~~~~~~
+../Core/Src/main.c:994:7: warning: unused variable 'AT_CREG' [-Wunused-variable]
+  char AT_CREG[] = "AT+CREG?\n\r";              // Registration in network
+       ^~~~~~~
+../Core/Src/main.c:990:7: warning: unused variable 'AT' [-Wunused-variable]
+  char AT[]="AT\r\n";                           // Simple command
+       ^~
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Castom_board.elf
  
 arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
 arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
-Finished building: Castom_board.list
- 
 Finished building: Castom_board.bin
  
    text	   data	    bss	    dec	    hex	filename
-  47848	    500	   3324	  51672	   c9d8	Castom_board.elf
+  31328	    136	   3392	  34856	   8828	Castom_board.elf
+Finished building: default.size.stdout
+ 
+Finished building: Castom_board.list
+ 
+12:12:18 **** Incremental Build of configuration Debug for project Castom_board ****
+make -j8 all 
+arm-none-eabi-size   Castom_board.elf 
+   text	   data	    bss	    dec	    hex	filename
+  31328	    136	   3392	  34856	   8828	Castom_board.elf
+Finished building: default.size.stdout
+ 
+12:12:42 **** Incremental Build of configuration Debug for project Castom_board ****
+make -j8 all 
+arm-none-eabi-size   Castom_board.elf 
+   text	   data	    bss	    dec	    hex	filename
+  31328	    136	   3392	  34856	   8828	Castom_board.elf
 Finished building: default.size.stdout
  

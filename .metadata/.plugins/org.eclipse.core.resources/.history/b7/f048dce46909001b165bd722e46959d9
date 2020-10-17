@@ -1,0 +1,16 @@
+/*
+ * GSM_IOT_GA6.c
+ *
+ *  Created on: Oct 8, 2020
+ *      Author: odemki
+ */
+
+
+void test_GSM_module(void)
+{
+
+	memset(str3, 0 , sizeof(str3));
+	sprintf(str3,"Devices no found!!!\r\n");      							// convert   in  str
+	size=sizeof(str3);
+	HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+}

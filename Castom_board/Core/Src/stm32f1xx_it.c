@@ -23,6 +23,7 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +43,11 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern char GSM_RX_buffer[60];    // buffer for receive data ansver from GSM module
+uint8_t counter_GSM_RX_buffer = 0;
+extern uint8_t ansver_flag;        // if ansver_flag == 1 data(ansver) are in buffer GSM_RX_buffer
+extern char uart_1_answer_buffer[40];
+extern uint8_t count;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +63,7 @@
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim2;
 extern DMA_HandleTypeDef hdma_usart3_rx;
+extern UART_HandleTypeDef huart1;
 extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 /* USER CODE BEGIN EV */
@@ -227,6 +233,50 @@ void TIM2_IRQHandler(void)
   /* USER CODE BEGIN TIM2_IRQn 1 */
 
   /* USER CODE END TIM2_IRQn 1 */
+}
+
+/**
+  * @brief This function handles USART1 global interrupt.
+  */
+void USART1_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART1_IRQn 0 */
+
+	// Receive data from UART ///////////////////////////////////////////////////
+	/* Structure input message: '0d','0a','4F','4B','0d','0a'
+	                             \r,  \n , O,   K,   \r,  \n
+	Its interrupt generate olways if one byte is received
+	 */
+	// Lessons 20 : http://mypractic.ru/urok-20-interfejs-uart-v-stm32-rabota-s-nim-cherez-registry-cmsis-ispolzovanie-preryvaniya-uart.html
+	uint8_t d = USART1->DR;                      					 		// Copy byte from UART1 buffer
+	if((d != '\r') && (d != '\n'))                                   		// Save in buffer is char is letter or numbers
+	{
+		if(count >=2)                                               		// Need miss first two characters ( structure input message: '0d','0a','4F','4B','0d','0a')
+		{
+			GSM_RX_buffer[counter_GSM_RX_buffer] = d;
+			counter_GSM_RX_buffer++;
+		}
+	}
+	else
+	{
+		if(counter_GSM_RX_buffer > 0)										// If answer is sawed
+		{
+			counter_GSM_RX_buffer = 0;
+			ansver_flag =1;
+		}
+		else
+		{
+			counter_GSM_RX_buffer=0;
+		}
+
+		count ++;
+	}
+//	/////////////////////////////////////////////////////////////////////////////
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
+
+  /* USER CODE END USART1_IRQn 1 */
 }
 
 /**

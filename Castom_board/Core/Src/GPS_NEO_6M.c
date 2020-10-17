@@ -254,8 +254,8 @@ void parsing_GPGGA_line(char *str_GPGGA)
 		uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 		sprintf(hex, "%x", intSum);
 
-//		if(strstr(smNmbr, hex) != NULL)
-//		{
+		if(strstr(smNmbr, hex) != NULL)
+		{
 			// Parsing string
 
 			i = 0;
@@ -348,7 +348,7 @@ void parsing_GPGGA_line(char *str_GPGGA)
 				}
 				i++;
 			}
-	//	}
+		}
 }
 
 
@@ -403,21 +403,21 @@ void parsing_GPVTG_line(char *str_GPVTG)
 					for(k = 0; k<=5; k++)
 					{
 						GPS_data.speed[k] = nmeaSnt[i+k];
-						if(nmeaSnt[i+k] = '.')              // don't use number after comma
-						{
-							// Save in global variable
-							memset(str, 0 , sizeof(str));
-							sprintf(str,"%s", GPS_data.speed);
-							strcpy(gps_speed, str);
 
-							break;
-						}
+//						if(nmeaSnt[i+k] = '.')              // don't use number after comma
+//						{
+//							// Save in global variable
+//							memset(str, 0 , sizeof(str));
+//							sprintf(str,"%s", GPS_data.speed);
+//							strcpy(gps_speed, str);
+//
+//							break;
+//						}
 					}
 				}
 				i++;
 			}
 }
-
 //---------------------------------------------------------------------
 
 
@@ -438,6 +438,17 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 		char *str_GPGLL;
 		char *str_GPGGA;
 		char *str_GPVTG;
+		char *str_answer;
+
+//		// Find answer 'OK' in buffStr
+//		str_answer = strstr(buffStr, "OK");
+//		if(str_answer != NULL)
+//		{
+//			while(1)
+//			{
+//
+//			}
+//		}
 
 		// Find $GPGLL in buffStr
 		str_GPGLL = strstr(buffStr, "$GPGLL");    // $GPGLL,4948.72578,N,02359.72468,E,151729.00,A,A*6C\r

@@ -39,6 +39,14 @@
 
 #include "fingerprint_GT_511C3.h"
 
+#include "GSM_IOT_GA6.h"
+
+#include "stdbool.h"
+
+#include "stdio.h"
+#include "string.h"               // For work with "strtok" function
+#include "stdlib.h"               // For work with "atoi" function
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +66,7 @@ void generate_sound(void);
 #define OLED ON
 #define H_a_T_SI7021 ON
 #define I2C_SCANNER ON
-#define GPS ON
+#define GPS OFF
 #define SOUND OFF
 #define FINGERPRINT OFF
 /* USER CODE END PM */
@@ -78,16 +86,36 @@ DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
 // -----------------------------------------------------------------------------
+// Receive data from GPS module
 #if GPS
+	// GPS receive part///////////////////////////////////////////////////////
 	uint8_t flag = 0;					// Flag signals what GPS buffer is full
-	void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+	void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)    // was   void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		flag = 1;
 	}
+	///////////////////////////////////////////////////////////////////////////
+	// GSM
 #endif
+// ----------------------------------------------------------------------------
+
+
+
+// GSM variables
+char GSM_RX_buffer[60]={0};    // buffer for receive data ansver from GSM module
+char uart_1_answer_buffer[40] = {0};
+uint8_t ansver_flag =0;        // if ansver_flag == 1 data(ansver) are in buffer GSM_RX_buffer
+uint8_t count =0;
+
+// variable for init gsm
+bool at_ready = false;
+bool ast_poweron = false;
+bool creg_2 = false;
+bool call_ready = false;
+bool creg_1 = false;
+//
 
 uint8_t interrupt_flag = 0;
-
 
 /* USER CODE END PV */
 
@@ -167,31 +195,40 @@ int main(void)
 
 
 
-#if I2C_SCANNER
-  I2C_1_scaner();
-#endif
+	#if I2C_SCANNER
+  	  I2C_1_scaner();
+	#endif
 
-#if H_a_T_SI7021
-  read_T_and_H_SI7021();
-#endif
+	#if H_a_T_SI7021
+  	  read_T_and_H_SI7021();
+	#endif
 
-#if OLED
-  init_oled();
+	#if OLED
+  	  init_oled();
 	  //test_oled();
-#endif
+	#endif
 
-HAL_TIM_Base_Start_IT(&htim2);
+  	  HAL_TIM_Base_Start_IT(&htim2);
+
+	#if GPS
+  	  uint8_t GPS_buff[512];      						// main buffer for stream from GPS
+  	  memset(GPS_buff ,0 ,sizeof(GPS_buff));
+  	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
+	#endif
+
+	#if SOUND
+  	  generate_sound();
+	#endif
 
 
-#if GPS
-	uint8_t GPS_buff[512];      						// main buffer for stream from GPS
-	memset(GPS_buff ,0 ,sizeof(GPS_buff));
-	HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
-#endif
 
-#if SOUND
-	generate_sound();
-#endif
+//  	bool at_ready = false;
+//    bool ast_poweron = false;
+//  	bool creg_2 = false;
+//  	bool call_ready = false;
+//  	bool creg_1 = false;
+
+/////////////////
 
 
   //AM2302_init();
@@ -202,35 +239,231 @@ HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE BEGIN WHILE */
 
 
-  while (1)
+
+  /////////////  RECEIVE DATA FROM UART 1. FIRST METHOD //////////////////////////////
+  HAL_Delay(4000);
+  // Lessons 20 : http://mypractic.ru/urok-20-interfejs-uart-v-stm32-rabota-s-nim-cherez-registry-cmsis-ispolzovanie-preryvaniya-uart.html
+  USART1->CR1 |= USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
+  NVIC_EnableIRQ (USART1_IRQn);
+  HAL_Delay(100);
+
+  // в терміналі послідовнцість CR/LF
+  // CR (U+000D): англ. carriage return — повернення каретки     // '\r'
+  // LF (U+000A): англ. line feed — зміна рядка;                 // '\n'
+
+//    // Turn OFF echo
+//	char turn_off_echo[]="ATE 0\r\n";   // "ATD+380931482354\r\n"
+//	uint8_t size=0;
+//    char str[40]={0};
+//    uint8_t size_mas = sizeof(str);
+//	memset(str, 0 , sizeof(str));
+//
+//    sprintf(str, turn_off_echo);      							// AT command
+//	size=sizeof(str);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
+
+
+//	HAL_Delay(500);
+//
+//	// CALL on NUMBER
+//	char call_to_my_mobile_number[]="ATD+380931482354\r\n";   // "ATD+380931482354\r\n"
+//	//uint8_t size=0;
+//	//char str[40]={0};
+//	size_mas = sizeof(str);
+//    memset(str, 0 , sizeof(str));
+//
+//	sprintf(str, call_to_my_mobile_number);      							// AT command
+//    size=sizeof(str);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
+  //init_gsm_module();
+  ////////////////////////////////////////////////////////////////////////////////////
+
+
+//  char buffer_output_comand[30] = {0};
+//  char command[25] = "ATE 0\r\n";
+//  strcpy(buffer_output_comand, command);
+//  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);
+
+//  while (ansver_flag != 1){}
+//  if(ansver_flag ==1)
+//  {
+//	  if (strstr(GSM_RX_buffer, "OK"))
+//	  {
+//			while(1)
+//			{
+//				int j=0;
+//				for(j=0; j<100; j++)
+//				{
+//
+//				}
+//			}
+//
+//
+//	  }
+//  }
+
+//  char str[50]={0};
+//	  memset(str, 0 , sizeof(str));
+//	  sprintf(str,"%s", "TEST 0123456789");
+//	  ssd1306_SetCursor(00, 36);
+//	  ssd1306_WriteString(str, Font_7x10, White);
+//
+//	  ssd1306_UpdateScreen();
+
+  // Init GSM module
+  char str[50]={0};
+  memset(str, 0 , sizeof(str));
+
+  if(init_gsm_module())
   {
-        if(interrupt_flag == 1)
-        {
-        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+	  // init OK
+	  sprintf(str,"%s", "GSM STATE: READY");
+	  ssd1306_SetCursor(00, 36);
+	  ssd1306_WriteString(str, Font_7x10, White);
 
-        	read_T_and_H_SI7021();
-        	test_flash_W25Q();
+	  ssd1306_UpdateScreen();
+  }
+  else
+  {
+	  // GSM didn't init
+	  sprintf(str,"%s", "GSM STATE: ERROR !");
+	  ssd1306_SetCursor(00, 36);
+	  ssd1306_WriteString(str, Font_7x10, White);
 
-			#if GPS
-        		parsing_GPS(GPS_buff, 512);
-        		HAL_Delay(500);
-			# else
-        		HAL_Delay(500);
-			#endif
+	  ssd1306_UpdateScreen();
+  }
 
-			#if OLED
-        		OLED_prinr_all_data();
-			#endif
+while (1)
+{
 
-        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
-			#if FINGERPRINT
-        		fingerprint_test();
-			#endif
 
-        	interrupt_flag = 0;
-        }
 
+
+
+	///////////////////////////////////// WORK
+//	  HAL_Delay(500);
+//	  //     // "ATD+380931482354\r\n"
+//	  char turn_off_echo[]="ATE 0\r\n";    			// Turn OFF echo
+//	  char AT[]="AT\r\n";                           // Simple command
+//	  char AT_CSQ[]="AT+CSQ\r\n";                   // signal reception quality
+//	  //uint8_t size=0;
+//	  //char str[40]={0};
+//	  //uint8_t size_mas = sizeof(str);
+//	  //memset(str, 0 , sizeof(str));
+//	  HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CSQ, strlen(AT_CSQ), 100);
+//
+//
+//	  //uint8_t state = 1;
+//
+//	  while (ansver_flag != 1){}      // waite for answer
+//	  	  if(ansver_flag ==1)
+//	 	  {
+//	 	  	  if (strstr(GSM_RX_buffer, "OK"))
+//	 	  	  {
+//	 	  		 // state = 0;
+//	 	  		  memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+//	 	  		  ansver_flag = 0;
+//	 	  	  }
+//
+//	 		 if (strstr(GSM_RX_buffer, "+CSQ"))
+//	 		 {
+//	 			  //state = 0;
+//	 			  memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+//	 			  ansver_flag = 0;
+//	 		 }
+//
+//
+//
+//
+//
+//}
+///////////////////////////////////////////////////////
+
+
+
+//  while (1)
+//  {
+//	  while (ansver_flag != 1){}
+//	    if(ansver_flag ==1)
+//	    {
+//	  	  if (strstr(GSM_RX_buffer, "OK"))
+//	  	  {
+//	  			while(1)
+//	  			{
+//	  				int j=0;
+//	  				for(j=0; j<100; j++)
+//	  				{
+//
+//	  				}
+//	  			}
+//
+//
+//	  	  }
+//
+//		 if (strstr(GSM_RX_buffer, "+CSQ"))
+//		 {
+//			  			while(1)
+//			  			{
+//			  				int j=0;
+//			  				for(j=0; j<100; j++)
+//			  				{
+//
+//			  				}
+//			  			}
+//
+//
+//		 }
+//}
+
+
+//	  memset(buffer_output_comand, 0, sizeof(buffer_output_comand));
+//	  char command_1[25] = "AT\r\n";
+//	  strcpy(buffer_output_comand, command_1);
+//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);
+//
+//
+//      HAL_Delay(2000);
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+//	    // MAIN LOOP
+//        if(interrupt_flag == 1)
+//        {
+//        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+//
+//
+//        	read_T_and_H_SI7021();
+//        	test_flash_W25Q();
+//
+//			#if GPS
+//        		parsing_GPS(GPS_buff, 512);
+//        		HAL_Delay(500);
+//			# else
+//        		HAL_Delay(500);
+//			#endif
+//
+//			#if OLED
+//        		OLED_prinr_all_data();
+//			#endif
+//
+//        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+//
+//			#if FINGERPRINT
+//        		fingerprint_test();
+//			#endif
+//
+//        	interrupt_flag = 0;
+//        }
+//////////////////////////////////////////////////////////////////////////////////
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -673,9 +906,477 @@ void generate_sound(void)
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1); // stop generation of pwm
 }
 // ----------------------------------------------------------------------------
+//void uart1_transmit_reseive_data(int* i)
+//{
+//	// 1. Transmit data in bloking mode /////////////////////////////////////
+////	            HAL_Delay(1000);
+////
+////		  		char str[50]={0};
+////		  		sprintf(str,"Bloking mode transfer: %d\n\0", *i);
+////		  		uint8_t k=0;
+////		  		uint8_t size_buffer=0;
+////		  		for(k=0; ((k<=sizeof(str)) && (str[k] != '\0')); k++)
+////		  		{
+////		  			size_buffer++;
+////		  		}
+////		  		// uint8_t size=sizeof(str);
+////
+////		  		HAL_UART_Transmit(&huart1 , (uint8_t *)str, size_buffer, 100);
+////		  		(*i)++;
+//	/////////////////////////////////////////////////////////////////////////
+//
+//	// 2. Transmit data using non bloking mode /////////////////////////////
+////		  HAL_Delay(1000);
+////
+////		  char str[50]={0};
+////		  sprintf(str,"Non bloking mode transfer: %d\n\0",  *i);
+////		  uint8_t k=0;
+////		  uint8_t size_buffer=0;
+////
+////		  for(k=0; ((k<=sizeof(str)) && (str[k] != '\0')); k++)
+////		  {
+////		  	  size_buffer++;
+////		  }
+////
+////		  HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, size_buffer);
+////		  (*i)++;
+//	/////////////////////////////////////////////////////////////////////////
+
+//
+//
+//}
 
 
+int init_gsm_module(void)
+{
+	// initialisation GSM module without answer from GSM. /////////////////////////////
+	// work ok
 
+	// Inits commands:
+		// 1. Send command "AT" answer "OK"
+		// 2. Send command "AT+CSQ" answer "+CSQ: 23,99" and "OK". 23,99 value can be from 0 to 31.
+		// 3. Send command "AT+CCID" answer "89380062300517128558" and "OK"
+		// 4. Send command "AT+CREG?" answer "+CREG: 1,1" and "OK"
+
+//	  char buffer_output_comand[30] = {0};
+//	  char command_1[25] = "AT\r\n";
+//	  strcpy(buffer_output_comand, command_1);
+//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
+//	  /////////////////////////////////////////////////////////
+//	  HAL_Delay(500);
+//
+//	  memset(buffer_output_comand, 0 , sizeof(buffer_output_comand));
+//	  char command_2[25] = "AT+CSQ\r\n";
+//	  strcpy(buffer_output_comand, command_2);
+//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
+//	  /////////////////////////////////////////////////////////
+//	  HAL_Delay(500);
+//
+//	  memset(buffer_output_comand, 0 , sizeof(buffer_output_comand));
+//	  char command_3[25] = "AT+CCID\r\n";
+//	  strcpy(buffer_output_comand, command_3);
+//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
+//	  /////////////////////////////////////////////////////////
+//	  HAL_Delay(500);
+//
+//	  memset(buffer_output_comand, 0 , sizeof(buffer_output_comand));
+//	  char command_4[25] = "AT+CREG?\r\n";
+//	  strcpy(buffer_output_comand, command_4);
+//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
+
+	///////////////////////////////////////////////////////////////////////////////////
+
+	char turn_off_echo[]="ATE 0\r\n";    			// Turn OFF echo
+	char AT[]="AT\r\n";                           // Simple command
+	char AT_CSQ[]="AT+CSQ\r\n";                   // signal reception quality
+	char CCID[] = "AT+CCID\r\n";
+
+	char AT_CREG[] = "AT+CREG?\n\r";              // Registration in network
+
+
+	uint8_t answer_1 = 0;
+	uint8_t answer_2 = 0;
+	uint8_t answer_3 = 0;
+	uint8_t answer_4 = 0;
+	uint8_t answer_5 = 0;
+
+	// 1. Send command " Turn off echo" ///////////////////////////
+	HAL_UART_Transmit(&huart1 , (uint8_t *)turn_off_echo, strlen(turn_off_echo), 100);
+
+    // Waite for answer
+	while (ansver_flag != 1)
+	{
+		// waite for answer
+	}
+		if(ansver_flag ==1)
+		{
+		 	if (strstr(GSM_RX_buffer, "OK"))
+		 	{
+		 	  	memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+		 	  	answer_1 = 1;
+		 	  	ansver_flag = 0;
+		 	}
+		 }
+
+    HAL_Delay(100);
+    ////////////////////////////////////////////////////////////////
+
+	// 2. Send command "signal reception quality" //////////////////
+	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CSQ, strlen(AT_CSQ), 100);
+
+	while (ansver_flag != 1)
+	{
+		// waite for answer
+	}
+		if(ansver_flag ==1)
+		{
+			if (strstr(GSM_RX_buffer, "+CSQ"))
+			{
+				// answer "+CSQ: 23,99"
+				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+				answer_2 = 1;
+				ansver_flag = 0;
+			}
+		}
+
+	while (ansver_flag != 1)                     // Waite for answer "OK"
+	{
+		// waite for answer
+	}
+	if(ansver_flag ==1)
+	{
+		if (strstr(GSM_RX_buffer, "OK"))
+		{
+			// answer "+CSQ: 23,99"
+			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+			answer_2 = 1;
+			ansver_flag = 0;
+		}
+	}
+	HAL_Delay(200);
+	//////////////////////////////////////////////////////////////////
+
+
+	// 3. Send command "signal reception quality" /////////////////////
+	HAL_UART_Transmit(&huart1 , (uint8_t *)CCID, strlen(CCID), 100);
+
+	while (ansver_flag != 1)
+	{
+		// waite for answer
+	}
+		if(ansver_flag ==1)
+		{
+			if (strstr(GSM_RX_buffer, "89380"))
+			{
+				// answer  89380062300517128558    // My ID
+				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+				answer_3 = 1;
+				ansver_flag = 0;
+			}
+		}
+
+	while (ansver_flag != 1)                    // Waite for answer "OK"
+	{
+				// waite for answer
+	}
+	if(ansver_flag ==1)
+	{
+		if (strstr(GSM_RX_buffer, "OK"))
+		{
+			// answer "+CSQ: 23,99"
+			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+			answer_3 = 1;
+			ansver_flag = 0;
+		}
+	}
+	HAL_Delay(200);
+//    ////////////////////////////////////////////////////////////////////
+//
+//	// 4. Send command "Check registration in network"
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CREG, strlen(AT_CREG), 1000);
+//
+//	while (ansver_flag != 1)
+//	{
+//		// waite for answer
+//	}
+//	if(ansver_flag ==1)
+//	{
+//		if (strstr(GSM_RX_buffer, "+CREG: 1,1"))
+//		{
+//			// answer   AT+CREG?\r\n
+//			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+//			answer_4 = 1;
+//			ansver_flag = 0;
+//		}
+//	}
+//	while (ansver_flag != 1)                    // Waite for answer "OK"
+//	{
+//				// waite for answer
+//	}
+//	if(ansver_flag ==1)
+//	{
+//		if (strstr(GSM_RX_buffer, "OK"))
+//		{
+//			// answer "+CSQ: 23,99"
+//			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+//			answer_4 = 1;
+//			ansver_flag = 0;
+//		}
+//	}
+//	HAL_Delay(100);
+	///////////////////////////////////////////////////////////////////
+
+
+	if(answer_1 && answer_2 && answer_3 )
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+
+
+}
+
+//void GSM_init(void)
+//{
+//	// 1. Send AT comand. Ansver must be "OK"
+//	char call_to_my_mobile_number[]="AT\r\n";
+//	uint8_t size=0;
+//	char str[40]={0};
+//	uint8_t size_mas = sizeof(str);
+//	memset(str, 0 , sizeof(str));
+//
+//	sprintf(str, call_to_my_mobile_number);      							// AT command
+//	size=sizeof(str);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);              // Send data into GSM module
+//
+//	while(ansver_flag == 1)              // Receive ansver
+//	{
+//		 if (strstr(GSM_RX_buffer, "OK"))
+//		 {
+////		     // Clear last line from previus data
+////		     sprintf(str,"%s", "                    ");
+////		     ssd1306_SetCursor(00, 46);
+////		     ssd1306_WriteString(str, Font_7x10, White);
+////		     ssd1306_UpdateScreen();
+////
+////		     memset(str, 0 , sizeof(str));
+////		     sprintf(str,"%s", "RING");
+////		     ssd1306_SetCursor(00, 46);
+////		     ssd1306_WriteString(str, Font_7x10, White);
+////
+////		     ssd1306_UpdateScreen();
+//
+//		     // Do something with incoming call
+//
+//		     //
+//		     ansver_flag = 0;
+//		 }
+//	}
+//}
+
+//int GSM_init(void)
+//{
+////	static bool at_ready = false;
+////	static	bool ast_poweron = false;
+////	static  bool creg_2 = false;
+////	static  bool call_ready = false;
+////	static 	bool creg_1 = false;
+//
+//
+//
+//
+//
+//	while(ansver_flag == 1)              // Receive ansver
+//	{
+//		 if (strstr(GSM_RX_buffer, "AT Ready") )
+//		 {
+//			   at_ready = true;
+//		       ansver_flag = 0;
+//		 }
+//		 if (strstr(GSM_RX_buffer, "AST_POWERON") )
+//		 {
+//			   ast_poweron = true;
+//			   ansver_flag = 0;
+//		 }
+//		 if(strstr(GSM_RX_buffer, "+CREG: 2"))
+//		 {
+//			   creg_2 = true;
+//			   ansver_flag = 0;
+//		 }
+////		 if(strstr(GSM_RX_buffer, "Call Ready"))
+////		 {
+////			   call_ready = true;
+////		 	   ansver_flag = 0;
+////		 }
+//		 if(strstr(GSM_RX_buffer, "+CREG: 1"))
+//		 {
+//			   creg_1 = true;
+//		       ansver_flag = 0;
+//		 }
+//
+//	 }
+//
+//	 if( (at_ready == true) && (ast_poweron == true) && (creg_2 == true)  && (creg_1 == true))   // && (call_ready == true)  // If init OK
+//	 {
+//		 return 1;
+//	 }
+//	 else
+//	 {
+//		 return 0;
+//	 }
+//}
+
+
+//void call_on_number(void)
+//{
+//	char call_to_my_mobile_number[]="ATD+380931482354\r\n";
+//	uint8_t size=0;
+//    char str[40]={0};
+//    uint8_t size_mas = sizeof(str);
+//	memset(str, 0 , sizeof(str));
+//
+//    sprintf(str, call_to_my_mobile_number);      							// AT command
+//	size=sizeof(str);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);              // Send data into GSM module
+//
+//
+//    while(ansver_flag == 1)              // Receive ansver
+//    {
+//    	 // Print GSM_RX_buffer in first line
+//    	 memset(str, 0 , sizeof(str));
+//    	 sprintf(str,"%s", GSM_RX_buffer);
+//    	 ssd1306_SetCursor(00, 36);
+//    	 ssd1306_WriteString(str, Font_7x10, White);
+//    	 //
+//
+//    	    // Parsing incoming data from GSM
+//    	    // Detect incoming call, and print it on OLED
+//            if (strstr(GSM_RX_buffer, "RING"))
+//            {
+//            	// Clear last line from previus data
+//            	sprintf(str,"%s", "                    ");
+//            	ssd1306_SetCursor(00, 46);
+//            	ssd1306_WriteString(str, Font_7x10, White);
+//            	ssd1306_UpdateScreen();
+//
+//            	memset(str, 0 , sizeof(str));
+//            	sprintf(str,"%s", "RING");
+//            	ssd1306_SetCursor(00, 46);
+//            	ssd1306_WriteString(str, Font_7x10, White);
+//
+//            	ssd1306_UpdateScreen();
+//
+//            	// Do something with incoming call
+//
+//            	//
+//            	ansver_flag = 0;
+//            }
+//            //  Звінок збили
+//            else if(strstr(GSM_RX_buffer, "BUSY"))
+//            {
+//            	// Clear last line from previus data
+//            	sprintf(str,"%s", "                    ");
+//            	ssd1306_SetCursor(00, 46);
+//            	ssd1306_WriteString(str, Font_7x10, White);
+//            	ssd1306_UpdateScreen();
+//
+//            	memset(str, 0 , sizeof(str));
+//            	sprintf(str,"%s", "BUSY");
+//            	ssd1306_SetCursor(00, 46);
+//            	ssd1306_WriteString(str, Font_7x10, White);
+//
+//            	ssd1306_UpdateScreen();
+//            	// Do something...
+//
+//            	//
+//            	ansver_flag = 0;
+//            }
+//              //  Телефон не був піднятий
+//            else if(strstr(GSM_RX_buffer, "NO ANSWERALL"))
+//            {
+//            	// Clear last line from previus data
+//            	 sprintf(str,"%s", "                    ");
+//            	 ssd1306_SetCursor(00, 46);
+//            	 ssd1306_WriteString(str, Font_7x10, White);
+//            	 ssd1306_UpdateScreen();
+//
+//            	 memset(str, 0 , sizeof(str));
+//            	 sprintf(str,"%s", "NO ANSWER");
+//            	 ssd1306_SetCursor(00, 46);
+//            	 ssd1306_WriteString(str, Font_7x10, White);
+//
+//            	 ssd1306_UpdateScreen();
+//            	 // Do something...
+//
+//            	 //
+//            	 ansver_flag = 0;
+//            }
+//
+//            //  Телефон підняли
+//            else if(strstr(GSM_RX_buffer, "CONNECT"))
+//            {
+//                 // Clear last line from previus data
+//                 sprintf(str,"%s", "                    ");
+//                 ssd1306_SetCursor(00, 46);
+//                 ssd1306_WriteString(str, Font_7x10, White);
+//                 ssd1306_UpdateScreen();
+//
+//                 memset(str, 0 , sizeof(str));
+//                 sprintf(str,"%s", "ANSWER: say...");
+//                 ssd1306_SetCursor(00, 46);
+//                 ssd1306_WriteString(str, Font_7x10, White);
+//
+//                 ssd1306_UpdateScreen();
+//                 // Do something...
+//
+//                 //
+//                 ansver_flag = 0;
+//             }
+//
+//            else
+//            {
+//                // Clean working line OLED  ///////////////////////////////
+//            	//memset(GSM_RX_buffer, 0 , sizeof(GSM_RX_buffer));     // Clean GSM_RX_buffer buffer
+//
+//            	HAL_Delay(1000);
+//
+//                sprintf(str,"%s", "                    ");
+//                ssd1306_SetCursor(00, 46);
+//                ssd1306_WriteString(str, Font_7x10, White);
+//                ssd1306_UpdateScreen();
+//
+//                //////////////////////////////////////////////////////////
+//            }
+//
+//
+//    	    // Print data on last line on OLED
+////    	    memset(str, 0 , sizeof(str));
+////    	    sprintf(str,"%s", GSM_RX_buffer);
+////    	    ssd1306_SetCursor(00, 46);
+////    	    ssd1306_WriteString(str, Font_7x10, White);
+////
+////    	    ssd1306_UpdateScreen();
+//    }
+//    // Clean working line OLED  ///////////////////////////////
+////    sprintf(str,"%s", "                    ");
+////    ssd1306_SetCursor(00, 46);
+////    ssd1306_WriteString(str, Font_7x10, White);
+////    ssd1306_UpdateScreen();
+//    //////////////////////////////////////////////////////////
+//
+//}
+
+void send_sms_on_number(void)
+{
+
+
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 /* USER CODE END 4 */
 
 /**

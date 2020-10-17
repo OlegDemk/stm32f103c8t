@@ -6,6 +6,7 @@
 C_SRCS += \
 ../Core/Src/Flash_W25Q.c \
 ../Core/Src/GPS_NEO_6M.c \
+../Core/Src/GSM_IOT_GA6.c \
 ../Core/Src/Humidity_and_Temperature_AM2302_sensor.c \
 ../Core/Src/Humidity_and_Temperature_SI7021_sensor.c \
 ../Core/Src/Si7021_driver.c \
@@ -25,6 +26,7 @@ C_SRCS += \
 OBJS += \
 ./Core/Src/Flash_W25Q.o \
 ./Core/Src/GPS_NEO_6M.o \
+./Core/Src/GSM_IOT_GA6.o \
 ./Core/Src/Humidity_and_Temperature_AM2302_sensor.o \
 ./Core/Src/Humidity_and_Temperature_SI7021_sensor.o \
 ./Core/Src/Si7021_driver.o \
@@ -44,6 +46,7 @@ OBJS += \
 C_DEPS += \
 ./Core/Src/Flash_W25Q.d \
 ./Core/Src/GPS_NEO_6M.d \
+./Core/Src/GSM_IOT_GA6.d \
 ./Core/Src/Humidity_and_Temperature_AM2302_sensor.d \
 ./Core/Src/Humidity_and_Temperature_SI7021_sensor.d \
 ./Core/Src/Si7021_driver.d \
@@ -66,6 +69,8 @@ Core/Src/Flash_W25Q.o: ../Core/Src/Flash_W25Q.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Flash_W25Q.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Core/Src/GPS_NEO_6M.o: ../Core/Src/GPS_NEO_6M.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/GPS_NEO_6M.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
+Core/Src/GSM_IOT_GA6.o: ../Core/Src/GSM_IOT_GA6.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/GSM_IOT_GA6.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Core/Src/Humidity_and_Temperature_AM2302_sensor.o: ../Core/Src/Humidity_and_Temperature_AM2302_sensor.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Humidity_and_Temperature_AM2302_sensor.d" -MT"$@" --specs=nano.specs -mfloat-abi=soft -mthumb -o "$@"
 Core/Src/Humidity_and_Temperature_SI7021_sensor.o: ../Core/Src/Humidity_and_Temperature_SI7021_sensor.c

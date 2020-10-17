@@ -6,6 +6,9 @@
  */
 #include "stdio.h"
 #include "stm32f1xx_hal.h"
+#include "main.h"
+
+#define TRANSMIT_IN_COMPORT OFF
 
 #define DEVICE_FOUND 0
 
@@ -30,14 +33,16 @@ void I2C_1_scaner(void)
 	This function search devise connected to I2C in this case -hi2c1.
 	After thet function print in console information about what to connect to I2C.
 	*/
-	uint8_t size=0;
-	char str3[100]={0};
-	uint8_t size_mas=sizeof(str3);
-	uint8_t i=0;
-	sprintf(str3,"I2C_1 SEARCH DEVISES... \r\n");      										// convert   in  str
-	size=sizeof(str3);
-	HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
 	uint8_t number_of_device=0;				// How many device controller is found
+	#if TRANSMIT_IN_COMPORT
+		uint8_t size=0;
+		char str3[100]={0};
+		uint8_t size_mas=sizeof(str3);
+		uint8_t i=0;
+		sprintf(str3,"I2C_1 SEARCH DEVISES... \r\n");      										// convert   in  str
+		size=sizeof(str3);
+		HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+	#endif
 	//HAL_Delay(500);
 
 	for(addres_devise=0x00; addres_devise<0xFF; addres_devise++)  // addres_devise<0x7F
@@ -54,17 +59,21 @@ void I2C_1_scaner(void)
 				switch (addres_devise)
 				{
 					case H_and_T_sensor_SI7021_I2C_ADDR:
-						sprintf(str3,"Device address-0x%x - found. It is Humidity and Temperature sensor SI7021 \r\n",addres_devise);      // convert   in  str
-						size=sizeof(str3);
-						HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
-						memset(str3, 0 , sizeof(str3));   // Clean str3
+						#if TRANSMIT_IN_COMPORT
+							sprintf(str3,"Device address-0x%x - found. It is Humidity and Temperature sensor SI7021 \r\n",addres_devise);      // convert   in  str
+							size=sizeof(str3);
+							HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+							memset(str3, 0 , sizeof(str3));   // Clean str3
+					#endif
                     break;
 
 					case  OLED_SSD136_I2C_ADDR:
-						sprintf(str3,"Device address-0x%x - found. It is OLED \r\n",addres_devise);      // convert   in  str
-						size=sizeof(str3);
-						HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
-						memset(str3, 0 , sizeof(str3));   // Clean str3
+						#if TRANSMIT_IN_COMPORT
+							sprintf(str3,"Device address-0x%x - found. It is OLED \r\n",addres_devise);      // convert   in  str
+							size=sizeof(str3);
+							HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+							memset(str3, 0 , sizeof(str3));   // Clean str3
+						#endif
 				    break;
 
 				    // place where add new connected device
@@ -77,25 +86,29 @@ void I2C_1_scaner(void)
 
 			else
 			{
-				memset(str3, 0 , sizeof(str3));
-				sprintf(str3,"Device address-0x%x - found........................UNKNOWN DEVICE \r\n",addres_devise);      // convert   in  str
-				size=sizeof(str3);
-				HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+				#if TRANSMIT_IN_COMPORT
+					memset(str3, 0 , sizeof(str3));
+					sprintf(str3,"Device address-0x%x - found........................UNKNOWN DEVICE \r\n",addres_devise);      // convert   in  str
+					size=sizeof(str3);
+					HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+				#endif
 			}
 		}
 	}
 	if(number_of_device==0)  																				// If devices nofound
 	{
+		#if TRANSMIT_IN_COMPORT
+			memset(str3, 0 , sizeof(str3));
+			sprintf(str3,"Devices no found!!!\r\n");      							// convert   in  str
+			size=sizeof(str3);
+			HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
+		#endif
+	}
+	#if TRANSMIT_IN_COMPORT
 		memset(str3, 0 , sizeof(str3));
-		sprintf(str3,"Devices no found!!!\r\n");      							// convert   in  str
+		sprintf(str3,"DONE\r\n");      																	// convert   in  str
 		size=sizeof(str3);
 		HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
-	}
-
-	memset(str3, 0 , sizeof(str3));
-	sprintf(str3,"DONE\r\n");      																	// convert   in  str
-	size=sizeof(str3);
-	HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
-
+	#endif
 	HAL_Delay(500);
 }
