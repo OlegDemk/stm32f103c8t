@@ -496,14 +496,15 @@ while (1)
 				else
 				{
 					broken_packet_counter ++;
-					if((GPGGA_data_is_ready != 1) && (broken_packet_counter >= 7))
+					//HAL_Delay(500);
+					if((GPGGA_data_is_ready != 1) && (broken_packet_counter >= 20))
 					{
 
 							GPGGA_data_is_ready = 0;
 							broken_packet_counter = 0;
 
 							memset(str, 0 , sizeof(str));
-							sprintf(str,"%s", "1.GPS: NO SIGNAL");
+							sprintf(str,"%s", "1.GPS: NO SIGNAL  ");
 							ssd1306_SetCursor(00, 00);
 							ssd1306_WriteString(str, Font_7x10, White);
 							memset(str, 0 , sizeof(str));

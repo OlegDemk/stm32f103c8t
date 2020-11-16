@@ -1,23 +1,17 @@
-19:39:26 **** Incremental Build of configuration Debug for project Castom_board ****
+21:37:50 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-../Core/Src/main.c:52:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
- extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
-        ^~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:213:6: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
-      I2C_1_scaner();
-      ^~~~~~~~~~~~
-../Core/Src/main.c:250:5: warning: implicit declaration of function 'buzzer_fricvency_setings' [-Wimplicit-function-declaration]
-     buzzer_fricvency_setings(htim1, TIM_CHANNEL_1, period, pulse);
-     ^~~~~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c: At top level:
-../Core/Src/main.c:1375:6: warning: conflicting types for 'buzzer_fricvency_setings'
- void buzzer_fricvency_setings(TIM_HandleTypeDef timer, uint32_t channel, uint16_t period, uint16_t pulse)
-      ^~~~~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c:250:5: note: previous implicit declaration of 'buzzer_fricvency_setings' was here
-     buzzer_fricvency_setings(htim1, TIM_CHANNEL_1, period, pulse);
-     ^~~~~~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc "../Core/Src/oled_ssd1306.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/oled_ssd1306.d" -MT"Core/Src/oled_ssd1306.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/oled_ssd1306.o"
+../Core/Src/oled_ssd1306.c: In function 'print_GPS_data':
+../Core/Src/oled_ssd1306.c:89:2: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+  memset(str, 0 , sizeof(str));
+  ^~~~~~
+../Core/Src/oled_ssd1306.c:89:2: warning: incompatible implicit declaration of built-in function 'memset'
+../Core/Src/oled_ssd1306.c:89:2: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/oled_ssd1306.c:93:2: warning: implicit declaration of function 'memcpy' [-Wimplicit-function-declaration]
+  memcpy(str, lat_str, sizeof(lat_str));
+  ^~~~~~
+../Core/Src/oled_ssd1306.c:93:2: warning: incompatible implicit declaration of built-in function 'memcpy'
+../Core/Src/oled_ssd1306.c:93:2: note: include '<string.h>' or provide a declaration of 'memcpy'
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Castom_board.elf
  
@@ -25,17 +19,17 @@ arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
 arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  53904	    548	   3404	  57856	   e200	Castom_board.elf
-Finished building: Castom_board.bin
+  53912	    548	   3404	  57864	   e208	Castom_board.elf
 Finished building: default.size.stdout
+Finished building: Castom_board.bin
  
  
 Finished building: Castom_board.list
  
-19:39:30 **** Incremental Build of configuration Debug for project Castom_board ****
+21:37:59 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  53904	    548	   3404	  57856	   e200	Castom_board.elf
+  53912	    548	   3404	  57864	   e208	Castom_board.elf
 Finished building: default.size.stdout
  
