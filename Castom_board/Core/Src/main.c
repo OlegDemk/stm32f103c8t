@@ -47,6 +47,8 @@
 #include "string.h"               // For work with "strtok" function
 #include "stdlib.h"               // For work with "atoi" function
 
+#include "GSM_IOT_GA6.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,6 +60,7 @@
 /* USER CODE BEGIN PD */
 void test_flash_W25Q(void);
 void generate_sound(void);
+char read_one_sign_from_keyboard(void);
 
 /* USER CODE END PD */
 
@@ -66,9 +69,18 @@ void generate_sound(void);
 #define OLED ON
 #define H_a_T_SI7021 ON
 #define I2C_SCANNER ON
-#define GPS OFF
-#define SOUND OFF
+#define GPS ON
+#define SOUND ON
 #define FINGERPRINT OFF
+
+// Ьain modes devices
+bool GSM_MODE = false;
+bool GPS_MODE = false;
+bool FINGERPRINT_MODE = false;
+bool SENSORS_MODE = false;
+
+bool EXIT_FROM_MODE = false;
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -101,11 +113,11 @@ DMA_HandleTypeDef hdma_usart3_rx;
 
 
 
-// GSM variables
-char GSM_RX_buffer[60]={0};    // buffer for receive data ansver from GSM module
-char uart_1_answer_buffer[40] = {0};
-uint8_t ansver_flag =0;        // if ansver_flag == 1 data(ansver) are in buffer GSM_RX_buffer
-uint8_t count =0;
+//// GSM variables
+//char GSM_RX_buffer[60]={0};    // buffer for receive data ansver from GSM module
+//char uart_1_answer_buffer[40] = {0};
+//uint8_t ansver_flag =0;        // if ansver_flag == 1 data(ansver) are in buffer GSM_RX_buffer
+//uint8_t count =0;
 
 // variable for init gsm
 bool at_ready = false;
@@ -216,226 +228,708 @@ int main(void)
   	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
 	#endif
 
-	#if SOUND
-  	  generate_sound();
-	#endif
 
 
-
-//  	bool at_ready = false;
-//    bool ast_poweron = false;
-//  	bool creg_2 = false;
-//  	bool call_ready = false;
-//  	bool creg_1 = false;
-
-/////////////////
-
-
-  //AM2302_init();
-
+   //choose_mode();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
 
+  #if SOUND
+  	uint16_t pulse = 2;
+  	uint32_t period = 1;
+  	uint16_t max = 200;
+  	uint16_t min = 1;
+  	for(period = min; period < max; period++)
+  	{
+  		pulse = period/2;
+  		buzzer_fricvency_setings(htim1, TIM_CHANNEL_1, period, pulse);
+  		HAL_Delay(1);
+  	}
+  	if(period >= max)
+  	{
+  		for(period = max; period > min; period--)
+  		{
+  			pulse = period/2;
+  			buzzer_fricvency_setings(htim1, TIM_CHANNEL_1, period, pulse);
+  			HAL_Delay(1);
+  		}
+  	}
+  	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1); // stop generation of pwm
+  #endif
 
-  /////////////  RECEIVE DATA FROM UART 1. FIRST METHOD //////////////////////////////
-  HAL_Delay(4000);
-  // Lessons 20 : http://mypractic.ru/urok-20-interfejs-uart-v-stm32-rabota-s-nim-cherez-registry-cmsis-ispolzovanie-preryvaniya-uart.html
-  USART1->CR1 |= USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
-  NVIC_EnableIRQ (USART1_IRQn);
-  HAL_Delay(100);
-
-  // в терміналі послідовнцість CR/LF
-  // CR (U+000D): англ. carriage return — повернення каретки     // '\r'
-  // LF (U+000A): англ. line feed — зміна рядка;                 // '\n'
-
-//    // Turn OFF echo
-//	char turn_off_echo[]="ATE 0\r\n";   // "ATD+380931482354\r\n"
-//	uint8_t size=0;
-//    char str[40]={0};
-//    uint8_t size_mas = sizeof(str);
-//	memset(str, 0 , sizeof(str));
-//
-//    sprintf(str, turn_off_echo);      							// AT command
-//	size=sizeof(str);
-//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
-
-
-//	HAL_Delay(500);
-//
-//	// CALL on NUMBER
-//	char call_to_my_mobile_number[]="ATD+380931482354\r\n";   // "ATD+380931482354\r\n"
-//	//uint8_t size=0;
-//	//char str[40]={0};
-//	size_mas = sizeof(str);
-//    memset(str, 0 , sizeof(str));
-//
-//	sprintf(str, call_to_my_mobile_number);      							// AT command
-//    size=sizeof(str);
-//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
-  //init_gsm_module();
-  ////////////////////////////////////////////////////////////////////////////////////
-
-
-//  char buffer_output_comand[30] = {0};
-//  char command[25] = "ATE 0\r\n";
-//  strcpy(buffer_output_comand, command);
-//  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);
-
-//  while (ansver_flag != 1){}
-//  if(ansver_flag ==1)
-//  {
-//	  if (strstr(GSM_RX_buffer, "OK"))
-//	  {
-//			while(1)
-//			{
-//				int j=0;
-//				for(j=0; j<100; j++)
-//				{
-//
-//				}
-//			}
-//
-//
-//	  }
-//  }
-
-//  char str[50]={0};
-//	  memset(str, 0 , sizeof(str));
-//	  sprintf(str,"%s", "TEST 0123456789");
-//	  ssd1306_SetCursor(00, 36);
-//	  ssd1306_WriteString(str, Font_7x10, White);
-//
-//	  ssd1306_UpdateScreen();
-
-  // Init GSM module
-  char str[50]={0};
-  memset(str, 0 , sizeof(str));
-
-  if(init_gsm_module())
-  {
-	  // init OK
-	  sprintf(str,"%s", "GSM STATE: READY");
-	  ssd1306_SetCursor(00, 36);
-	  ssd1306_WriteString(str, Font_7x10, White);
-
-	  ssd1306_UpdateScreen();
-  }
-  else
-  {
-	  // GSM didn't init
-	  sprintf(str,"%s", "GSM STATE: ERROR !");
-	  ssd1306_SetCursor(00, 36);
-	  ssd1306_WriteString(str, Font_7x10, White);
-
-	  ssd1306_UpdateScreen();
-  }
-
+  	int EXIT = 0;
 while (1)
 {
+	EXIT = 0;
+
+	// Print main menu on OLED ////////////////////
+	char str[50]={0};
+	// Print message
+	sprintf(str,"%s", " SELECT MODE...");
+	ssd1306_SetCursor(00, 00);
+	ssd1306_WriteString(str, Font_7x10, White);
+
+	sprintf(str,"%s", "1.GPS MODE");
+	ssd1306_SetCursor(00, 16);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	sprintf(str,"%s", "2.GSM MODE");
+	ssd1306_SetCursor(00, 26);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	sprintf(str,"%s", "3.FINGERPRINT MODE");
+	ssd1306_SetCursor(00, 36);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	sprintf(str,"%s", "4.SENSORS MODE");
+	ssd1306_SetCursor(00, 46);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	ssd1306_UpdateScreen();
+	char sign = 0;
+	do                                                            // Whaite for choise
+	{
+		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+		// For debug ///////////
+		//sign = '1';
+		/////////////////////
+
+		if(sign == '1')    // If select GSM mode
+		{
+			GPS_MODE = true;
+		}
+		if(sign == '2')    // If select GPS mode
+		{
+			GSM_MODE = true;
+		}
+		if(sign == '3')    // If select GPS mode
+		{
+			FINGERPRINT_MODE = true;
+		}
+		if(sign == '4')    // If select GPS mode
+		{
+			SENSORS_MODE = true;
+		}
+
+		ssd1306_UpdateScreen();
+		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '4'));     // Select one from 3 modes
+
+    // MAIN MODES
+
+	while(GSM_MODE && (EXIT == 0))  /////////////////////////////////////////////////////////////////////
+	{
+		ssd1306_Fill(Black);
+		ssd1306_UpdateScreen();
+		// Print mode in head
+		sprintf(str,"%s", "2.GSM MODE");
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str, Font_7x10, White);
+		ssd1306_UpdateScreen();
+
+
+		// Init GSM module////////////////////////////
+		init_GSM_uart_comunication();
+		if(init_gsm_module() == HAL_OK)
+		{
+			// init OK
+			GSM_INIT = 1;
+
+			sprintf(str,"%s", "2.GSM MODE: OK");
+			ssd1306_SetCursor(00, 00);
+			ssd1306_WriteString(str, Font_7x10, White);
+			ssd1306_UpdateScreen();
+		}
+		else
+		{
+			// GSM didn't init
+			GSM_INIT = 0;
+
+			sprintf(str,"%s", "2.GSM MODE: ERROR");
+			ssd1306_SetCursor(00, 00);
+			ssd1306_WriteString(str, Font_7x10, White);
+			ssd1306_UpdateScreen();
+		}
+		// END INIT GSM MODULE  //////////////////////////
+
+        if(GSM_INIT == 1)
+        {
+			// Print GSM menu
+			sprintf(str,"%s", "1.For make CALL");
+			ssd1306_SetCursor(00, 16);
+			ssd1306_WriteString(str, Font_7x10, White);
+			memset(str, 0 , sizeof(str));
+
+			sprintf(str,"%s", "2.For send SMS");
+			ssd1306_SetCursor(00, 26);
+			ssd1306_WriteString(str, Font_7x10, White);
+			memset(str, 0 , sizeof(str));
+
+			sprintf(str,"%s", "Press '*' for EXIT");
+			ssd1306_SetCursor(00, 46);
+			ssd1306_WriteString(str, Font_7x10, White);
+			memset(str, 0 , sizeof(str));
+			ssd1306_UpdateScreen();
+
+			// 2. Написати функції які.
+			// 		1. Звонить і має прийняти однв з відповідей:
+			//          1. Телефон збили
+			//			2. Телефон не підняли
+			//			3. Телефон піднятий
+			//      В момент звінка можна кнопкою збити вихідний звінок
+			//
+			//      2. Збити вихідний звінок
+			//
+			do                                                            // Whaite for choise
+			{
+				sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+				if(sign == '1')    // If select Call mode
+				{
+
+				}
+				if(sign == '2')    // If select SMS mode
+				{
+
+
+				}
+				if(sign == '*')    // If select EXIT  // Exit in main menu
+				{
+					EXIT = 1;      // Flag_fro exit from there
+					// Clear all OLED
+					ssd1306_Fill(Black);
+					ssd1306_UpdateScreen();
+
+					GPS_MODE = false;
+					GSM_MODE = false;
+					FINGERPRINT_MODE = false;
+					SENSORS_MODE = false;
+				}
+
+				}while ((sign != '1') && (sign != '2') && (sign != '*') );     // Select one from 3 modes
+			}
+        else
+        {
+        	HAL_Delay(2000);
+
+        	// Exit from GSM menu
+        	EXIT = 1;      // Flag_fro exit from there
+        	// Clear all OLED
+        	ssd1306_Fill(Black);
+        	ssd1306_UpdateScreen();
+
+        	GPS_MODE = false;
+        	GSM_MODE = false;
+        	FINGERPRINT_MODE = false;
+        	SENSORS_MODE = false;
+        }
+
+	}
+	while (GPS_MODE && (EXIT == 0)) /////////////////////////////////////////////////////////////////////
+	{
+		ssd1306_Fill(Black);
+		ssd1306_UpdateScreen();
+		// GPS code place where
+		// Print mode in head
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "1.GPS MODE");
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "Press '*' for EXIT");
+		ssd1306_SetCursor(00, 46);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		ssd1306_UpdateScreen();
+
+		do                                                            // Whaite for choise
+		{
+			// Place for parsing GPS DATA
+
+			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+			if(sign == '*')    // If select EXIT  // Exit in main menu
+			{
+				EXIT = 1;      // Flag_fro exit from there
+				// Clear all OLED
+				ssd1306_Fill(Black);
+				ssd1306_UpdateScreen();
+
+				GPS_MODE = false;
+				GSM_MODE = false;
+				FINGERPRINT_MODE = false;
+				SENSORS_MODE = false;
+			}
+			else
+			{
+				///////////////////////////////////////////////////////////
+				parsing_GPS(GPS_buff, 512);
+				int GPS_SELECTED = 1;
+				OLED_prinr_all_data(GPS_SELECTED);
+
+			}
+		}while ( (sign != '*'));     // Select one from 3 modes
+	}
+
+	while (FINGERPRINT_MODE && (EXIT == 0)) /////////////////////////////////////////////////////////////////////
+	{
+		ssd1306_Fill(Black);
+		ssd1306_UpdateScreen();
+		// Fingerprint code place where
+		// Print mode in head
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "3.FINGERPRINT MODE");
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		// Print meu fingerprint
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "1. function 1");
+		ssd1306_SetCursor(00, 16);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "2. function 2");
+		ssd1306_SetCursor(00, 26);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "3. function 3");
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "Press '*' for EXIT");
+		ssd1306_SetCursor(00, 46);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		ssd1306_UpdateScreen();
+
+		do                                                            // Whaite for choise
+		{
+			// Place for sensors code
+
+			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+		    if(sign == '1')
+		    {
+		    	// Clear all OLED
+		        ssd1306_Fill(Black);
+		        ssd1306_UpdateScreen();
+		        // Print mode in head
+
+		        // Ptint selected menu
+		        memset(str, 0 , sizeof(str));
+		        sprintf(str,"%s", "1. function 1");
+		        ssd1306_SetCursor(00, 00);
+		        ssd1306_WriteString(str, Font_7x10, White);
+		        memset(str, 0 , sizeof(str));
+
+		        memset(str, 0 , sizeof(str));
+		        sprintf(str,"%s", "Press '*' for EXIT");
+		        ssd1306_SetCursor(00, 46);
+		        ssd1306_WriteString(str, Font_7x10, White);
+		        memset(str, 0 , sizeof(str));
+
+		        ssd1306_UpdateScreen();
+
+		        do                                                            // Whaite for choise
+		        {
+		            // Place for code function 1
+
+		            sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+		            if(sign == '*')    // If select EXIT  // Exit in main menu
+		            {
+		            	EXIT = 1;      // Flag_fro exit from there
+		            	// Clear all OLED
+		            	ssd1306_Fill(Black);
+		            	ssd1306_UpdateScreen();
+
+		            	GPS_MODE = false;
+		            	GSM_MODE = false;
+		            	FINGERPRINT_MODE = false;
+		            	SENSORS_MODE = false;
+		            }
+		         }while (sign != '*');     // Select EXIT
+		     }
+
+		     if(sign == '2')
+		     {
+		        // Clear all OLED
+		        ssd1306_Fill(Black);
+		        ssd1306_UpdateScreen();
+		        // Print mode in head
+
+		        // Ptint selected menu
+		        memset(str, 0 , sizeof(str));
+		        sprintf(str,"%s", "1. function 2");
+		        ssd1306_SetCursor(00, 00);
+		        ssd1306_WriteString(str, Font_7x10, White);
+		        memset(str, 0 , sizeof(str));
+
+		        memset(str, 0 , sizeof(str));
+		        sprintf(str,"%s", "Press '*' for EXIT");
+		        ssd1306_SetCursor(00, 46);
+		        ssd1306_WriteString(str, Font_7x10, White);
+		        memset(str, 0 , sizeof(str));
+
+		        ssd1306_UpdateScreen();
+
+		        do                                                            // Whaite for choise
+		        {
+		        	// Place for code function 2
+
+		        	sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+		            if(sign == '*')    // If select EXIT  // Exit in main menu
+		            {
+		             	EXIT = 1;      // Flag_fro exit from there
+		                // Clear all OLED
+		                ssd1306_Fill(Black);
+		                ssd1306_UpdateScreen();
+
+		                GPS_MODE = false;
+		                GSM_MODE = false;
+		                FINGERPRINT_MODE = false;
+		                SENSORS_MODE = false;
+		            }
+		         }while (sign != '*');     // Select EXIT
+		      }
+
+		      if(sign == '3')
+		      {
+		    	  // Clear all OLED
+		          ssd1306_Fill(Black);
+		          ssd1306_UpdateScreen();
+		          // Print mode in head
+
+		          // Ptint selected menu
+		          memset(str, 0 , sizeof(str));
+		          sprintf(str,"%s", "1. function 3");
+		          ssd1306_SetCursor(00, 00);
+		          ssd1306_WriteString(str, Font_7x10, White);
+		          memset(str, 0 , sizeof(str));
+
+		          memset(str, 0 , sizeof(str));
+		          sprintf(str,"%s", "Press '*' for EXIT");
+		          ssd1306_SetCursor(00, 46);
+		          ssd1306_WriteString(str, Font_7x10, White);
+		          memset(str, 0 , sizeof(str));
+
+		          ssd1306_UpdateScreen();
+
+		          do                                                            // Whaite for choise
+		          {
+		        	  // Place for code function 3
+
+		               sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+		               if(sign == '*')    // If select EXIT  // Exit in main menu
+		               {
+		                   EXIT = 1;      // Flag_fro exit from there
+		                   // Clear all OLED
+		                   ssd1306_Fill(Black);
+		                   ssd1306_UpdateScreen();
+
+		                   GPS_MODE = false;
+		                   GSM_MODE = false;
+		                   FINGERPRINT_MODE = false;
+		                   SENSORS_MODE = false;
+		                }
+		           }while (sign != '*');     // Select EXIT
+		       }
+
+			   if(sign == '*')    // If select EXIT  // Exit in main menu
+			   {
+				   EXIT = 1;      // Flag_fro exit from there
+				    // Clear all OLED
+					ssd1306_Fill(Black);
+					ssd1306_UpdateScreen();
+
+					GPS_MODE = false;
+					GSM_MODE = false;
+					FINGERPRINT_MODE = false;
+					SENSORS_MODE = false;
+				}
+			   }while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
+
+	}
+
+	while (SENSORS_MODE && (EXIT == 0))  /////////////////////////////////////////////////////////////////////
+	{
+		ssd1306_Fill(Black);
+		ssd1306_UpdateScreen();
+		// Sensors code place where
+		// Print mode in head
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "4.SENSORS MODE");
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		// Print meu fingerprint
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "1. Run all sensors");
+		ssd1306_SetCursor(00, 16);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "2. function 2");
+		ssd1306_SetCursor(00, 26);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "3. function 3");
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		memset(str, 0 , sizeof(str));
+		sprintf(str,"%s", "Press '*' for EXIT");
+		ssd1306_SetCursor(00, 46);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		ssd1306_UpdateScreen();
+
+		do                                                            // Whaite for choise
+			{
+			// Place for sensors code
+
+			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+            if(sign == '1')
+            {
+            	// Clear all OLED
+            	ssd1306_Fill(Black);
+            	ssd1306_UpdateScreen();
+
+            	// Ptint selected menu
+            	memset(str, 0 , sizeof(str));
+            	sprintf(str,"%s", "1. Run all sensors");
+            	ssd1306_SetCursor(00, 00);
+            	ssd1306_WriteString(str, Font_7x10, White);
+            	memset(str, 0 , sizeof(str));
+
+            	memset(str, 0 , sizeof(str));
+            	sprintf(str,"%s", "Press '*' for EXIT");
+            	ssd1306_SetCursor(00, 46);
+            	ssd1306_WriteString(str, Font_7x10, White);
+            	memset(str, 0 , sizeof(str));
+
+            	ssd1306_UpdateScreen();
+
+            	do                                                            // Whaite for choise
+            	{
+            		// Place for code function 1
+
+            		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+            		if(sign == '*')    // If select EXIT  // Exit in main menu
+            		{
+            			EXIT = 1;      // Flag_fro exit from there
+            			// Clear all OLED
+            			ssd1306_Fill(Black);
+            			ssd1306_UpdateScreen();
+
+            			GPS_MODE = false;
+            			GSM_MODE = false;
+            			FINGERPRINT_MODE = false;
+            			SENSORS_MODE = false;
+            		}
+            	}while (sign != '*');     // Select EXIT
+            }
+
+            if(sign == '2')
+            {
+                // Clear all OLED
+                ssd1306_Fill(Black);
+               	ssd1306_UpdateScreen();
+
+                // Ptint selected menu
+                memset(str, 0 , sizeof(str));
+                sprintf(str,"%s", "1. function 2");
+                ssd1306_SetCursor(00, 00);
+                ssd1306_WriteString(str, Font_7x10, White);
+                memset(str, 0 , sizeof(str));
+
+                memset(str, 0 , sizeof(str));
+                sprintf(str,"%s", "Press '*' for EXIT");
+                ssd1306_SetCursor(00, 46);
+                ssd1306_WriteString(str, Font_7x10, White);
+                memset(str, 0 , sizeof(str));
+
+                ssd1306_UpdateScreen();
+
+                do                                                            // Whaite for choise
+                {
+                       // Place for code function 2
+
+                       sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+                       if(sign == '*')    // If select EXIT  // Exit in main menu
+                       {
+                            EXIT = 1;      // Flag_fro exit from there
+                            // Clear all OLED
+                            ssd1306_Fill(Black);
+                            ssd1306_UpdateScreen();
+
+                            GPS_MODE = false;
+                            GSM_MODE = false;
+                            FINGERPRINT_MODE = false;
+                            SENSORS_MODE = false;
+                       }
+                 }while (sign != '*');     // Select EXIT
+
+                // Place for code function 2
+            }
+
+            if(sign == '3')
+            {
+                 // Clear all OLED
+                 ssd1306_Fill(Black);
+                 ssd1306_UpdateScreen();
+                 // Print mode in head
+
+                 // Ptint selected menu
+                 memset(str, 0 , sizeof(str));
+                 sprintf(str,"%s", "1. function 3");
+                 ssd1306_SetCursor(00, 00);
+                 ssd1306_WriteString(str, Font_7x10, White);
+                 memset(str, 0 , sizeof(str));
+
+                 memset(str, 0 , sizeof(str));
+                 sprintf(str,"%s", "Press '*' for EXIT");
+                 ssd1306_SetCursor(00, 46);
+                 ssd1306_WriteString(str, Font_7x10, White);
+                 memset(str, 0 , sizeof(str));
+
+                 ssd1306_UpdateScreen();
+
+                 do                                                            // Whaite for choise
+                 {
+                      // Place for code function 3
+
+                      sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+                      if(sign == '*')    // If select EXIT  // Exit in main menu
+                      {
+                           EXIT = 1;      // Flag_fro exit from there
+                           // Clear all OLED
+                           ssd1306_Fill(Black);
+                           ssd1306_UpdateScreen();
+
+                           GPS_MODE = false;
+                           GSM_MODE = false;
+                           FINGERPRINT_MODE = false;
+                           SENSORS_MODE = false;
+                      }
+                  }while (sign != '*');     // Select EXIT
+
+                 // Place for code function 3
+            }
+
+			if(sign == '*')    // If select EXIT  // Exit in main menu
+			{
+				EXIT = 1;      // Flag_fro exit from there
+				// Clear all OLED
+				ssd1306_Fill(Black);
+				ssd1306_UpdateScreen();
+
+				GPS_MODE = false;
+				GSM_MODE = false;
+				FINGERPRINT_MODE = false;
+				SENSORS_MODE = false;
+			}
+		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
+
+	}
 
 
 
+//
+//      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 1);     // For detect 1,4,7,*
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);     //
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, 1);     //
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, 1);     //
+//
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 1);     // For detect 1,4,7,*
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     //
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     //
+//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
 
-
-
-	///////////////////////////////////// WORK
-//	  HAL_Delay(500);
-//	  //     // "ATD+380931482354\r\n"
-//	  char turn_off_echo[]="ATE 0\r\n";    			// Turn OFF echo
-//	  char AT[]="AT\r\n";                           // Simple command
-//	  char AT_CSQ[]="AT+CSQ\r\n";                   // signal reception quality
-//	  //uint8_t size=0;
-//	  //char str[40]={0};
-//	  //uint8_t size_mas = sizeof(str);
-//	  //memset(str, 0 , sizeof(str));
-//	  HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CSQ, strlen(AT_CSQ), 100);
+//
+//	int TELEPHONE_MODE = 1;
+//	int CALL_OR_SMS_TO_NUMBER = 1;
+//
+//	if(TELEPHONE_MODE == 1)        // вибирається клавіатурою (Певною клавішею)
+//	{
+//		 // 1. Якщо потрібно набрати номер або нмс
+//			// якщо включений режим набору номера або смс і ініт GSM == OK
+//		    if ((CALL_OR_SMS_TO_NUMBER == 1) && (GSM_INIT == 1))
+//		    {
+//		    	if(GSM_INIT == 1)
+//		    	{
+//		    			while(1)
+//		    			{
+//		    				int state = 0;
+//		    				state = call_on_number();
+//
+//		    				if(state == 1)
+//		    				{
+//		    					parsing_ansver_from_GSM();
+//		    				}
+//		    				else
+//		    				{
 //
 //
-//	  //uint8_t state = 1;
+//		    				}
 //
-//	  while (ansver_flag != 1){}      // waite for answer
-//	  	  if(ansver_flag ==1)
-//	 	  {
-//	 	  	  if (strstr(GSM_RX_buffer, "OK"))
-//	 	  	  {
-//	 	  		 // state = 0;
-//	 	  		  memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//	 	  		  ansver_flag = 0;
-//	 	  	  }
 //
-//	 		 if (strstr(GSM_RX_buffer, "+CSQ"))
-//	 		 {
-//	 			  //state = 0;
-//	 			  memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//	 			  ansver_flag = 0;
-//	 		 }
+//		    			}
+//
+//		    	}
+//		    }
+//
+//		    // 2. Чикати на вхідний звінок або смс
+//		    if(GSM_INIT == 1)
+//		    {
+//		    	if_RING_from_GSM();              // Work
+//		    	//if_RING_OUT_from_GSM();          // збитий звінок
+//		    }
+//
+//	}
 //
 //
 //
 //
 //
-//}
-///////////////////////////////////////////////////////
-
-
-
-//  while (1)
-//  {
-//	  while (ansver_flag != 1){}
-//	    if(ansver_flag ==1)
-//	    {
-//	  	  if (strstr(GSM_RX_buffer, "OK"))
-//	  	  {
-//	  			while(1)
-//	  			{
-//	  				int j=0;
-//	  				for(j=0; j<100; j++)
-//	  				{
-//
-//	  				}
-//	  			}
 //
 //
-//	  	  }
-//
-//		 if (strstr(GSM_RX_buffer, "+CSQ"))
-//		 {
-//			  			while(1)
-//			  			{
-//			  				int j=0;
-//			  				for(j=0; j<100; j++)
-//			  				{
-//
-//			  				}
-//			  			}
 //
 //
-//		 }
-//}
-
-
-//	  memset(buffer_output_comand, 0, sizeof(buffer_output_comand));
-//	  char command_1[25] = "AT\r\n";
-//	  strcpy(buffer_output_comand, command_1);
-//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);
 //
 //
-//      HAL_Delay(2000);
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-//	    // MAIN LOOP
+//
+//
+///////////////////////////////////////////////////////////////////////////////////////
+	    // MAIN LOOP
 //        if(interrupt_flag == 1)
 //        {
 //        	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
@@ -835,7 +1329,10 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(CS_M25Q_GPIO_Port, CS_M25Q_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, CS_M25Q_Pin|GPIO_PIN_3, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_15, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -850,6 +1347,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(CS_M25Q_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA11 PA12 PA15 */
+  GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_15;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB3 */
+  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB4 PB5 PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_8|GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
 
@@ -905,476 +1422,154 @@ void generate_sound(void)
 	}
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1); // stop generation of pwm
 }
-// ----------------------------------------------------------------------------
-//void uart1_transmit_reseive_data(int* i)
-//{
-//	// 1. Transmit data in bloking mode /////////////////////////////////////
-////	            HAL_Delay(1000);
-////
-////		  		char str[50]={0};
-////		  		sprintf(str,"Bloking mode transfer: %d\n\0", *i);
-////		  		uint8_t k=0;
-////		  		uint8_t size_buffer=0;
-////		  		for(k=0; ((k<=sizeof(str)) && (str[k] != '\0')); k++)
-////		  		{
-////		  			size_buffer++;
-////		  		}
-////		  		// uint8_t size=sizeof(str);
-////
-////		  		HAL_UART_Transmit(&huart1 , (uint8_t *)str, size_buffer, 100);
-////		  		(*i)++;
-//	/////////////////////////////////////////////////////////////////////////
-//
-//	// 2. Transmit data using non bloking mode /////////////////////////////
-////		  HAL_Delay(1000);
-////
-////		  char str[50]={0};
-////		  sprintf(str,"Non bloking mode transfer: %d\n\0",  *i);
-////		  uint8_t k=0;
-////		  uint8_t size_buffer=0;
-////
-////		  for(k=0; ((k<=sizeof(str)) && (str[k] != '\0')); k++)
-////		  {
-////		  	  size_buffer++;
-////		  }
-////
-////		  HAL_UART_Transmit_IT(&huart1, (uint8_t *)str, size_buffer);
-////		  (*i)++;
-//	/////////////////////////////////////////////////////////////////////////
-
-//
-//
-//}
-
-
-int init_gsm_module(void)
+// ---------------------------------------------------------------------------
+/*
+  Its function read one sing from keyboard
+ */
+char read_one_sign_from_keyboard(void)
 {
-	// initialisation GSM module without answer from GSM. /////////////////////////////
-	// work ok
+	  // 2. Зробити зчитування даних з клавіатури як переривання
+	  //
+	  //HAL_Delay(100);
 
-	// Inits commands:
-		// 1. Send command "AT" answer "OK"
-		// 2. Send command "AT+CSQ" answer "+CSQ: 23,99" and "OK". 23,99 value can be from 0 to 31.
-		// 3. Send command "AT+CCID" answer "89380062300517128558" and "OK"
-		// 4. Send command "AT+CREG?" answer "+CREG: 1,1" and "OK"
+	  char sign = 0;
+	  uint8_t readed_status = 0;
 
-//	  char buffer_output_comand[30] = {0};
-//	  char command_1[25] = "AT\r\n";
-//	  strcpy(buffer_output_comand, command_1);
-//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
-//	  /////////////////////////////////////////////////////////
-//	  HAL_Delay(500);
-//
-//	  memset(buffer_output_comand, 0 , sizeof(buffer_output_comand));
-//	  char command_2[25] = "AT+CSQ\r\n";
-//	  strcpy(buffer_output_comand, command_2);
-//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
-//	  /////////////////////////////////////////////////////////
-//	  HAL_Delay(500);
-//
-//	  memset(buffer_output_comand, 0 , sizeof(buffer_output_comand));
-//	  char command_3[25] = "AT+CCID\r\n";
-//	  strcpy(buffer_output_comand, command_3);
-//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
-//	  /////////////////////////////////////////////////////////
-//	  HAL_Delay(500);
-//
-//	  memset(buffer_output_comand, 0 , sizeof(buffer_output_comand));
-//	  char command_4[25] = "AT+CREG?\r\n";
-//	  strcpy(buffer_output_comand, command_4);
-//	  HAL_UART_Transmit(&huart1 , (uint8_t *)buffer_output_comand, strlen(buffer_output_comand), 0xFFFF);              // Send data into GSM module
+	  readed_status = 0;
+	  uint8_t i = 0;
 
-	///////////////////////////////////////////////////////////////////////////////////
+	  for(i=1; i<=4; i++)
+	  {
+		  if((i == 1) && (readed_status != 1))
+		  {
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 1);     // For detect 123A
+			  HAL_Delay(1);
+			  if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+			  {
+			  		sign = 'A';
+			  		readed_status = 1;
+			  }
 
-	char turn_off_echo[]="ATE 0\r\n";    			// Turn OFF echo
-	char AT[]="AT\r\n";                           // Simple command
-	char AT_CSQ[]="AT+CSQ\r\n";                   // signal reception quality
-	char CCID[] = "AT+CCID\r\n";
+			  else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+			  {
+			  		sign = '3';
+			  		readed_status = 1;
+			  }
 
-	char AT_CREG[] = "AT+CREG?\n\r";              // Registration in network
+			  else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+			  {
+			  	    sign = '2';
+			  	    readed_status = 1;
+			  }
 
+			  else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+			  {
+			  		sign = '1';
+			  		readed_status = 1;
+			  }
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 0);
+		  }
 
-	uint8_t answer_1 = 0;
-	uint8_t answer_2 = 0;
-	uint8_t answer_3 = 0;
-	uint8_t answer_4 = 0;
-	uint8_t answer_5 = 0;
+		  if((i == 2) && (readed_status != 1))
+		  {
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     // For detect 123A
+				HAL_Delay(1);
+				if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+				{
+					  sign = 'B';
+					  readed_status = 1;
+				}
 
-	// 1. Send command " Turn off echo" ///////////////////////////
-	HAL_UART_Transmit(&huart1 , (uint8_t *)turn_off_echo, strlen(turn_off_echo), 100);
+				else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+				{
+					  sign = '6';
+					  readed_status = 1;
+				}
 
-    // Waite for answer
-	while (ansver_flag != 1)
-	{
-		// waite for answer
-	}
-		if(ansver_flag ==1)
-		{
-		 	if (strstr(GSM_RX_buffer, "OK"))
+				else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+				{
+					  sign = '5';
+					  readed_status = 1;
+				}
+
+				else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+				{
+					  sign = '4';
+					  readed_status = 1;
+				}
+				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 0);
+			}
+
+		    if((i == 3) && (readed_status != 1))
 		 	{
-		 	  	memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-		 	  	answer_1 = 1;
-		 	  	ansver_flag = 0;
+		 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     // For detect 123A
+		 		HAL_Delay(1);
+		 		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+		 		{
+		 			sign = 'C';
+		 			readed_status = 1;
+		 		}
+
+		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+		 		{
+		 			sign = '9';
+		 			readed_status = 1;
+		 		}
+
+		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+		 		{
+		 			sign = '8';
+		 			readed_status = 1;
+		 		}
+
+		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+		 		{
+		 			 sign = '7';
+		 			readed_status = 1;
+		 		}
+		 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 0);
 		 	}
-		 }
-
-    HAL_Delay(100);
-    ////////////////////////////////////////////////////////////////
-
-	// 2. Send command "signal reception quality" //////////////////
-	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CSQ, strlen(AT_CSQ), 100);
-
-	while (ansver_flag != 1)
-	{
-		// waite for answer
-	}
-		if(ansver_flag ==1)
-		{
-			if (strstr(GSM_RX_buffer, "+CSQ"))
-			{
-				// answer "+CSQ: 23,99"
-				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-				answer_2 = 1;
-				ansver_flag = 0;
-			}
-		}
-
-	while (ansver_flag != 1)                     // Waite for answer "OK"
-	{
-		// waite for answer
-	}
-	if(ansver_flag ==1)
-	{
-		if (strstr(GSM_RX_buffer, "OK"))
-		{
-			// answer "+CSQ: 23,99"
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-			answer_2 = 1;
-			ansver_flag = 0;
-		}
-	}
-	HAL_Delay(200);
-	//////////////////////////////////////////////////////////////////
 
 
-	// 3. Send command "signal reception quality" /////////////////////
-	HAL_UART_Transmit(&huart1 , (uint8_t *)CCID, strlen(CCID), 100);
+		    if((i == 3) && (readed_status != 1))
+		   		 	{
+		   		 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);     // For detect 123A
+		   		 		HAL_Delay(1);
+		   		 		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+		   		 		{
+		   		 			sign = 'D';
+		   		 			readed_status = 1;
+		   		 		}
 
-	while (ansver_flag != 1)
-	{
-		// waite for answer
-	}
-		if(ansver_flag ==1)
-		{
-			if (strstr(GSM_RX_buffer, "89380"))
-			{
-				// answer  89380062300517128558    // My ID
-				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-				answer_3 = 1;
-				ansver_flag = 0;
-			}
-		}
+		   		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+		   		 		{
+		   		 			sign = '#';
+		   		 			readed_status = 1;
+		   		 		}
 
-	while (ansver_flag != 1)                    // Waite for answer "OK"
-	{
-				// waite for answer
-	}
-	if(ansver_flag ==1)
-	{
-		if (strstr(GSM_RX_buffer, "OK"))
-		{
-			// answer "+CSQ: 23,99"
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-			answer_3 = 1;
-			ansver_flag = 0;
-		}
-	}
-	HAL_Delay(200);
-//    ////////////////////////////////////////////////////////////////////
-//
-//	// 4. Send command "Check registration in network"
-//	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CREG, strlen(AT_CREG), 1000);
-//
-//	while (ansver_flag != 1)
-//	{
-//		// waite for answer
-//	}
-//	if(ansver_flag ==1)
-//	{
-//		if (strstr(GSM_RX_buffer, "+CREG: 1,1"))
-//		{
-//			// answer   AT+CREG?\r\n
-//			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//			answer_4 = 1;
-//			ansver_flag = 0;
-//		}
-//	}
-//	while (ansver_flag != 1)                    // Waite for answer "OK"
-//	{
-//				// waite for answer
-//	}
-//	if(ansver_flag ==1)
-//	{
-//		if (strstr(GSM_RX_buffer, "OK"))
-//		{
-//			// answer "+CSQ: 23,99"
-//			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//			answer_4 = 1;
-//			ansver_flag = 0;
-//		}
-//	}
-//	HAL_Delay(100);
-	///////////////////////////////////////////////////////////////////
+		   		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+		   		 		{
+		   		 			sign = '0';
+		   		 			readed_status = 1;
+		   		 		}
 
-
-	if(answer_1 && answer_2 && answer_3 )
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-
-
+		   		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+		   		 		{
+		   		 			 sign = '*';
+		   		 			readed_status = 1;
+		   		 		}
+		   		 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+		   		 	}
+	  }
+	  return sign;
 }
-
-//void GSM_init(void)
-//{
-//	// 1. Send AT comand. Ansver must be "OK"
-//	char call_to_my_mobile_number[]="AT\r\n";
-//	uint8_t size=0;
-//	char str[40]={0};
-//	uint8_t size_mas = sizeof(str);
-//	memset(str, 0 , sizeof(str));
-//
-//	sprintf(str, call_to_my_mobile_number);      							// AT command
-//	size=sizeof(str);
-//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);              // Send data into GSM module
-//
-//	while(ansver_flag == 1)              // Receive ansver
-//	{
-//		 if (strstr(GSM_RX_buffer, "OK"))
-//		 {
-////		     // Clear last line from previus data
-////		     sprintf(str,"%s", "                    ");
-////		     ssd1306_SetCursor(00, 46);
-////		     ssd1306_WriteString(str, Font_7x10, White);
-////		     ssd1306_UpdateScreen();
-////
-////		     memset(str, 0 , sizeof(str));
-////		     sprintf(str,"%s", "RING");
-////		     ssd1306_SetCursor(00, 46);
-////		     ssd1306_WriteString(str, Font_7x10, White);
-////
-////		     ssd1306_UpdateScreen();
-//
-//		     // Do something with incoming call
-//
-//		     //
-//		     ansver_flag = 0;
-//		 }
-//	}
-//}
-
-//int GSM_init(void)
-//{
-////	static bool at_ready = false;
-////	static	bool ast_poweron = false;
-////	static  bool creg_2 = false;
-////	static  bool call_ready = false;
-////	static 	bool creg_1 = false;
-//
-//
-//
-//
-//
-//	while(ansver_flag == 1)              // Receive ansver
-//	{
-//		 if (strstr(GSM_RX_buffer, "AT Ready") )
-//		 {
-//			   at_ready = true;
-//		       ansver_flag = 0;
-//		 }
-//		 if (strstr(GSM_RX_buffer, "AST_POWERON") )
-//		 {
-//			   ast_poweron = true;
-//			   ansver_flag = 0;
-//		 }
-//		 if(strstr(GSM_RX_buffer, "+CREG: 2"))
-//		 {
-//			   creg_2 = true;
-//			   ansver_flag = 0;
-//		 }
-////		 if(strstr(GSM_RX_buffer, "Call Ready"))
-////		 {
-////			   call_ready = true;
-////		 	   ansver_flag = 0;
-////		 }
-//		 if(strstr(GSM_RX_buffer, "+CREG: 1"))
-//		 {
-//			   creg_1 = true;
-//		       ansver_flag = 0;
-//		 }
-//
-//	 }
-//
-//	 if( (at_ready == true) && (ast_poweron == true) && (creg_2 == true)  && (creg_1 == true))   // && (call_ready == true)  // If init OK
-//	 {
-//		 return 1;
-//	 }
-//	 else
-//	 {
-//		 return 0;
-//	 }
-//}
+// ----------------------------------------------------------------------------
 
 
-//void call_on_number(void)
-//{
-//	char call_to_my_mobile_number[]="ATD+380931482354\r\n";
-//	uint8_t size=0;
-//    char str[40]={0};
-//    uint8_t size_mas = sizeof(str);
-//	memset(str, 0 , sizeof(str));
-//
-//    sprintf(str, call_to_my_mobile_number);      							// AT command
-//	size=sizeof(str);
-//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);              // Send data into GSM module
-//
-//
-//    while(ansver_flag == 1)              // Receive ansver
-//    {
-//    	 // Print GSM_RX_buffer in first line
-//    	 memset(str, 0 , sizeof(str));
-//    	 sprintf(str,"%s", GSM_RX_buffer);
-//    	 ssd1306_SetCursor(00, 36);
-//    	 ssd1306_WriteString(str, Font_7x10, White);
-//    	 //
-//
-//    	    // Parsing incoming data from GSM
-//    	    // Detect incoming call, and print it on OLED
-//            if (strstr(GSM_RX_buffer, "RING"))
-//            {
-//            	// Clear last line from previus data
-//            	sprintf(str,"%s", "                    ");
-//            	ssd1306_SetCursor(00, 46);
-//            	ssd1306_WriteString(str, Font_7x10, White);
-//            	ssd1306_UpdateScreen();
-//
-//            	memset(str, 0 , sizeof(str));
-//            	sprintf(str,"%s", "RING");
-//            	ssd1306_SetCursor(00, 46);
-//            	ssd1306_WriteString(str, Font_7x10, White);
-//
-//            	ssd1306_UpdateScreen();
-//
-//            	// Do something with incoming call
-//
-//            	//
-//            	ansver_flag = 0;
-//            }
-//            //  Звінок збили
-//            else if(strstr(GSM_RX_buffer, "BUSY"))
-//            {
-//            	// Clear last line from previus data
-//            	sprintf(str,"%s", "                    ");
-//            	ssd1306_SetCursor(00, 46);
-//            	ssd1306_WriteString(str, Font_7x10, White);
-//            	ssd1306_UpdateScreen();
-//
-//            	memset(str, 0 , sizeof(str));
-//            	sprintf(str,"%s", "BUSY");
-//            	ssd1306_SetCursor(00, 46);
-//            	ssd1306_WriteString(str, Font_7x10, White);
-//
-//            	ssd1306_UpdateScreen();
-//            	// Do something...
-//
-//            	//
-//            	ansver_flag = 0;
-//            }
-//              //  Телефон не був піднятий
-//            else if(strstr(GSM_RX_buffer, "NO ANSWERALL"))
-//            {
-//            	// Clear last line from previus data
-//            	 sprintf(str,"%s", "                    ");
-//            	 ssd1306_SetCursor(00, 46);
-//            	 ssd1306_WriteString(str, Font_7x10, White);
-//            	 ssd1306_UpdateScreen();
-//
-//            	 memset(str, 0 , sizeof(str));
-//            	 sprintf(str,"%s", "NO ANSWER");
-//            	 ssd1306_SetCursor(00, 46);
-//            	 ssd1306_WriteString(str, Font_7x10, White);
-//
-//            	 ssd1306_UpdateScreen();
-//            	 // Do something...
-//
-//            	 //
-//            	 ansver_flag = 0;
-//            }
-//
-//            //  Телефон підняли
-//            else if(strstr(GSM_RX_buffer, "CONNECT"))
-//            {
-//                 // Clear last line from previus data
-//                 sprintf(str,"%s", "                    ");
-//                 ssd1306_SetCursor(00, 46);
-//                 ssd1306_WriteString(str, Font_7x10, White);
-//                 ssd1306_UpdateScreen();
-//
-//                 memset(str, 0 , sizeof(str));
-//                 sprintf(str,"%s", "ANSWER: say...");
-//                 ssd1306_SetCursor(00, 46);
-//                 ssd1306_WriteString(str, Font_7x10, White);
-//
-//                 ssd1306_UpdateScreen();
-//                 // Do something...
-//
-//                 //
-//                 ansver_flag = 0;
-//             }
-//
-//            else
-//            {
-//                // Clean working line OLED  ///////////////////////////////
-//            	//memset(GSM_RX_buffer, 0 , sizeof(GSM_RX_buffer));     // Clean GSM_RX_buffer buffer
-//
-//            	HAL_Delay(1000);
-//
-//                sprintf(str,"%s", "                    ");
-//                ssd1306_SetCursor(00, 46);
-//                ssd1306_WriteString(str, Font_7x10, White);
-//                ssd1306_UpdateScreen();
-//
-//                //////////////////////////////////////////////////////////
-//            }
-//
-//
-//    	    // Print data on last line on OLED
-////    	    memset(str, 0 , sizeof(str));
-////    	    sprintf(str,"%s", GSM_RX_buffer);
-////    	    ssd1306_SetCursor(00, 46);
-////    	    ssd1306_WriteString(str, Font_7x10, White);
-////
-////    	    ssd1306_UpdateScreen();
-//    }
-//    // Clean working line OLED  ///////////////////////////////
-////    sprintf(str,"%s", "                    ");
-////    ssd1306_SetCursor(00, 46);
-////    ssd1306_WriteString(str, Font_7x10, White);
-////    ssd1306_UpdateScreen();
-//    //////////////////////////////////////////////////////////
-//
-//}
-
-void send_sms_on_number(void)
-{
 
 
-}
-
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* USER CODE END 4 */

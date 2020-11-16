@@ -229,6 +229,7 @@ void parsing_GPGGA_line(char *str_GPGGA)
 	    char nmeaSnt[70];
 		int size = sizeof(nmeaSnt);
 		memset(nmeaSnt, 0, size);
+		char number_of_satalits_str[4] = {0};
 
 		//Copy to  "*" з str_GPGGA в nmeaSnt
 		int i=0;
@@ -254,8 +255,8 @@ void parsing_GPGGA_line(char *str_GPGGA)
 		uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 		sprintf(hex, "%x", intSum);
 
-		if(strstr(smNmbr, hex) != NULL)
-		{
+//		if(strstr(smNmbr, hex) != NULL)
+//		{
 			// Parsing string
 
 			i = 0;
@@ -270,11 +271,11 @@ void parsing_GPGGA_line(char *str_GPGGA)
 					switch (count)
 					{
 						case 0:                     // Time
-							for(g=0; g<6; g++)
+							for(g=0; g<8; g++)
 							{
 								not_used[g] = nmeaSnt[i+g];
 							}
-							not_used[6] = '\0';
+							not_used[9] = '\0';
 							i = i+g;
 
 							break;
@@ -325,30 +326,45 @@ void parsing_GPGGA_line(char *str_GPGGA)
 							break;
 
 						case 6:                      // Number of Satellites
-							memset(not_used, 0 , sizeof(not_used));    // clean buffer
+							memset(number_of_satalits_str, 0 , sizeof(number_of_satalits_str));    // clean buffer
+
 							for(g=0; g<2; g++)
 							{
-								not_used[g] = nmeaSnt[i+g];
+								number_of_satalits_str[g] = nmeaSnt[i+g];
 							}
-							not_used[2] = '\0';
+							number_of_satalits_str[2] = '\0';
+							// Convert two digits string on number
+							uint8_t dozens_number_of_satalits = (uint8_t)number_of_satalits_str[0] - 48;
+							dozens_number_of_satalits = dozens_number_of_satalits *10;
+							uint8_t units_number_of_satalits = (uint8_t)number_of_satalits_str[1]  - 48;
+							uint8_t digit_number_of_satalites = dozens_number_of_satalits + units_number_of_satalits;
 
-							// Save in structure
-							char str[3]={0};
-							sprintf(str,"%s", not_used);
-							strcpy(GPS_data.number_of_satellites_GPGGA, str);
+							// Chesk if data id number
+							if((digit_number_of_satalites >= 3 || digit_number_of_satalites <= 14))   // Check if data correct
+							{
+								// Convert uint8_t in char
+								char buff_char_number_of_satalites[3]={0};
+								memset(buff_char_number_of_satalites, 0 ,sizeof(buff_char_number_of_satalites));
+								buff_char_number_of_satalites[0] = (char)((dozens_number_of_satalits/10) + 48);
+								buff_char_number_of_satalites[1] = (char)units_number_of_satalits + 48;
+								buff_char_number_of_satalites[2] = '\0';
 
-							// Save in global variable
-							memset(str, 0 , sizeof(str));
-							sprintf(str,"%s", GPS_data.number_of_satellites_GPGGA);
-							strcpy(gps_number_of_satellites, str);
-							i = i+g;
+								// write in global variable
+								strcpy(gps_number_of_satellites, buff_char_number_of_satalites);
+							}
+							else
+							{
+								char error_message[] = "Er";
+								strcpy(gps_number_of_satellites, error_message);
+							}
+
 							break;
 					}
 					count++;
 				}
 				i++;
 			}
-		}
+		//}
 }
 
 
@@ -378,45 +394,58 @@ void parsing_GPVTG_line(char *str_GPVTG)
 	memcpy(smNmbr, &rawSum[1], 2);							// Copy checksum
 	smNmbr[2]='\0';											// Add and of line '\0' sing
 
-	// PROBLEM: Checksum !=
-	uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
-	char hex[3];
-	sprintf(hex, "%x", intSum);
+//	// PROBLEM: Checksum !=
 
-//	if(strstr(smNmbr, hex) != NULL)
-//	{
-			// Parsing string
+	i = 0;
+	int count = 0;
 
-			i = 0;
-			int count = 0;
-
-			while(nmeaSnt[i] != '\0')
+	uint8_t speed_data_readed = 1;
+	while(speed_data_readed == 1)
+	{
+		if(nmeaSnt[i] == ',')
+		{
+			count++;
+		}
+		if(count == 7)				// Find seven part (speed)
+		{
+			i++;
+			uint8_t k = 0;
+			char speed_test_variable[4]={0};    // for debug
+			uint8_t error = 0;
+			do
 			{
-				if(nmeaSnt[i] == ',')
+				//GPS_data.speed[k] = nmeaSnt[i+k];
+				if(((nmeaSnt[i+k]-48) >= 0) && ((nmeaSnt[i+k]-48)  <= 9))   // Ok
 				{
-					count++;
+					speed_test_variable[k] = nmeaSnt[i+k];
 				}
-				if(count == 7)
+				else	// if error value. delete value.
 				{
-					i++;
-					uint8_t k = 0;
-					for(k = 0; k<=5; k++)
-					{
-						GPS_data.speed[k] = nmeaSnt[i+k];
+					// Error
+					error = 1;
+					memset(speed_test_variable, 0 ,sizeof(speed_test_variable));
+				}
+				k++;
+			}while ((k < 3) && (nmeaSnt[i+k] != '.') && (error != 1));    // Problem where !!!!
 
-//						if(nmeaSnt[i+k] = '.')              // don't use number after comma
-//						{
-//							// Save in global variable
-//							memset(str, 0 , sizeof(str));
-//							sprintf(str,"%s", GPS_data.speed);
-//							strcpy(gps_speed, str);
-//
-//							break;
-//						}
-					}
-				}
-				i++;
-			}
+			///////////// Test
+//			if(speed_test_variable[0] == '1')
+//			{
+//				int j=0;
+//				j = 100+100;
+//			}
+			///////// end test
+
+			// Save in global variable
+			memset(str, 0 , sizeof(str));
+			//sprintf(str,"%s", GPS_data.speed);
+			sprintf(str,"%s", speed_test_variable);
+			strcpy(gps_speed, str);
+
+			speed_data_readed = 0;
+		}
+		i++;
+	}
 }
 //---------------------------------------------------------------------
 
@@ -439,16 +468,6 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 		char *str_GPGGA;
 		char *str_GPVTG;
 		char *str_answer;
-
-//		// Find answer 'OK' in buffStr
-//		str_answer = strstr(buffStr, "OK");
-//		if(str_answer != NULL)
-//		{
-//			while(1)
-//			{
-//
-//			}
-//		}
 
 		// Find $GPGLL in buffStr
 		str_GPGLL = strstr(buffStr, "$GPGLL");    // $GPGLL,4948.72578,N,02359.72468,E,151729.00,A,A*6C\r

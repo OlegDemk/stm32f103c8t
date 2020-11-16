@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="uart1_transmit_reseive_data"/>
+		<item key="selection" value="init_gsm_module"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="init_gsm_module"/>
+			<item value="hours"/>
+			<item value="ansver_flag"/>
+			<item value="wer_3 )"/>
+			<item value="GSM_RX_buffer"/>
+			<item value="counter_GSM_RX_buffer"/>
+			<item value="USART_CR1_RXNEIE"/>
+			<item value="USART_CR1_RE"/>
+			<item value="USART_CR1_TE"/>
+			<item value="call_on_number"/>
 			<item value="uart1_transmit_reseive_data"/>
 			<item value="HAL_UART_RxCpltCallback"/>
 			<item value="HAL_NVIC_SetPriority"/>
 			<item value="__HAL_RCC_USART1_CLK_ENABLE"/>
 			<item value="USART1_IRQHandler"/>
-			<item value="Callback"/>
-			<item value="HAL_StatusTypeDef"/>
-			<item value="UART_IT_RXNE"/>
-			<item value="recei"/>
-			<item value="UART_IT_TC"/>
-			<item value="Transmit"/>
-			<item value="Transmut"/>
-			<item value="Tran"/>
-			<item value="USE_HAL_UART_REGISTER_CALLBACKS"/>
-			<item value="gps_time"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1332"/>
-		<item key="DIALOG_Y_ORIGIN" value="200"/>
+		<item key="DIALOG_X_ORIGIN" value="435"/>
+		<item key="DIALOG_Y_ORIGIN" value="273"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
-		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|18.104166|0|GTK|1|"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.234042|0|GTK|1|"/>
 	</section>
 </section>

@@ -1,3 +1,3 @@
-oled_ssd1306.c:15:6:init_oled	8	static
-oled_ssd1306.c:23:6:test_oled	16	static
-oled_ssd1306.c:55:6:OLED_prinr_all_data	88	static
+oled_ssd1306.c:17:6:init_oled	8	static
+oled_ssd1306.c:25:6:test_oled	16	static
+oled_ssd1306.c:57:6:OLED_prinr_all_data	120	static

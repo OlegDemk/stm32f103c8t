@@ -243,11 +243,13 @@ void USART1_IRQHandler(void)
   /* USER CODE BEGIN USART1_IRQn 0 */
 
 	// Receive data from UART ///////////////////////////////////////////////////
-	/* Structure input message: '0d','0a','4F','4B','0d','0a'
+	/*
+                 CR (U+000D): англ. carriage return —      // '\r'
+                 LF (U+000A): англ. line feed —            // '\n'
+	 * Structure input message: '0d','0a','4F','4B','0d','0a'
 	                             \r,  \n , O,   K,   \r,  \n
 	Its interrupt generate olways if one byte is received
 	 */
-	// Lessons 20 : http://mypractic.ru/urok-20-interfejs-uart-v-stm32-rabota-s-nim-cherez-registry-cmsis-ispolzovanie-preryvaniya-uart.html
 	uint8_t d = USART1->DR;                      					 		// Copy byte from UART1 buffer
 	if((d != '\r') && (d != '\n'))                                   		// Save in buffer is char is letter or numbers
 	{

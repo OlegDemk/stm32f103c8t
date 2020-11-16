@@ -24,7 +24,9 @@ Core/Src/GSM_IOT_GA6.o: ../Core/Src/GSM_IOT_GA6.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
+ ../Core/Inc/GSM_IOT_GA6.h ../Core/Inc/ssd1306.h ../Core/Inc/fonts.h \
+ ../Core/Inc/fonts.h
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 
@@ -77,3 +79,11 @@ Core/Src/GSM_IOT_GA6.o: ../Core/Src/GSM_IOT_GA6.c \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
+
+../Core/Inc/GSM_IOT_GA6.h:
+
+../Core/Inc/ssd1306.h:
+
+../Core/Inc/fonts.h:
+
+../Core/Inc/fonts.h:

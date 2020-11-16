@@ -10,6 +10,6 @@
 
 void init_oled(void);
 void test_oled(void);
-void OLED_prinr_all_data(void);
+void OLED_prinr_all_data(int GPS_SELECTED);
 
 #endif /* INC_OLED_SSD1306_H_ */
