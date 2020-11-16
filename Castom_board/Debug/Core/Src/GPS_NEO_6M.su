@@ -1,6 +1,6 @@
-GPS_NEO_6M.c:34:6:simple_read_stream_data_from_GPS	16	static
-GPS_NEO_6M.c:45:5:nmea0183_checksum	24	static
-GPS_NEO_6M.c:58:6:parsing_GPGLL_line	176	static
-GPS_NEO_6M.c:227:6:parsing_GPGGA_line	144	static
-GPS_NEO_6M.c:372:6:parsing_GPVTG_line	104	static
-GPS_NEO_6M.c:458:6:parsing_GPS	544	static
+GPS_NEO_6M.c:35:6:simple_read_stream_data_from_GPS	16	static
+GPS_NEO_6M.c:46:5:nmea0183_checksum	24	static
+GPS_NEO_6M.c:59:6:parsing_GPGLL_line	176	static
+GPS_NEO_6M.c:231:6:parsing_GPGGA_line	144	static
+GPS_NEO_6M.c:376:6:parsing_GPVTG_line	104	static
+GPS_NEO_6M.c:455:6:parsing_GPS	544	static

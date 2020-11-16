@@ -23,13 +23,14 @@ struct GPS
 	char time[6];
 
 	char speed[4];
-
 	char number_of_satellites_GPGGA[2];
 
 } GPS_data;
 
+int GPGGA_data_is_ready = 0;     // Flag. If time data is ready then print it on OLED.
+uint8_t receive_gps_signal = 0;
 
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 // Function print all non parsed data from GSM module
 void simple_read_stream_data_from_GPS (uint8_t *GPS_buff, int size_buff)    // <<<<<<<<< NAME FUNCTION !!!!!
 {
@@ -40,7 +41,7 @@ void simple_read_stream_data_from_GPS (uint8_t *GPS_buff, int size_buff)    // <
 		flag = 0;
 	}
 }
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 // Checksum
 int nmea0183_checksum(char *msg)
 {
@@ -54,14 +55,14 @@ int nmea0183_checksum(char *msg)
 	return checksum;
 }
 
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 void parsing_GPGLL_line(char *str_GPGLL)
 {
 	char nmeaSnt[49];										// Main buffer for GPGLL line
 	int size = sizeof(nmeaSnt);
 	memset(nmeaSnt, 0, size);
 
-	//Copy to  "*" з str_GPGLL в nmeaSnt
+	//Copy to  "*" from str_GPGLL in nmeaSnt
 	int i=0;
 	for(i=0; (str_GPGLL[i] != '*') && (i < 50)  ; i++)
 	{
@@ -215,6 +216,9 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						memset(str, 0 , sizeof(str));
 						sprintf(str,"%s", GPS_data.time);
 						strcpy(gps_time, str);
+
+						GPGGA_data_is_ready = 1;
+
 						break;
 				}
 				count++;
@@ -223,7 +227,7 @@ void parsing_GPGLL_line(char *str_GPGLL)
 		}
 	}
 }
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 void parsing_GPGGA_line(char *str_GPGGA)
 {
 	    char nmeaSnt[70];
@@ -231,7 +235,7 @@ void parsing_GPGGA_line(char *str_GPGGA)
 		memset(nmeaSnt, 0, size);
 		char number_of_satalits_str[4] = {0};
 
-		//Copy to  "*" з str_GPGGA в nmeaSnt
+		//Copy to  "*" from str_GPGGA in nmeaSnt
 		int i=0;
 
 		for(i=0; (str_GPGGA[i] != '*') && (i < 70)  ; i++)
@@ -368,7 +372,7 @@ void parsing_GPGGA_line(char *str_GPGGA)
 }
 
 
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 void parsing_GPVTG_line(char *str_GPVTG)
 {
 	char nmeaSnt[49];
@@ -377,7 +381,7 @@ void parsing_GPVTG_line(char *str_GPVTG)
 
 	char str[6]={0};
 
-	//Copy to  "*" з str_GPVTG в nmeaSnt
+	//Copy to  "*" from str_GPVTG in nmeaSnt
 	int i=0;
 
 	for(i=0; (str_GPVTG[i] != '*') && (i < 50)  ; i++)
@@ -428,13 +432,6 @@ void parsing_GPVTG_line(char *str_GPVTG)
 				k++;
 			}while ((k < 3) && (nmeaSnt[i+k] != '.') && (error != 1));    // Problem where !!!!
 
-			///////////// Test
-//			if(speed_test_variable[0] == '1')
-//			{
-//				int j=0;
-//				j = 100+100;
-//			}
-			///////// end test
 
 			// Save in global variable
 			memset(str, 0 , sizeof(str));
@@ -447,10 +444,10 @@ void parsing_GPVTG_line(char *str_GPVTG)
 		i++;
 	}
 }
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 
 
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 // Parsing only three lines from NMIA
 // 1. From GPGLL - coordinates
 // 2. From GPGGA - number of satellites
@@ -467,13 +464,13 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 		char *str_GPGLL;
 		char *str_GPGGA;
 		char *str_GPVTG;
-		char *str_answer;
 
 		// Find $GPGLL in buffStr
 		str_GPGLL = strstr(buffStr, "$GPGLL");    // $GPGLL,4948.72578,N,02359.72468,E,151729.00,A,A*6C\r
 		if(str_GPGLL != NULL)
 		{
 			parsing_GPGLL_line(str_GPGLL);
+			receive_gps_signal++;
 		}
 
 		// Find $GPGGA in buffStr
@@ -481,6 +478,7 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 		if(str_GPGGA != NULL)
 		{
 			parsing_GPGGA_line(str_GPGGA);
+			receive_gps_signal++;
 		}
 
 		// Find $GPVTG in buffStr
@@ -488,12 +486,13 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 		if(str_GPVTG != NULL)
 		{
 			parsing_GPVTG_line(str_GPVTG);
+			receive_gps_signal++;
 		}
 
 		flag = 0;			// Flag = 0 means: Data was readed
 	}
 }
-//---------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------
 
 
 
