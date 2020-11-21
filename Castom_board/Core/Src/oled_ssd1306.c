@@ -6,6 +6,7 @@
  */
 #include "ssd1306.h"
 #include "fonts.h"
+#include <string.h>
 
 #include "main.h"
 
@@ -16,6 +17,10 @@ extern TIM_HandleTypeDef htim1;
 extern int GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
 
 void print_GPS_data(void);
+void print_all_sensors_data(void);
+void print_GSM_data(void);
+void print_fingerprint_data(void);
+
 
 // -----------------------------------------------------------------------------------
 void init_oled(void)
@@ -58,26 +63,25 @@ void test_oled(void)
 	}
 }
 // -----------------------------------------------------------------------------------
-void OLED_prinr_all_data(int GPS_SELECTED)
+void OLED_prinr_all_data(int  select_print_data)
 {
-    // Print all data in OLED
-    if(GPS_SELECTED == 1)
-    {
-    	print_GPS_data();
-    }
-    //    	if(GSM_SELECTED == 0)
-    //    	{
-    //
-    //    	}
-    //    	if(FINGERPEINT_SELECTED == 0)
-    //    	{
-    //
-    //    	}
-    //    	if(SENSORS_SELECTED == 0)
-    //        {
-    //
-    //        }
+	switch (select_print_data)
+	{
+		case 1:
+			print_GPS_data();
+			break;
+		case 2:
+			print_GSM_data();
+			break;
+		case 3:
+			print_fingerprint_data();
+			break;
+		case 4:
+			print_all_sensors_data();
+			break;
+	}
 
+//    // Print all data in OLED
     ssd1306_UpdateScreen();
 }
 // -----------------------------------------------------------------------------------
@@ -89,12 +93,12 @@ void print_main_menu(void)
 	ssd1306_SetCursor(00, 00);
 	ssd1306_WriteString(str, Font_7x10, White);
 
-	sprintf(str,"%s", "1.GPS MODE");
+	sprintf(str,"%s", "1.GSM MODE");
 	ssd1306_SetCursor(00, 16);
 	ssd1306_WriteString(str, Font_7x10, White);
 	memset(str, 0 , sizeof(str));
 
-	sprintf(str,"%s", "2.GSM MODE");
+	sprintf(str,"%s", "2.GPS MODE");
 	ssd1306_SetCursor(00, 26);
 	ssd1306_WriteString(str, Font_7x10, White);
 	memset(str, 0 , sizeof(str));
@@ -244,12 +248,39 @@ void print_GPS_data(void)
 	ssd1306_SetCursor(90, 36);
 	ssd1306_WriteString(gps_speed, Font_7x10, White);
 }
+// -----------------------------------------------------------------------------------
+void print_all_sensors_data(void)
+{
+	// 1. Print data from si7021 sensor
+	char str_1[40]={0};
 
+	strcpy(str_1, "1.si7021 ");
+	strcat(str_1, temperature_si7021);
+	strcat(str_1, humidity_si7021);
 
+	ssd1306_SetCursor(0, 16);
+	ssd1306_WriteString(str_1, Font_7x10, White);
 
+	memset(str_1, 0 , sizeof(str_1));
 
+	// 2. Print data from AM2302
 
+	// 3. Print data from 9066 sensor
 
+	// 4. Other sensors
+
+}
+// -----------------------------------------------------------------------------------
+void print_GSM_data(void)
+{
+
+}
+// -----------------------------------------------------------------------------------
+void print_fingerprint_data(void)
+{
+
+}
+// -----------------------------------------------------------------------------------
 
 
 

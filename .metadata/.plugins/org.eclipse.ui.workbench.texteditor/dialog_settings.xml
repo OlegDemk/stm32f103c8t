@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="read_one_sign_from_keyboard"/>
+		<item key="selection" value="OLED_prinr_all_data"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="read_one_sign_from_keyboard"/>
+			<item value="OLED_prinr_all_data"/>
+			<item value="humidity_si7021"/>
+			<item value="GPS_SELECTED"/>
+			<item value="SENSORS_SELECTED"/>
+			<item value="print_GPS_data"/>
 			<item value="GPGGA_data_is_ready"/>
+			<item value="sign"/>
+			<item value="GPS_buff"/>
+			<item value="parsing_GPS"/>
+			<item value="str"/>
+			<item value="str_gps"/>
+			<item value="read_one_sign_from_keyboard"/>
 			<item value="gps_signal_receive"/>
 			<item value="MODE"/>
 			<item value="str_answer"/>
-			<item value="OLED_prinr_all_data"/>
-			<item value="Press &apos;*&apos; for EXIT"/>
-			<item value="memset(str, 0 , sizeof(str));&#x0A;                 sprintf(str,&quot;%s&quot;, &quot;Press &apos;*&apos; for EXIT&quot;);&#x0A;                 ssd1306_SetCursor(00, 46);&#x0A;                 ssd1306_WriteString(str, Font_7x10, White);&#x0A;                 memset(str, 0 , sizeof(str));"/>
-			<item value="count"/>
-			<item value="k"/>
-			<item value="speed"/>
-			<item value="gps_number_of_satellites"/>
-			<item value="number_of_satalits_str"/>
-			<item value="gps_time"/>
-			<item value="parsing_GPS"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="918"/>
-		<item key="DIALOG_Y_ORIGIN" value="252"/>
+		<item key="DIALOG_X_ORIGIN" value="483"/>
+		<item key="DIALOG_Y_ORIGIN" value="476"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
-		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|6.544304|0|GTK|1|"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
 	</section>
 </section>

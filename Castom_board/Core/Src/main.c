@@ -49,6 +49,7 @@
 
 #include "GSM_IOT_GA6.h"
 
+
 extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
 extern uint8_t receive_gps_signal;
 /* USER CODE END Includes */
@@ -63,6 +64,11 @@ extern uint8_t receive_gps_signal;
 void test_flash_W25Q(void);
 void generate_sound(void);
 char read_one_sign_from_keyboard(void);
+
+int gsm_mode(char sign);
+int gps_mode(char sign);
+int fingerprint_mode(char sign);
+int sensors_mode(char sign);
 //void gps_mode(char sign);
 
 uint8_t GPS_buff[512];      						// main buffer for stream from GPS
@@ -282,483 +288,44 @@ while (1)
 		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
 
 		// For debug ///////////
-		//sign = '1';
+		//sign = '2';    // turn on GSM mode
 		/////////////////////
 
 		if(sign == '1')    // If select GSM mode
 		{
-			GPS_MODE = true;
+			GSM_MODE = true;
+			while(GSM_MODE && (EXIT == 0))
+			{
+				EXIT = gsm_mode(sign);
+			}
 		}
 		if(sign == '2')    // If select GPS mode
 		{
-			GSM_MODE = true;
+			GPS_MODE = true;
+			while (GPS_MODE && (EXIT == 0))
+			{
+				EXIT = gps_mode(sign);
+			}
 		}
-		if(sign == '3')    // If select GPS mode
+		if(sign == '3')    // If select FINGERPRINT MODE
 		{
 			FINGERPRINT_MODE = true;
+			while (FINGERPRINT_MODE && (EXIT == 0))
+			{
+				EXIT = fingerprint_mode(sign);
+			}
 		}
-		if(sign == '4')    // If select GPS mode
+		if(sign == '4')    // If select SENSORS MODE
 		{
 			SENSORS_MODE = true;
+			while (SENSORS_MODE && (EXIT == 0))
+			{
+				EXIT = sensors_mode(sign);
+			}
 		}
 
 		ssd1306_UpdateScreen();
 		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '4'));     // Select one from 3 modes
-
-    // MAIN MODES
-
-	while(GSM_MODE && (EXIT == 0))  /////////////////////////////////////////////////////////////////////
-	{
-		// EXIT = gsm_mode(sign);
-
-		ssd1306_Fill(Black);
-		ssd1306_UpdateScreen();
-		// Print mode in head
-		sprintf(str,"%s", "2.GSM: waiting...");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str, Font_7x10, White);
-		ssd1306_UpdateScreen();
-
-
-		// Init GSM module////////////////////////////
-		init_GSM_uart_comunication();
-		if(init_gsm_module() == HAL_OK)
-		{
-			// init OK
-			GSM_INIT = 1;
-
-			sprintf(str,"%s", "                    ");
-			ssd1306_SetCursor(00, 00);
-			ssd1306_WriteString(str, Font_7x10, White);
-			ssd1306_UpdateScreen();
-
-			sprintf(str,"%s", "2.GSM: OK");
-			ssd1306_SetCursor(00, 00);
-			ssd1306_WriteString(str, Font_7x10, White);
-			ssd1306_UpdateScreen();
-		}
-		else
-		{
-			// GSM didn't init
-			GSM_INIT = 0;
-
-			sprintf(str,"%s", "                    ");
-			ssd1306_SetCursor(00, 00);
-			ssd1306_WriteString(str, Font_7x10, White);
-			ssd1306_UpdateScreen();
-
-			sprintf(str,"%s", "2.GSM: ERROR");
-			ssd1306_SetCursor(00, 00);
-			ssd1306_WriteString(str, Font_7x10, White);
-			ssd1306_UpdateScreen();
-		}
-		// END INIT GSM MODULE  //////////////////////////
-
-        if(GSM_INIT == 1)
-        {
-			// Print GSM menu
-			sprintf(str,"%s", "1.For make CALL");
-			ssd1306_SetCursor(00, 16);
-			ssd1306_WriteString(str, Font_7x10, White);
-			memset(str, 0 , sizeof(str));
-
-			sprintf(str,"%s", "2.For send SMS");
-			ssd1306_SetCursor(00, 26);
-			ssd1306_WriteString(str, Font_7x10, White);
-			memset(str, 0 , sizeof(str));
-
-			ssd1306_UpdateScreen();
-
-			// 2. Написати функції які.
-			// 		1. Звонить і має прийняти однв з відповідей:
-			//          1. Телефон збили
-			//			2. Телефон не підняли
-			//			3. Телефон піднятий
-			//      В момент звінка можна кнопкою збити вихідний звінок
-			//
-			//      2. Збити вихідний звінок
-			//
-			do                                                            // Whaite for choise
-			{
-				sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-				if(sign == '1')    // If select Call mode
-				{
-
-				}
-				if(sign == '2')    // If select SMS mode
-				{
-
-
-				}
-				if(sign == '*')    // If select EXIT  // Exit in main menu
-				{
-					EXIT = 1;      // Flag_fro exit from there
-					// Clear all OLED
-					ssd1306_Fill(Black);
-					ssd1306_UpdateScreen();
-
-					GPS_MODE = false;
-					GSM_MODE = false;
-					FINGERPRINT_MODE = false;
-					SENSORS_MODE = false;
-				}
-
-				}while ((sign != '1') && (sign != '2') && (sign != '*') );     // Select one from 3 modes
-			}
-        else
-        {
-        	HAL_Delay(2000);
-
-        	// Exit from GSM menu
-        	EXIT = 1;      // Flag_fro exit from there
-        	// Clear all OLED
-        	ssd1306_Fill(Black);
-        	ssd1306_UpdateScreen();
-
-        	GPS_MODE = false;
-        	GSM_MODE = false;
-        	FINGERPRINT_MODE = false;
-        	SENSORS_MODE = false;
-        }
-
-	}
-	while (GPS_MODE && (EXIT == 0)) /////////////////////////////////////////////////////////////////////
-	{
-		EXIT = gps_mode(sign);
-	}
-
-	while (FINGERPRINT_MODE && (EXIT == 0)) /////////////////////////////////////////////////////////////////////
-	{
-		ssd1306_Fill(Black);
-		ssd1306_UpdateScreen();
-		// Fingerprint code place where
-		// Print mode in head
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "3.FINGERPRINT");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		// Print meu fingerprint
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "1. function 1");
-		ssd1306_SetCursor(00, 16);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "2. function 2");
-		ssd1306_SetCursor(00, 26);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "3. function 3");
-		ssd1306_SetCursor(00, 36);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		ssd1306_UpdateScreen();
-
-		do                                                            // Whaite for choise
-		{
-			// Place for sensors code
-
-			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-		    if(sign == '1')
-		    {
-		    	// Clear all OLED
-		        ssd1306_Fill(Black);
-		        ssd1306_UpdateScreen();
-		        // Print mode in head
-
-		        // Ptint selected menu
-		        memset(str, 0 , sizeof(str));
-		        sprintf(str,"%s", "1. function 1");
-		        ssd1306_SetCursor(00, 00);
-		        ssd1306_WriteString(str, Font_7x10, White);
-		        memset(str, 0 , sizeof(str));
-
-		        ssd1306_UpdateScreen();
-
-		        do                                                            // Whaite for choise
-		        {
-		            // Place for code function 1
-
-		            sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-		            if(sign == '*')    // If select EXIT  // Exit in main menu
-		            {
-		            	EXIT = 1;      // Flag_fro exit from there
-		            	// Clear all OLED
-		            	ssd1306_Fill(Black);
-		            	ssd1306_UpdateScreen();
-
-		            	GPS_MODE = false;
-		            	GSM_MODE = false;
-		            	FINGERPRINT_MODE = false;
-		            	SENSORS_MODE = false;
-		            }
-		         }while (sign != '*');     // Select EXIT
-		     }
-
-		     if(sign == '2')
-		     {
-		        // Clear all OLED
-		        ssd1306_Fill(Black);
-		        ssd1306_UpdateScreen();
-		        // Print mode in head
-
-		        // Ptint selected menu
-		        memset(str, 0 , sizeof(str));
-		        sprintf(str,"%s", "1. function 2");
-		        ssd1306_SetCursor(00, 00);
-		        ssd1306_WriteString(str, Font_7x10, White);
-		        memset(str, 0 , sizeof(str));
-
-		        ssd1306_UpdateScreen();
-
-		        do                                                            // Whaite for choise
-		        {
-		        	// Place for code function 2
-
-		        	sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-		            if(sign == '*')    // If select EXIT  // Exit in main menu
-		            {
-		             	EXIT = 1;      // Flag_fro exit from there
-		                // Clear all OLED
-		                ssd1306_Fill(Black);
-		                ssd1306_UpdateScreen();
-
-		                GPS_MODE = false;
-		                GSM_MODE = false;
-		                FINGERPRINT_MODE = false;
-		                SENSORS_MODE = false;
-		            }
-		         }while (sign != '*');     // Select EXIT
-		      }
-
-		      if(sign == '3')
-		      {
-		    	  // Clear all OLED
-		          ssd1306_Fill(Black);
-		          ssd1306_UpdateScreen();
-		          // Print mode in head
-
-		          // Ptint selected menu
-		          memset(str, 0 , sizeof(str));
-		          sprintf(str,"%s", "1. function 3");
-		          ssd1306_SetCursor(00, 00);
-		          ssd1306_WriteString(str, Font_7x10, White);
-		          memset(str, 0 , sizeof(str));
-
-		          ssd1306_UpdateScreen();
-
-		          do                                                            // Whaite for choise
-		          {
-		        	  // Place for code function 3
-
-		               sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-		               if(sign == '*')    // If select EXIT  // Exit in main menu
-		               {
-		                   EXIT = 1;      // Flag_fro exit from there
-		                   // Clear all OLED
-		                   ssd1306_Fill(Black);
-		                   ssd1306_UpdateScreen();
-
-		                   GPS_MODE = false;
-		                   GSM_MODE = false;
-		                   FINGERPRINT_MODE = false;
-		                   SENSORS_MODE = false;
-		                }
-		           }while (sign != '*');     // Select EXIT
-		       }
-
-			   if(sign == '*')    // If select EXIT  // Exit in main menu
-			   {
-				   EXIT = 1;      // Flag_fro exit from there
-				    // Clear all OLED
-					ssd1306_Fill(Black);
-					ssd1306_UpdateScreen();
-
-					GPS_MODE = false;
-					GSM_MODE = false;
-					FINGERPRINT_MODE = false;
-					SENSORS_MODE = false;
-				}
-			   }while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
-
-	}
-
-	while (SENSORS_MODE && (EXIT == 0))  /////////////////////////////////////////////////////////////////////
-	{
-		ssd1306_Fill(Black);
-		ssd1306_UpdateScreen();
-		// Sensors code place where
-		// Print mode in head
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "4.SENSORS");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		// Print meu fingerprint
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "1. Run all sensors");
-		ssd1306_SetCursor(00, 16);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "2. function 2");
-		ssd1306_SetCursor(00, 26);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "3. function 3");
-		ssd1306_SetCursor(00, 36);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		ssd1306_UpdateScreen();
-
-		do                                                            // Whaite for choise
-			{
-			// Place for sensors code
-
-			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-            if(sign == '1')
-            {
-            	// Clear all OLED
-            	ssd1306_Fill(Black);
-            	ssd1306_UpdateScreen();
-
-            	// Ptint selected menu
-            	memset(str, 0 , sizeof(str));
-            	sprintf(str,"%s", "1. Run all sensors");
-            	ssd1306_SetCursor(00, 00);
-            	ssd1306_WriteString(str, Font_7x10, White);
-            	memset(str, 0 , sizeof(str));
-
-            	ssd1306_UpdateScreen();
-
-            	do                                                            // Whaite for choise
-            	{
-            		// Place for code function 1
-
-            		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-            		if(sign == '*')    // If select EXIT  // Exit in main menu
-            		{
-            			EXIT = 1;      // Flag_fro exit from there
-            			// Clear all OLED
-            			ssd1306_Fill(Black);
-            			ssd1306_UpdateScreen();
-
-            			GPS_MODE = false;
-            			GSM_MODE = false;
-            			FINGERPRINT_MODE = false;
-            			SENSORS_MODE = false;
-            		}
-            	}while (sign != '*');     // Select EXIT
-            }
-
-            if(sign == '2')
-            {
-                // Clear all OLED
-                ssd1306_Fill(Black);
-               	ssd1306_UpdateScreen();
-
-                // Ptint selected menu
-                memset(str, 0 , sizeof(str));
-                sprintf(str,"%s", "1. function 2");
-                ssd1306_SetCursor(00, 00);
-                ssd1306_WriteString(str, Font_7x10, White);
-                memset(str, 0 , sizeof(str));
-
-                ssd1306_UpdateScreen();
-
-                do                                                            // Whaite for choise
-                {
-                       // Place for code function 2
-
-                       sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-                       if(sign == '*')    // If select EXIT  // Exit in main menu
-                       {
-                            EXIT = 1;      // Flag_fro exit from there
-                            // Clear all OLED
-                            ssd1306_Fill(Black);
-                            ssd1306_UpdateScreen();
-
-                            GPS_MODE = false;
-                            GSM_MODE = false;
-                            FINGERPRINT_MODE = false;
-                            SENSORS_MODE = false;
-                       }
-                 }while (sign != '*');     // Select EXIT
-
-                // Place for code function 2
-            }
-
-            if(sign == '3')
-            {
-                 // Clear all OLED
-                 ssd1306_Fill(Black);
-                 ssd1306_UpdateScreen();
-                 // Print mode in head
-
-                 // Ptint selected menu
-                 memset(str, 0 , sizeof(str));
-                 sprintf(str,"%s", "1. function 3");
-                 ssd1306_SetCursor(00, 00);
-                 ssd1306_WriteString(str, Font_7x10, White);
-                 memset(str, 0 , sizeof(str));
-
-                 ssd1306_UpdateScreen();
-
-                 do                                                            // Whaite for choise
-                 {
-                      // Place for code function 3
-
-                      sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-                      if(sign == '*')    // If select EXIT  // Exit in main menu
-                      {
-                           EXIT = 1;      // Flag_fro exit from there
-                           // Clear all OLED
-                           ssd1306_Fill(Black);
-                           ssd1306_UpdateScreen();
-
-                           GPS_MODE = false;
-                           GSM_MODE = false;
-                           FINGERPRINT_MODE = false;
-                           SENSORS_MODE = false;
-                      }
-                  }while (sign != '*');     // Select EXIT
-
-                 // Place for code function 3
-            }
-
-			if(sign == '*')    // If select EXIT  // Exit in main menu
-			{
-				EXIT = 1;      // Flag_fro exit from there
-				// Clear all OLED
-				ssd1306_Fill(Black);
-				ssd1306_UpdateScreen();
-
-				GPS_MODE = false;
-				GSM_MODE = false;
-				FINGERPRINT_MODE = false;
-				SENSORS_MODE = false;
-			}
-		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
-
-	}
 
 
 
@@ -1262,143 +829,141 @@ void generate_sound(void)
  */
 char read_one_sign_from_keyboard(void)
 {
-	  // 2. Зробити зчитування даних з клавіатури як переривання
-	  //
-	  //HAL_Delay(100);
+	// 2. Зробити зчитування даних з клавіатури як переривання
+	char sign = 0;
+	uint8_t readed_status = 0;
 
-	  char sign = 0;
-	  uint8_t readed_status = 0;
+	readed_status = 0;
+	uint8_t i = 0;
 
-	  readed_status = 0;
-	  uint8_t i = 0;
-
-	  for(i=1; i<=4; i++)
-	  {
-		  if((i == 1) && (readed_status != 1))
-		  {
-			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 1);     // For detect 123A
-			  HAL_Delay(1);
-			  if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
-			  {
-			  		sign = 'A';
-			  		readed_status = 1;
-			  }
-
-			  else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
-			  {
-			  		sign = '3';
-			  		readed_status = 1;
-			  }
-
-			  else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
-			  {
-			  	    sign = '2';
-			  	    readed_status = 1;
-			  }
-
-			  else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
-			  {
-			  		sign = '1';
-			  		readed_status = 1;
-			  }
-			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 0);
-		  }
-
-		  if((i == 2) && (readed_status != 1))
-		  {
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     // For detect 123A
-				HAL_Delay(1);
-				if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
-				{
-					  sign = 'B';
-					  readed_status = 1;
-				}
-
-				else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
-				{
-					  sign = '6';
-					  readed_status = 1;
-				}
-
-				else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
-				{
-					  sign = '5';
-					  readed_status = 1;
-				}
-
-				else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
-				{
-					  sign = '4';
-					  readed_status = 1;
-				}
-				HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 0);
+	for(i=1; i<=4; i++)
+	{
+		if((i == 1) && (readed_status != 1))
+		{
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 1);     // For detect 123A
+			HAL_Delay(1);
+			if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+			{
+			  	sign = 'A';
+			  	readed_status = 1;
 			}
 
-		    if((i == 3) && (readed_status != 1))
+			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+			{
+			  	sign = '3';
+			  	readed_status = 1;
+			}
+
+			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+			{
+			  	sign = '2';
+			  	readed_status = 1;
+			}
+
+			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+			{
+			  	sign = '1';
+			  	readed_status = 1;
+			}
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 0);
+		}
+
+		if((i == 2) && (readed_status != 1))
+		{
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     // For detect 123A
+			HAL_Delay(1);
+			if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+			{
+				sign = 'B';
+				readed_status = 1;
+			}
+
+			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+			{
+				sign = '6';
+				readed_status = 1;
+			}
+
+			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+			{
+				sign = '5';
+				readed_status = 1;
+			}
+
+			else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+			{
+				sign = '4';
+				readed_status = 1;
+			}
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 0);
+		}
+
+		if((i == 3) && (readed_status != 1))
+		{
+		 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     // For detect 123A
+		 	HAL_Delay(1);
+		 	if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
 		 	{
-		 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     // For detect 123A
-		 		HAL_Delay(1);
-		 		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
-		 		{
-		 			sign = 'C';
-		 			readed_status = 1;
-		 		}
-
-		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
-		 		{
-		 			sign = '9';
-		 			readed_status = 1;
-		 		}
-
-		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
-		 		{
-		 			sign = '8';
-		 			readed_status = 1;
-		 		}
-
-		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
-		 		{
-		 			 sign = '7';
-		 			readed_status = 1;
-		 		}
-		 		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 0);
+		 		sign = 'C';
+		 		readed_status = 1;
 		 	}
 
+		 	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+		 	{
+		 		sign = '9';
+		 		readed_status = 1;
+		 	}
 
-		    if((i == 3) && (readed_status != 1))
-		   		 	{
-		   		 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);     // For detect 123A
-		   		 		HAL_Delay(1);
-		   		 		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
-		   		 		{
-		   		 			sign = 'D';
-		   		 			readed_status = 1;
-		   		 		}
+		 	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+		 	{
+		 		sign = '8';
+		 		readed_status = 1;
+		 	}
 
-		   		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
-		   		 		{
-		   		 			sign = '#';
-		   		 			readed_status = 1;
-		   		 		}
+		 	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+		 	{
+		 		 sign = '7';
+		 		readed_status = 1;
+		 	}
+		 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 0);
+		}
 
-		   		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
-		   		 		{
-		   		 			sign = '0';
-		   		 			readed_status = 1;
-		   		 		}
 
-		   		 		else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
-		   		 		{
-		   		 			 sign = '*';
-		   		 			readed_status = 1;
-		   		 		}
-		   		 		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
-		   		 	}
-	  }
-	  return sign;
+		if((i == 3) && (readed_status != 1))
+		{
+		    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);     // For detect 123A
+		    HAL_Delay(1);
+
+		   	if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
+		   	{
+		   		sign = 'D';
+		   		readed_status = 1;
+		   	}
+
+		   	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_8))
+		   	{
+		   		 sign = '#';
+		   		 readed_status = 1;
+		   	}
+
+		   	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_5))
+		   	{
+		   		 sign = '0';
+		   		 readed_status = 1;
+		   	}
+
+		   	else if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4))
+		   	{
+		   		 sign = '*';
+		   		 readed_status = 1;
+		   	}
+		   	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 0);
+		}
+	}
+	return sign;
 }
 // ----------------------------------------------------------------------------
-int gps_mode(sign)
+int gps_mode(char sign)
 {
 	// Clearn OLED
 	ssd1306_Fill(Black);
@@ -1436,8 +1001,8 @@ int gps_mode(sign)
 		{
 			// Parsing data form GPS
 			parsing_GPS(GPS_buff, 512);
-			int GPS_SELECTED = 1;							// Flag for print GPS data on OLED
-			OLED_prinr_all_data(GPS_SELECTED);
+			int select_print_data = 1;							// Flag for print GPS data on OLED
+			OLED_prinr_all_data(select_print_data);
 
 			if(GPGGA_data_is_ready == 1)					// Check if data from GPS device was correct ( parsed GPGLL line correct)
 			{
@@ -1475,7 +1040,471 @@ int gps_mode(sign)
 	}while ( (sign != '*'));     // Select one from 3 modes
 }
 // ----------------------------------------------------------------------------
+int gsm_mode(char sign)
+{
+	// Clearn OLED
+	ssd1306_Fill(Black);
+	ssd1306_UpdateScreen();
+	// Print mode in head
+	char str_gsm[50]={0};
+	sprintf(str_gsm,"%s", "2.GSM: waiting...");
+	ssd1306_SetCursor(00, 00);
+	ssd1306_WriteString(str_gsm, Font_7x10, White);
+	ssd1306_UpdateScreen();
+
+
+		// Init GSM module////////////////////////////
+		init_GSM_uart_comunication();
+		if(init_gsm_module() == HAL_OK)
+		{
+			// init OK
+			GSM_INIT = 1;
+
+			sprintf(str_gsm,"%s", "                    ");
+			ssd1306_SetCursor(00, 00);
+			ssd1306_WriteString(str_gsm, Font_7x10, White);
+			ssd1306_UpdateScreen();
+
+			sprintf(str_gsm,"%s", "2.GSM: OK");
+			ssd1306_SetCursor(00, 00);
+			ssd1306_WriteString(str_gsm, Font_7x10, White);
+			ssd1306_UpdateScreen();
+		}
+		else
+		{
+			// GSM didn't init
+			GSM_INIT = 0;
+
+			sprintf(str_gsm,"%s", "                    ");
+			ssd1306_SetCursor(00, 00);
+			ssd1306_WriteString(str_gsm, Font_7x10, White);
+			ssd1306_UpdateScreen();
+
+			sprintf(str_gsm,"%s", "2.GSM: ERROR");
+			ssd1306_SetCursor(00, 00);
+			ssd1306_WriteString(str_gsm, Font_7x10, White);
+			ssd1306_UpdateScreen();
+		}
+		// END INIT GSM MODULE  //////////////////////////
+
+        if(GSM_INIT == 1)
+        {
+			// Print GSM menu
+			sprintf(str_gsm,"%s", "1.For make CALL");
+			ssd1306_SetCursor(00, 16);
+			ssd1306_WriteString(str_gsm, Font_7x10, White);
+			memset(str_gsm, 0 , sizeof(str_gsm));
+
+			sprintf(str_gsm,"%s", "2.For send SMS");
+			ssd1306_SetCursor(00, 26);
+			ssd1306_WriteString(str_gsm, Font_7x10, White);
+			memset(str_gsm, 0 , sizeof(str_gsm));
+
+			ssd1306_UpdateScreen();
+
+			// 2. Написати функції які.
+			// 		1. Звонить і має прийняти однв з відповідей:
+			//          1. Телефон збили
+			//			2. Телефон не підняли
+			//			3. Телефон піднятий
+			//      В момент звінка можна кнопкою збити вихідний звінок
+			//
+			//      2. Збити вихідний звінок
+			//
+			do                                                            // Whaite for choise
+			{
+				sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+				if(sign == '1')    // If select Call mode
+				{
+
+				}
+				if(sign == '2')    // If select SMS mode
+				{
+
+
+				}
+				if(sign == '*')    // If select EXIT  // Exit in main menu
+				{
+					// Clear all OLED
+					ssd1306_Fill(Black);
+					ssd1306_UpdateScreen();
+
+					GPS_MODE = false;
+					GSM_MODE = false;
+					FINGERPRINT_MODE = false;
+					SENSORS_MODE = false;
+
+					return 1;  			 // Flag_fro exit from there
+				}
+
+				}while ((sign != '1') && (sign != '2') && (sign != '*') );     // Select one from 3 modes
+			}
+        else     				// If error init GSM module. Exit from GSM menu
+        {
+        	HAL_Delay(2000);
+
+        	// Clear all OLED
+        	ssd1306_Fill(Black);
+        	ssd1306_UpdateScreen();
+
+        	GPS_MODE = false;
+        	GSM_MODE = false;
+        	FINGERPRINT_MODE = false;
+        	SENSORS_MODE = false;
+
+        	return 1;  			 // Flag_fro exit from there
+        }
+}
 // ----------------------------------------------------------------------------
+int fingerprint_mode(char sign)
+{
+	// Clearn OLED
+	ssd1306_Fill(Black);
+	ssd1306_UpdateScreen();
+	// Fingerprint code place where
+	// Print mode in head
+	char str_fingerprint[50]={0};
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	sprintf(str_fingerprint,"%s", "3.FINGERPRINT");
+	ssd1306_SetCursor(00, 00);
+	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	// Print meu fingerprint
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	sprintf(str_fingerprint,"%s", "1. function 1");
+	ssd1306_SetCursor(00, 16);
+	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	sprintf(str_fingerprint,"%s", "2. function 2");
+	ssd1306_SetCursor(00, 26);
+	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	sprintf(str_fingerprint,"%s", "3. function 3");
+	ssd1306_SetCursor(00, 36);
+	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	ssd1306_UpdateScreen();
+
+	do                                                            // Whaite for choise
+	{
+		// Place for sensors code
+		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+	    if(sign == '1')
+	    {
+	    	// Clear all OLED
+	        ssd1306_Fill(Black);
+	        ssd1306_UpdateScreen();
+	        // Print mode in head
+
+	        // Ptint selected menu
+	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        sprintf(str_fingerprint,"%s", "1. function 1");
+	        ssd1306_SetCursor(00, 00);
+	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	        ssd1306_UpdateScreen();
+
+	        do                                                            // Whaite for choise
+	        {
+	            // Place for code function 1
+
+	            sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+	            if(sign == '*')    // If select EXIT  // Exit in main menu
+	            {
+	            	// Clear all OLED
+	            	ssd1306_Fill(Black);
+	            	ssd1306_UpdateScreen();
+
+	            	GPS_MODE = false;
+	            	GSM_MODE = false;
+	            	FINGERPRINT_MODE = false;
+	            	SENSORS_MODE = false;
+
+	            	return 1;          // Flag_fro exit from there
+	            }
+	         }while (sign != '*');     // Select EXIT
+	     }
+
+	     if(sign == '2')
+	     {
+	        // Clear all OLED
+	        ssd1306_Fill(Black);
+	        ssd1306_UpdateScreen();
+	        // Print mode in head
+
+	        // Ptint selected menu
+	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        sprintf(str_fingerprint,"%s", "1. function 2");
+	        ssd1306_SetCursor(00, 00);
+	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	        ssd1306_UpdateScreen();
+
+	        do                                                            // Whaite for choise
+	        {
+	        	// Place for code function 2
+
+	        	sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+	            if(sign == '*')    // If select EXIT  // Exit in main menu
+	            {
+	                // Clear all OLED
+	                ssd1306_Fill(Black);
+	                ssd1306_UpdateScreen();
+
+	                GPS_MODE = false;
+	                GSM_MODE = false;
+	                FINGERPRINT_MODE = false;
+	                SENSORS_MODE = false;
+
+	                return 1;          // Flag_fro exit from there
+	            }
+	         }while (sign != '*');     // Select EXIT
+	      }
+
+	      if(sign == '3')
+	      {
+	    	  // Clear all OLED
+	          ssd1306_Fill(Black);
+	          ssd1306_UpdateScreen();
+	          // Print mode in head
+
+	          // Ptint selected menu
+	          memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	          sprintf(str_fingerprint,"%s", "1. function 3");
+	          ssd1306_SetCursor(00, 00);
+	          ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	          memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
+	          ssd1306_UpdateScreen();
+
+	          do                                                            // Whaite for choise
+	          {
+	        	  // Place for code function 3
+
+	               sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+	               if(sign == '*')    // If select EXIT  // Exit in main menu
+	               {
+	                   // Clear all OLED
+	                   ssd1306_Fill(Black);
+	                   ssd1306_UpdateScreen();
+
+	                   GPS_MODE = false;
+	                   GSM_MODE = false;
+	                   FINGERPRINT_MODE = false;
+	                   SENSORS_MODE = false;
+
+	                   return 1;          // Flag_fro exit from there
+	                }
+	           }while (sign != '*');     // Select EXIT
+	       }
+
+		   if(sign == '*')    // If select EXIT  // Exit in main menu
+		   {
+			    // Clear all OLED
+				ssd1306_Fill(Black);
+				ssd1306_UpdateScreen();
+
+				GPS_MODE = false;
+				GSM_MODE = false;
+				FINGERPRINT_MODE = false;
+				SENSORS_MODE = false;
+
+				return 1;          // Flag_fro exit from there
+			}
+		   }while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
+}
+// ----------------------------------------------------------------------------
+
+int sensors_mode(char sign)
+{
+		// Clear all OLED
+		ssd1306_Fill(Black);
+		ssd1306_UpdateScreen();
+		// Sensors code place where
+		// Print mode in head
+		char str_sensors[50]={0};
+		memset(str_sensors, 0 , sizeof(str_sensors));
+		sprintf(str_sensors,"%s", "4.SENSORS");
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str_sensors, Font_7x10, White);
+		memset(str_sensors, 0 , sizeof(str_sensors));
+
+		// Print meu fingerprint
+		memset(str_sensors, 0 , sizeof(str_sensors));
+		sprintf(str_sensors,"%s", "1. Run all sensors");
+		ssd1306_SetCursor(00, 16);
+		ssd1306_WriteString(str_sensors, Font_7x10, White);
+		memset(str_sensors, 0 , sizeof(str_sensors));
+
+		memset(str_sensors, 0 , sizeof(str_sensors));
+		sprintf(str_sensors,"%s", "2. function 2");
+		ssd1306_SetCursor(00, 26);
+		ssd1306_WriteString(str_sensors, Font_7x10, White);
+		memset(str_sensors, 0 , sizeof(str_sensors));
+
+		memset(str_sensors, 0 , sizeof(str_sensors));
+		sprintf(str_sensors,"%s", "3. function 3");
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str_sensors, Font_7x10, White);
+		memset(str_sensors, 0 , sizeof(str_sensors));
+
+		ssd1306_UpdateScreen();
+
+
+		do                                                            // Whaite for choise
+			{
+			// Place for sensors code
+
+			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+            if(sign == '1')
+            {
+            	// Clear all OLED
+            	ssd1306_Fill(Black);
+            	ssd1306_UpdateScreen();
+
+            	// Ptint selected menu
+            	memset(str_sensors, 0 , sizeof(str_sensors));
+            	sprintf(str_sensors,"%s", "1. Run all sensors");
+            	ssd1306_SetCursor(00, 00);
+            	ssd1306_WriteString(str_sensors, Font_7x10, White);
+            	memset(str_sensors, 0 , sizeof(str_sensors));
+
+            	ssd1306_UpdateScreen();
+
+            	do                                                            // Whaite for choise
+            	{
+            		// Place for code function 1
+            		// Create timer for measure
+            		read_T_and_H_SI7021();
+            		int select_print_data = 4;							// Flag for print sensors data on OLED
+            		OLED_prinr_all_data(select_print_data);
+
+            		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+            		if(sign == '*')    // If select EXIT  // Exit in main menu
+            		{
+            			// Stop timer for measure
+
+            			// Clear all OLED
+            			ssd1306_Fill(Black);
+            			ssd1306_UpdateScreen();
+
+            			GPS_MODE = false;
+            			GSM_MODE = false;
+            			FINGERPRINT_MODE = false;
+            			SENSORS_MODE = false;
+
+            			return 1;          // Flag_fro exit from there
+            		}
+            	}while (sign != '*');     // Select EXIT
+            }
+
+            if(sign == '2')
+            {
+                // Clear all OLED
+                ssd1306_Fill(Black);
+               	ssd1306_UpdateScreen();
+
+                // Ptint selected menu
+                memset(str_sensors, 0 , sizeof(str_sensors));
+                sprintf(str_sensors,"%s", "1. function 2");
+                ssd1306_SetCursor(00, 00);
+                ssd1306_WriteString(str_sensors, Font_7x10, White);
+                memset(str_sensors, 0 , sizeof(str_sensors));
+
+                ssd1306_UpdateScreen();
+
+                do                                                            // Whaite for choise
+                {
+                       // Place for code function 2
+
+                       sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+                       if(sign == '*')    // If select EXIT  // Exit in main menu
+                       {
+                            // Clear all OLED
+                            ssd1306_Fill(Black);
+                            ssd1306_UpdateScreen();
+
+                            GPS_MODE = false;
+                            GSM_MODE = false;
+                            FINGERPRINT_MODE = false;
+                            SENSORS_MODE = false;
+
+                            return 1;          // Flag_fro exit from there
+                       }
+                 }while (sign != '*');     // Select EXIT
+
+                // Place for code function 2
+            }
+
+            if(sign == '3')
+            {
+                 // Clear all OLED
+                 ssd1306_Fill(Black);
+                 ssd1306_UpdateScreen();
+                 // Print mode in head
+
+                 // Ptint selected menu
+                 memset(str_sensors, 0 , sizeof(str_sensors));
+                 sprintf(str_sensors,"%s", "1. function 3");
+                 ssd1306_SetCursor(00, 00);
+                 ssd1306_WriteString(str_sensors, Font_7x10, White);
+                 memset(str_sensors, 0 , sizeof(str_sensors));
+
+                 ssd1306_UpdateScreen();
+
+                 do                                                            // Whaite for choise
+                 {
+                      // Place for code function 3
+
+                      sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+                      if(sign == '*')    // If select EXIT  // Exit in main menu
+                      {
+                           // Clear all OLED
+                           ssd1306_Fill(Black);
+                           ssd1306_UpdateScreen();
+
+                           GPS_MODE = false;
+                           GSM_MODE = false;
+                           FINGERPRINT_MODE = false;
+                           SENSORS_MODE = false;
+
+                           return 1;          // Flag_fro exit from there
+                      }
+                  }while (sign != '*');     // Select EXIT
+
+                 // Place for code function 3
+            }
+
+			if(sign == '*')    // If select EXIT  // Exit in main menu
+			{
+				// Clear all OLED
+				ssd1306_Fill(Black);
+				ssd1306_UpdateScreen();
+
+				GPS_MODE = false;
+				GSM_MODE = false;
+				FINGERPRINT_MODE = false;
+				SENSORS_MODE = false;
+
+				return 1;          // Flag_fro exit from there
+			}
+		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
+}
 // ----------------------------------------------------------------------------
 
 
