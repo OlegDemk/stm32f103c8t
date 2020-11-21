@@ -80,8 +80,38 @@ void OLED_prinr_all_data(int GPS_SELECTED)
 
     ssd1306_UpdateScreen();
 }
+// -----------------------------------------------------------------------------------
+void print_main_menu(void)
+{
+	char str[50]={0};
+	// Print message
+	sprintf(str,"%s", " SELECT MODE...");
+	ssd1306_SetCursor(00, 00);
+	ssd1306_WriteString(str, Font_7x10, White);
 
+	sprintf(str,"%s", "1.GPS MODE");
+	ssd1306_SetCursor(00, 16);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
 
+	sprintf(str,"%s", "2.GSM MODE");
+	ssd1306_SetCursor(00, 26);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	sprintf(str,"%s", "3.FINGERPRINT MODE");
+	ssd1306_SetCursor(00, 36);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	sprintf(str,"%s", "4.SENSORS MODE");
+	ssd1306_SetCursor(00, 46);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	ssd1306_UpdateScreen();
+}
+// -----------------------------------------------------------------------------------
 void print_GPS_data(void)
 {
 	// 1. Print Lat and Lon ////////////////////////////////

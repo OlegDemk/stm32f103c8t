@@ -63,6 +63,10 @@ extern uint8_t receive_gps_signal;
 void test_flash_W25Q(void);
 void generate_sound(void);
 char read_one_sign_from_keyboard(void);
+//void gps_mode(char sign);
+
+uint8_t GPS_buff[512];      						// main buffer for stream from GPS
+//void parsing_GPS(uint8_t *GPS_buff, int size_buff);
 
 /* USER CODE END PD */
 
@@ -225,7 +229,7 @@ int main(void)
   	  HAL_TIM_Base_Start_IT(&htim2);
 
 	#if GPS
-  	  uint8_t GPS_buff[512];      						// main buffer for stream from GPS
+//  	  uint8_t GPS_buff[512];      						// main buffer for stream from GPS
   	  memset(GPS_buff ,0 ,sizeof(GPS_buff));
   	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
 	#endif
@@ -263,39 +267,16 @@ int main(void)
   #endif
 
   	int EXIT = 0;
+/////////////////////////////////////////////////////////////////////////////////////////////////
 while (1)
 {
 	EXIT = 0;
 
-	// Print main menu on OLED ////////////////////
 	char str[50]={0};
-	// Print message
-	sprintf(str,"%s", " SELECT MODE...");
-	ssd1306_SetCursor(00, 00);
-	ssd1306_WriteString(str, Font_7x10, White);
-
-	sprintf(str,"%s", "1.GPS MODE");
-	ssd1306_SetCursor(00, 16);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
-
-	sprintf(str,"%s", "2.GSM MODE");
-	ssd1306_SetCursor(00, 26);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
-
-	sprintf(str,"%s", "3.FINGERPRINT MODE");
-	ssd1306_SetCursor(00, 36);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
-
-	sprintf(str,"%s", "4.SENSORS MODE");
-	ssd1306_SetCursor(00, 46);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
-
-	ssd1306_UpdateScreen();
 	char sign = 0;
+
+	print_main_menu();  // Print main menu on OLED
+
 	do                                                            // Whaite for choise
 	{
 		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
@@ -328,6 +309,8 @@ while (1)
 
 	while(GSM_MODE && (EXIT == 0))  /////////////////////////////////////////////////////////////////////
 	{
+		// EXIT = gsm_mode(sign);
+
 		ssd1306_Fill(Black);
 		ssd1306_UpdateScreen();
 		// Print mode in head
@@ -442,80 +425,7 @@ while (1)
 	}
 	while (GPS_MODE && (EXIT == 0)) /////////////////////////////////////////////////////////////////////
 	{
-		ssd1306_Fill(Black);
-		ssd1306_UpdateScreen();
-		// GPS code place where
-		// Print mode in head
-		memset(str, 0 , sizeof(str));
-		sprintf(str,"%s", "1.GPS: waiting...");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		ssd1306_UpdateScreen();
-
-		uint8_t broken_packet_counter = 0;
-
-		do                                                            // Whaite for choise
-		{
-			// Place for parsing GPS DATA
-
-			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-
-			if(sign == '*')    // If select EXIT  // Exit in main menu
-			{
-				EXIT = 1;      // Flag_fro exit from there
-				// Clear all OLED
-				ssd1306_Fill(Black);
-				ssd1306_UpdateScreen();
-
-				GPS_MODE = false;
-				GSM_MODE = false;
-				FINGERPRINT_MODE = false;
-				SENSORS_MODE = false;
-			}
-			else
-			{
-				// Parsing data form GPS
-				parsing_GPS(GPS_buff, 512);
-				int GPS_SELECTED = 1;					// Flag for print GPS data on OLED
-				OLED_prinr_all_data(GPS_SELECTED);
-
-				if(GPGGA_data_is_ready == 1)
-				{
-					memset(str, 0 , sizeof(str));
-					sprintf(str,"%s", "1.GPS: OK            ");
-					ssd1306_SetCursor(00, 00);
-					ssd1306_WriteString(str, Font_7x10, White);
-					memset(str, 0 , sizeof(str));
-
-					//receive_gps_signal = 0;
-					broken_packet_counter = 0;
-					GPGGA_data_is_ready = 0;
-				}
-				else
-				{
-					broken_packet_counter ++;
-					//HAL_Delay(500);
-					if((GPGGA_data_is_ready != 1) && (broken_packet_counter >= 20))
-					{
-
-							GPGGA_data_is_ready = 0;
-							broken_packet_counter = 0;
-
-							memset(str, 0 , sizeof(str));
-							sprintf(str,"%s", "1.GPS: NO SIGNAL  ");
-							ssd1306_SetCursor(00, 00);
-							ssd1306_WriteString(str, Font_7x10, White);
-							memset(str, 0 , sizeof(str));
-
-
-					 }
-				}
-
-				ssd1306_UpdateScreen();
-			}
-		}while ( (sign != '*'));     // Select one from 3 modes
+		EXIT = gps_mode(sign);
 	}
 
 	while (FINGERPRINT_MODE && (EXIT == 0)) /////////////////////////////////////////////////////////////////////
@@ -852,71 +762,6 @@ while (1)
 
 
 
-//
-//      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, 1);     // For detect 1,4,7,*
-//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);     //
-//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, 1);     //
-//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, 1);     //
-//
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_11, 1);     // For detect 1,4,7,*
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     //
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     //
-//	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);
-
-//
-//	int TELEPHONE_MODE = 1;
-//	int CALL_OR_SMS_TO_NUMBER = 1;
-//
-//	if(TELEPHONE_MODE == 1)        // вибирається клавіатурою (Певною клавішею)
-//	{
-//		 // 1. Якщо потрібно набрати номер або нмс
-//			// якщо включений режим набору номера або смс і ініт GSM == OK
-//		    if ((CALL_OR_SMS_TO_NUMBER == 1) && (GSM_INIT == 1))
-//		    {
-//		    	if(GSM_INIT == 1)
-//		    	{
-//		    			while(1)
-//		    			{
-//		    				int state = 0;
-//		    				state = call_on_number();
-//
-//		    				if(state == 1)
-//		    				{
-//		    					parsing_ansver_from_GSM();
-//		    				}
-//		    				else
-//		    				{
-//
-//
-//		    				}
-//
-//
-//		    			}
-//
-//		    	}
-//		    }
-//
-//		    // 2. Чикати на вхідний звінок або смс
-//		    if(GSM_INIT == 1)
-//		    {
-//		    	if_RING_from_GSM();              // Work
-//		    	//if_RING_OUT_from_GSM();          // збитий звінок
-//		    }
-//
-//	}
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 ///////////////////////////////////////////////////////////////////////////////////////
 	    // MAIN LOOP
 //        if(interrupt_flag == 1)
@@ -1553,7 +1398,85 @@ char read_one_sign_from_keyboard(void)
 	  return sign;
 }
 // ----------------------------------------------------------------------------
+int gps_mode(sign)
+{
+	// Clearn OLED
+	ssd1306_Fill(Black);
+	ssd1306_UpdateScreen();
+	// Print mode in head
+	char str_gps[50]={0};
+	memset(str_gps, 0 , sizeof(str_gps));
+	sprintf(str_gps,"%s", "1.GPS: waiting...");
+	ssd1306_SetCursor(00, 00);
+	ssd1306_WriteString(str_gps, Font_7x10, White);
+	memset(str_gps, 0 , sizeof(str_gps));
 
+	ssd1306_UpdateScreen();
+
+	uint8_t broken_packet_counter = 0;
+
+	do                                                            	// Wait on choiсe
+	{
+		sign = read_one_sign_from_keyboard();                       // Read sign from keyboard
+
+		if(sign == '*')    	// If select EXIT  // Exit in main menu
+		{
+			// Clear all OLED
+			ssd1306_Fill(Black);
+			ssd1306_UpdateScreen();
+
+			GPS_MODE = false;
+			GSM_MODE = false;
+			FINGERPRINT_MODE = false;
+			SENSORS_MODE = false;
+
+			return 1;   // Flag_fro exit from there
+		}
+		else
+		{
+			// Parsing data form GPS
+			parsing_GPS(GPS_buff, 512);
+			int GPS_SELECTED = 1;							// Flag for print GPS data on OLED
+			OLED_prinr_all_data(GPS_SELECTED);
+
+			if(GPGGA_data_is_ready == 1)					// Check if data from GPS device was correct ( parsed GPGLL line correct)
+			{
+				// Print the data that GPS is valid
+				memset(str_gps, 0 , sizeof(str_gps));
+				sprintf(str_gps,"%s", "1.GPS: OK            ");
+				ssd1306_SetCursor(00, 00);
+				ssd1306_WriteString(str_gps, Font_7x10, White);
+				memset(str_gps, 0 , sizeof(str_gps));
+
+				//receive_gps_signal = 0;
+				broken_packet_counter = 0;
+				GPGGA_data_is_ready = 0;
+			}
+			else
+			{
+				broken_packet_counter ++;
+				//HAL_Delay(500);
+				if((GPGGA_data_is_ready != 1) && (broken_packet_counter >= 20))
+				{
+					// Print the data that GPS is does not valid
+					GPGGA_data_is_ready = 0;
+					broken_packet_counter = 0;
+
+					memset(str_gps, 0 , sizeof(str_gps));
+					sprintf(str_gps,"%s", "1.GPS: NO SIGNAL  ");
+					ssd1306_SetCursor(00, 00);
+					ssd1306_WriteString(str_gps, Font_7x10, White);
+					memset(str_gps, 0 , sizeof(str_gps));
+				}
+			}
+
+			ssd1306_UpdateScreen();
+		}
+	}while ( (sign != '*'));     // Select one from 3 modes
+}
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 
 
 
