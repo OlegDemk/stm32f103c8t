@@ -11,14 +11,16 @@
 void init_GSM_uart_comunication(void);
 int init_gsm_module(void);
 
-int call_on_number(void);
+int call_on_mu_number(void);
+int call_on_number(char *number, uint8_t size_number);
 
 void parsing_ansver_from_GSM(void);
 void if_RING_from_GSM(void);
 void if_RING_OUT_from_GSM(void);
-void wait_ansver_after_make_call_in_blok_mode(void);
+int wait_ansver_after_make_call_in_blok_mode(void);
 int end_of_call(void);
 
+int check_during_out_call(void);
 //enum GSM
 //{
 //	CALLING = 1,

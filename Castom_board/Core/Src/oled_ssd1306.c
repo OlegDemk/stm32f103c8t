@@ -87,6 +87,9 @@ void OLED_prinr_all_data(int  select_print_data)
 // -----------------------------------------------------------------------------------
 void print_main_menu(void)
 {
+	ssd1306_Fill(Black);
+	ssd1306_UpdateScreen();
+
 	char str[50]={0};
 	// Print message
 	sprintf(str,"%s", " SELECT MODE...");
@@ -251,9 +254,9 @@ void print_GPS_data(void)
 // -----------------------------------------------------------------------------------
 void print_all_sensors_data(void)
 {
-	// 1. Print data from si7021 sensor
 	char str_1[40]={0};
 
+	// 1. Print data from si7021 sensor
 	strcpy(str_1, "1.si7021 ");
 	strcat(str_1, temperature_si7021);
 	strcat(str_1, humidity_si7021);
@@ -264,11 +267,22 @@ void print_all_sensors_data(void)
 	memset(str_1, 0 , sizeof(str_1));
 
 	// 2. Print data from AM2302
+	strcpy(str_1, "2.AM2302 ");
+	strcat(str_1, temperature_am3202);
+	strcat(str_1, humidity_am3202);
 
-	// 3. Print data from 9066 sensor
+	ssd1306_SetCursor(0, 26);
+	ssd1306_WriteString(str_1, Font_7x10, White);
 
-	// 4. Other sensors
+	memset(str_1, 0 , sizeof(str_1));
 
+	// 3. Print data from 9066
+	strcpy(str_1, "2.9066 ");
+
+	ssd1306_SetCursor(0, 36);
+	ssd1306_WriteString(str_1, Font_7x10, White);
+
+	memset(str_1, 0 , sizeof(str_1));
 }
 // -----------------------------------------------------------------------------------
 void print_GSM_data(void)

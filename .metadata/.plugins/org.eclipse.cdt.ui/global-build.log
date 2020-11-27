@@ -1,30 +1,14 @@
-19:05:11 **** Incremental Build of configuration Debug for project Castom_board ****
+15:56:06 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/oled_ssd1306.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/oled_ssd1306.d" -MT"Core/Src/oled_ssd1306.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/oled_ssd1306.o"
-../Core/Src/oled_ssd1306.c: In function 'print_main_menu':
-../Core/Src/oled_ssd1306.c:92:2: warning: implicit declaration of function 'sprintf' [-Wimplicit-function-declaration]
-  sprintf(str,"%s", " SELECT MODE...");
-  ^~~~~~~
-../Core/Src/oled_ssd1306.c:92:2: warning: incompatible implicit declaration of built-in function 'sprintf'
-../Core/Src/oled_ssd1306.c:92:2: note: include '<stdio.h>' or provide a declaration of 'sprintf'
-arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Castom_board.elf
- 
-arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
-arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  54320	    548	   3916	  58784	   e5a0	Castom_board.elf
+  56152	    576	   3912	  60640	   ece0	Castom_board.elf
 Finished building: default.size.stdout
  
-Finished building: Castom_board.bin
- 
-Finished building: Castom_board.list
- 
-19:05:14 **** Incremental Build of configuration Debug for project Castom_board ****
+15:56:11 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  54320	    548	   3916	  58784	   e5a0	Castom_board.elf
+  56152	    576	   3912	  60640	   ece0	Castom_board.elf
 Finished building: default.size.stdout
  
