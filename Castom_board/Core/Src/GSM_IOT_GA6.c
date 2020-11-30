@@ -40,6 +40,7 @@ char AT_CSQ[]="AT+CSQ\r\n";                     // signal reception quality
 char CCID[] = "AT+CCID\r\n";
 char AT_CREG[] = "AT+CREG?\r\n";                // Registration in network
 char AT_END_OF_CALL[] = "ATH0\r\n";             // End of call
+char ACCEPTS_INCOMMING_CALL[] = "ATA\r\n";
 
 // Commands GSM module
 char call_to_my_mobile_number[]="ATD+380931482354;\r\n";
@@ -441,7 +442,7 @@ int end_of_call(void)
 		while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
 		{
 			id++;
-		    DelayMicro(10);
+		    DelayMicro(100);
 
 		    if(ansver_flag ==1)					// waite flag from interrupt
 		    {
@@ -464,54 +465,45 @@ int end_of_call(void)
 
 }
 // -------------------------------------------------------------------
-
-void parsing_ansver_from_GSM(void)
+int accepts_on_incomming_call(void)
 {
+	////////////////////////
 	uint32_t id =0;               				 // Variable for timeout
 	bool no_answer = false;
-	int timeout_counter = 1000;    // was 10000
+	int timeout_counter = 10000;
+	//
+
+	// Call on number
+	HAL_UART_Transmit(&huart1 , (uint8_t *)ACCEPTS_INCOMMING_CALL, strlen(ACCEPTS_INCOMMING_CALL), 1000);
+
 	ansver_flag = 0;
 	no_answer = false;
 
 	while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
 	{
-			id++;
-		    DelayMicro(10);
+		id++;
+		DelayMicro(100);
 
-		    if(ansver_flag ==1)					// waite flag from interrupt
-		    {
-		    	if (strstr(GSM_RX_buffer, "BUSY"))                        // Звінок збитий   WORK
-		    	{
-		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-		    		ansver_flag = 1;
-		    	}
-
-		    	if (strstr(GSM_RX_buffer, "NO ANSWER"))					  // Не відповідає   WORK
-		    	{
-		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-		    		ansver_flag = 1;
-		    	}
-
-//		    	if (strstr(GSM_RX_buffer, "CONNECT"))					  // Трубка піднята  DON't work!!!
-//		    	{
-//		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//		    		ansver_flag = 1;
-//		    	}
-
-		    }
-
-		    if(id  >= timeout_counter)						// Timeout is goon
-		    {
-		    	no_answer = true;               // Out from waiting answer
-		    	return 0;
-		    }
-
+		if(ansver_flag ==1)					// waite flag from interrupt
+		{
+			if (strstr(GSM_RX_buffer, "OK"))
+			{
+				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+				ansver_flag = 1;
+				return 1;
+			}
 		}
+		if(id  >= timeout_counter)						// Timeout is goon
+		{
+			no_answer = true;               // Out from waiting answer
+			return 0;
+		}
+	}
 }
+//char accepts_incomming_call[] = "ATA\r\n";
 
 
-
-	///////////////////////////////////////////////////////
+// -------------------------------------------------------------------
 //	 // waite answer "BUSY" from GSM    WORK OK
 int wait_ansver_after_make_call_in_blok_mode(void)
 {
@@ -543,159 +535,90 @@ int wait_ansver_after_make_call_in_blok_mode(void)
 				    return 3;
 				}
 		}
-
-	/////////////////////////////////////////////////////////////////////
 }
-
-
-// -------------------------------------------------------------------
-/*
- Функія використовується дла детектання вхідного звінка або смс
+// ----------------------------------------------------------------------------
+/* The function checks for an incoming call.
+ * 1 . Sent command for check.
+ * If are input call command return "+CLCC: 1,1,4,0,0,"+380931482354",145,""" answer
+ * Else, command return "OK"
+ * Function receive pointer on buffer where will be save incoming number
+ * Return: Status.
+ * 		0 - Error(Timeout)
+ * 		1 - No input call
+ * 		2 - input call
  */
-
-// PROBLEM !!!!!!!! функція буде працювати некоректно якщо
-// вона буде працювати в основному лупі з делеями
-void if_RING_from_GSM(void)
+int wait_incoming_call(char *incoming_number)
 {
-		uint32_t id =0;               				 // Variable for timeout
-		bool no_answer = false;
-		int timeout_counter = 10000;
-		char str[50]={0};
+	uint32_t id =0;               				 // Variable for timeout
+	bool no_answer = false;
+	int timeout_counter = 10000;                 // Variable for compare timeout
+	ansver_flag = 0;
+	no_answer = false;
 
-		ansver_flag = 0;
-		no_answer = false;
+	// Senc check command
+	char AT_CLCC[] = "AT+CLCC\r\n";
+	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CLCC, strlen(AT_CLCC), 1000);
 
-		while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
+	// Wait for an answer
+	while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
+	{
+		id++;														// Increment timeout
+		DelayMicro(10);
+
+		if(ansver_flag ==1)					// waite flag from interrupt
 		{
-			id++;
-		    DelayMicro(10);
+			if (strstr(GSM_RX_buffer, "OK"))   					// NO incoming call
+			{
+				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+				ansver_flag = 1;
+				return 1;
+			}
+			uint8_t find_edigit_counter = 0;
+			//+CLCC: 1,1,4,0,0,"+380931482354",145,""
+			if(strstr(GSM_RX_buffer, "+CLCC: 1,1,4,0,0,"))
+			{
+				// Parsing number
+				uint8_t i = 0;
+				for(i = 0; i <= sizeof(GSM_RX_buffer); i++)
+				{
+					if(GSM_RX_buffer[i] == '+')										// Find start number
+					{
+						find_edigit_counter ++;										// We have two '+' sign because we must miss first sign
+						if(find_edigit_counter == 2)
+						{
+							i++;
+							uint8_t k = 0;
+							uint8_t j = 0;
+							for(j = 0; j<= 12; j ++)								// 12 - mobile number long
+							{
+								if(j == 12)											// Add '\0' in last element
+								{
+									incoming_number[k] = '\0';
+								}
+								else
+								{
+									incoming_number[k] = GSM_RX_buffer[i];			// Copy
+									i++;
+									k++;
+								}
+							}
+						}
+					}
+				}
 
-		    if(ansver_flag ==1)					// waite flag from interrupt
-		    {
-		    	// якщо є вхідний звінок
-		    	if (strstr(GSM_RX_buffer, "RING"))                        // Звінок збитий   WORK
-		    	{
-		    		//GSM_STATE = RING;
-		    		// Print on OLED
-		    		sprintf(str,"%s", "RING...");
-		    	    ssd1306_SetCursor(00, 36);
-		    		ssd1306_WriteString(str, Font_7x10, White);
-		    		ssd1306_UpdateScreen();
+				memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));					// Сlean the buffer
+				ansver_flag = 1;
 
-
-		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-		    		ansver_flag = 1;
-		    	}
-
-		    	// DON'T WORK !!!!!!!!
-		    	// NO CARRIER  //  якщо вхідний звінок збитий
-		    	if (strstr(GSM_RX_buffer, "NO CARRIER"))                        // Звінок збитий   WORK
-		    	{
-		    		//GSM_STATE = NOTHING;
-		    		sprintf(str,"%s", "                        ");
-		    		ssd1306_SetCursor(00, 36);
-		    		ssd1306_WriteString(str, Font_7x10, White);
-		    	    ssd1306_UpdateScreen();
-
-		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-		    		ansver_flag = 1;
-		    	}
-
-
-		    }
-
-		    if(id  >= timeout_counter)						// Timeout is goon
-		    {
-		    	no_answer = true;               // Out from waiting answer
-		    }
-
+				return 2;
+			}
 		}
 
+		if(id  >= timeout_counter)													// Out of timeout
+		{
+			no_answer = true;														 // Out from waiting answer
+
+			return 0;
+		}
+	}
 }
-//// якщо звінок збитий
-//void if_RING_OUT_from_GSM(void)
-//{
-//		uint32_t id =0;               				 // Variable for timeout
-//		bool no_answer = false;
-//		int timeout_counter = 10000;
-//
-//		ansver_flag = 0;
-//		no_answer = false;
-//
-//		while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
-//		{
-//			id++;
-//		    DelayMicro(10);
-//
-//		    if(ansver_flag ==1)					// waite flag from interrupt
-//		    {
-//
-//		    	// DON'T WORK !!!!!!!!
-//		    	// NO CARRIER  //  якщо вхідний звінок збитий
-//		    	if (strstr(GSM_RX_buffer, "NO CARRIER"))                        // Звінок збитий   WORK
-//		    	{
-//		    		GSM_STATE = NOTHING;
-//
-//		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//		    		ansver_flag = 1;
-//		    	}
-//		    }
-//
-//		    if(id  >= timeout_counter)						// Timeout is goon
-//		    {
-//		    	no_answer = true;               // Out from waiting answer
-//		    	return 0;
-//		    }
-//
-//		}
-//
-//}
-
-
-
-
-// Відповіді модуля на вихід
-//     /// after call AT comand:   ATD+380931482354;
-//[14:29:10:153] ␍␊
-//[14:29:10:157] OK␍␊
-
-
-//	// Трубка не була піднята
-//[14:25:35:912] ␍␊
-//[14:25:35:914] NO ANSWER␍␊␊
-
-	// збитий звінок
-//[14:24:31:112] ␍␊
-//[14:24:31:116] BUSY␍␊
-
-	// піднята трубка
-
-
-
-
-////////////////////////////////////////////////////////////
-//			 while (ansver_flag != 1)
-//			 {
-//				// waite for answer
-//			 }
-//			 if(ansver_flag == 1)
-//			 {
-//					if (strstr(GSM_RX_buffer, "RING"))                        // Звінок збитий
-//				    {
-//						memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//						ansver_flag = 1;
-//					}
-//
-//					if (strstr(GSM_RX_buffer, "NO CARRIER"))					  // Не відповідає
-//				    {
-//						memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-//					    ansver_flag = 1;
-//					}
-//
-//
-//
-//
-//			}
-////////////////////////////////////////////////////////
-
-//
+// ----------------------------------------------------------------------------

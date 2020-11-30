@@ -14,13 +14,17 @@ int init_gsm_module(void);
 int call_on_mu_number(void);
 int call_on_number(char *number, uint8_t size_number);
 
-void parsing_ansver_from_GSM(void);
-void if_RING_from_GSM(void);
+// void parsing_ansver_from_GSM(void);
+// void if_RING_from_GSM(void);
 void if_RING_OUT_from_GSM(void);
 int wait_ansver_after_make_call_in_blok_mode(void);
 int end_of_call(void);
 
 int check_during_out_call(void);
+int wait_incoming_call(char * incoming_number);
+int accepts_on_incomming_call(void);
+//void test_function (char * test_buffer, uint8_t size);
+
 //enum GSM
 //{
 //	CALLING = 1,

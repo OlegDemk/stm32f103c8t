@@ -64,6 +64,7 @@ extern uint8_t receive_gps_signal;
 void test_flash_W25Q(void);
 void generate_sound(void);
 char read_one_sign_from_keyboard(void);
+bool enter_a_mobile_number(char * number);
 
 int gsm_mode(char sign);
 int gps_mode(char sign);
@@ -274,7 +275,7 @@ while (1)
 		//sign = '1';    // turn on GSM mode
 		/////////////////////
 
-		if(sign == '1')    // If select GSM mode
+		if(sign == '1')    							// If select GSM mode
 		{
 			GSM_MODE = true;
 			while(GSM_MODE && (EXIT == 0))
@@ -282,7 +283,7 @@ while (1)
 				EXIT = gsm_mode(sign);
 			}
 		}
-		if(sign == '2')    // If select GPS mode
+		if(sign == '2')    							// If select GPS mode
 		{
 			GPS_MODE = true;
 			while (GPS_MODE && (EXIT == 0))
@@ -290,7 +291,7 @@ while (1)
 				EXIT = gps_mode(sign);
 			}
 		}
-		if(sign == '3')    // If select FINGERPRINT MODE
+		if(sign == '3')    							// If select FINGERPRINT MODE
 		{
 			FINGERPRINT_MODE = true;
 			while (FINGERPRINT_MODE && (EXIT == 0))
@@ -298,7 +299,7 @@ while (1)
 				EXIT = fingerprint_mode(sign);
 			}
 		}
-		if(sign == '4')    // If select SENSORS MODE
+		if(sign == '4')    							// If select SENSORS MODE
 		{
 			SENSORS_MODE = true;
 			while (SENSORS_MODE && (EXIT == 0))
@@ -1004,7 +1005,7 @@ int gsm_mode(char sign)
 	ssd1306_WriteString(str_gsm, Font_7x10, White);
 	ssd1306_UpdateScreen();
 
-	// Init GSM module////////////////////////////
+	// Init GSM module///
 	init_GSM_uart_comunication();
 	if(init_gsm_module() == HAL_OK)
 	{
@@ -1035,11 +1036,18 @@ int gsm_mode(char sign)
 		ssd1306_SetCursor(00, 00);
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
 		ssd1306_UpdateScreen();
+
+		HAL_Delay(2000);
 	}
 		// END INIT GSM MODULE  //////////////////////////
 
     if(GSM_INIT == 1)
     {
+    	char incoming_call_status = 0;					// Call status.
+    	bool first_time_after_call = false;
+    	bool incoming_call_status_oled = false;			// Status for blinky
+    	int print_oled_status = 0;
+
 		// Print GSM menu
 		sprintf(str_gsm,"%s", "1.CALL to me");
 		ssd1306_SetCursor(00, 16);
@@ -1056,124 +1064,175 @@ int gsm_mode(char sign)
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
 		memset(str_gsm, 0 , sizeof(str_gsm));
 
-//		sprintf(str_gsm,"%s", "STATUS: ");
-//		ssd1306_SetCursor(00, 46);
-//		ssd1306_WriteString(str_gsm, Font_7x10, White);
-//		memset(str_gsm, 0 , sizeof(str_gsm));
 
 		ssd1306_UpdateScreen();
 
 		// Select GSM menu or EXIT
-		do                                                            // Whaite for choise
+		do																		// Wait on your choice
 		{
-			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+			// 1. Select mode
+			sign = read_one_sign_from_keyboard();								// Read sign from keyboard
+
+			// 2. Wait incoming call
+			char incoming_number[15] = {0};										// Buffer for incoming number
+			incoming_call_status = wait_incoming_call(incoming_number);
+
+			if(incoming_call_status == 2)										// If are incomming call
+			{
+				// 1. Clean OLED.
+				if(print_oled_status == 0)
+				{
+					claen_oled_lines(false, true, true, true, true);
+				}
+
+				// 2. Print message and incoming number.
+				if(incoming_call_status_oled == true)
+				{
+					sprintf(str_gsm,"%s", "Incoming CALL...");
+					ssd1306_SetCursor(00, 16);
+					ssd1306_WriteString(str_gsm, Font_7x10, White);
+					memset(str_gsm, 0 , sizeof(str_gsm));
+					ssd1306_UpdateScreen();
+
+					incoming_call_status_oled = false;
+				}
+				else
+				{
+					claen_oled_lines(false, true, false, false, false);		// Clean OLED
+
+					incoming_call_status_oled = true;
+				}
+
+				if (print_oled_status == 0)											// Print only one time
+				{
+					sprintf(str_gsm,"%s", incoming_number);
+					ssd1306_SetCursor(00, 26);
+					ssd1306_WriteString(incoming_number, Font_7x10, White);
+					memset(incoming_number, 0 , sizeof(incoming_number));
+
+					// 3. Print key action.
+					sprintf(str_gsm,"%s", "'A':pick up phone");
+					ssd1306_SetCursor(00, 36);
+					ssd1306_WriteString(str_gsm, Font_7x10, White);
+					memset(str_gsm, 0 , sizeof(str_gsm));
+
+					sprintf(str_gsm,"%s", "'*':end call");
+					ssd1306_SetCursor(00, 46);
+					ssd1306_WriteString(str_gsm, Font_7x10, White);
+					memset(str_gsm, 0 , sizeof(str_gsm));
+				}
+				print_oled_status++;
+
+				//ssd1306_UpdateScreen();
+
+				// 4. Read action from keyboard
+				sign = read_one_sign_from_keyboard();							// Read sign from keyboard
+				if(sign == '*')													// Call end
+				{
+					if(end_of_call() == 1)										// Send "end call" command in GSM module
+					{
+						claen_oled_lines(false, true, true, true, true);		// Clean OLED
+
+						sprintf(str_gsm,"%s", "CALL END");
+						ssd1306_SetCursor(00, 16);
+						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						memset(str_gsm, 0 , sizeof(str_gsm));
+
+						ssd1306_UpdateScreen();
+
+						HAL_Delay(2000);
+
+						sign = '*';
+					}
+				}
+				if(sign == 'A')													// Pick up the phone
+				{
+					if(accepts_on_incomming_call() == 1);						// Send "pick up the phone" command in GSM module
+					{
+						claen_oled_lines(false, true, true, true, true);		// Clean OLED
+
+						sprintf(str_gsm,"%s", "SPEAK...");
+						ssd1306_SetCursor(00, 16);
+						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						memset(str_gsm, 0 , sizeof(str_gsm));
+
+						sprintf(str_gsm,"%s", "#:end call");
+						ssd1306_SetCursor(00, 46);
+						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						memset(str_gsm, 0 , sizeof(str_gsm));
+
+						ssd1306_UpdateScreen();
+
+						do{
+							sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+							HAL_Delay(200);
+						}while (sign != '#');
+
+						if(sign == '#')											// Call end
+						{
+							end_of_call();
+
+							claen_oled_lines(false, true, true, true, true);
+
+							sprintf(str_gsm,"%s", "CALL END");
+							ssd1306_SetCursor(00, 16);
+							ssd1306_WriteString(str_gsm, Font_7x10, White);
+							memset(str_gsm, 0 , sizeof(str_gsm));
+
+							ssd1306_UpdateScreen();
+
+							HAL_Delay(2000);
+
+						}
+					}
+
+				}
+
+				first_time_after_call = true;
+
+
+
+			}
+
+			// PROBLEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			// деколи програма злітає сюди і виводить логовне меню
+			//жжж
+			sssss
+			if((incoming_call_status == 1) && (first_time_after_call == true))   // For exit from incoming call menu
+			{
+				sign = '*';
+				first_time_after_call = false;
+			}
 
 			if(sign == '1')    // If select Call mode
 			{
 				int call_status = call_on_mu_number();
 				show_sratus_call (call_status, str_gsm, sign, 1);
 			}
-			// 1. Type mobile number
-			//enter_a_mobile_number();
-			//enter_a_mobile_number();
 
 			if(sign == '2')
 			{
-				// 1. Clean OLED
-				bool entered_number_status = false;
+				// 1. Type mobile number.
+				char number[13]={0};										// Buffer where will be save entered number
+				uint8_t size_number = 0;									// How many entered digits in number
+				bool entered_number_status = false;							// Status number buffer.
+				entered_number_status = enter_a_mobile_number(number);		// Enter number
 
-				int h = 16;
-				char str[30] = {0};
-				while(h != 46)
-				{
-					sprintf(str,"%s", "                    ");
-					ssd1306_SetCursor(00, h);
-					ssd1306_WriteString(str, Font_7x10, White);
-					memset(str, 0 , sizeof(str));
+				for(size_number = 0; number[size_number] != '\0'; size_number++){}		// Count digits
 
-					h = h +10;
-				}
-				ssd1306_UpdateScreen();
-				HAL_Delay(500);
-				//
-
-                // 2. Type numbers
-				sprintf(str,"%s", "Enter number:");
-				ssd1306_SetCursor(00, 16);
-				ssd1306_WriteString(str, Font_7x10, White);
-				memset(str, 0 , sizeof(str));
-
-				ssd1306_UpdateScreen();
-
-				uint8_t k = 0;
-				char sing_number;
-				char number[13]={0};
-				do{
-					sing_number = read_one_sign_from_keyboard();
-					if ((sing_number != '\0') && (sing_number != 'D'))  	// Enter one digit
-					{
-						number[k] = sing_number;
-						k++;
-
-                        //i=i+10;
-						// print all mumbers
-						sprintf(str,"%s", number);
-						ssd1306_SetCursor(00, 26);
-						ssd1306_WriteString(str, Font_7x10, White);
-						memset(str, 0 , sizeof(str));
-						ssd1306_UpdateScreen();
-
-					}
-					if((sing_number == 'D') && (k >=1))						// Delete one digit
-					{
-						k--;
-						number[k] = ' ';
-
-						sprintf(str,"%s", number);
-						ssd1306_SetCursor(00, 26);
-						ssd1306_WriteString(str, Font_7x10, White);
-						memset(str, 0 , sizeof(str));
-						ssd1306_UpdateScreen();
-					}
-
-					if(k == 12)												// If all digits was entered
-					{
-						entered_number_status = true;						// Status. All digit entered
-						//break;
-					}
-
-					HAL_Delay(200);
-				}while ((sing_number != '*') && (entered_number_status != true));
-				//}while ((sing_number != '*') && (k != 12));
-
-				uint8_t size_number = 0;
-				for(size_number = 0; number[size_number] != '\0'; size_number++){}
-
-				if(entered_number_status == true)
+				// 2. Call on entered number.
+				if(entered_number_status == true)										// If entered all digits will be call on this number
 				{
 					int call_status = call_on_number(number, size_number);
 					show_sratus_call(call_status, str_gsm, sign, 0);
 				}
-
-
-//				if(sing_number != '*')
-//				{
-					// Count digits in number
-//					uint8_t size_number = 0;
-//					for(size_number = 0; number[size_number] != '\0'; size_number++){}
-
-					//uint8_t size_number = sizeof(number);
-					//int call_status = call_on_number(number, size_number);
-//					int call_status = call_on_number(number, size_number);
-//					show_sratus_call(call_status, str_gsm, sign, 0);
-
-
-//				}
 			}
+
 			if(sign == '3')    // If select SMS mode (don't realised)
 			{
 
 			}
+
 			if(sign == '*')    // If select EXIT  // Exit in main menu
 			{
 				// Clear all OLED
@@ -1188,7 +1247,10 @@ int gsm_mode(char sign)
 				return 1;  			 // Flag_fro exit from there
 			}
 
-		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
+			ssd1306_UpdateScreen();
+			HAL_Delay(200);
+
+		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*'));     // Select one from 3 modes
 	}
     else     				// If error init GSM module. Exit from GSM menu
     {
@@ -1198,8 +1260,8 @@ int gsm_mode(char sign)
         ssd1306_Fill(Black);
         ssd1306_UpdateScreen();
 
-        GPS_MODE = false;
         GSM_MODE = false;
+        GPS_MODE = false;
         FINGERPRINT_MODE = false;
         SENSORS_MODE = false;
 
@@ -1556,7 +1618,8 @@ int sensors_mode(char sign)
 		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
 }
 // ----------------------------------------------------------------------------
-
+/* After output call this function show call status
+ */
 void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
 {
 	if (where_call == 1)   // If call to me
@@ -1601,7 +1664,7 @@ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_c
 	}
 	// wait ansver from GSM module
 
-	int gsm_out_call_stattus =0;
+	int gsm_out_call_stattus = 0;
 	while ((sign != '#') && (gsm_out_call_stattus != 1) && (gsm_out_call_stattus != 2)
 	&& (gsm_out_call_stattus != 3))
 	{
@@ -1659,10 +1722,122 @@ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_c
 
 		}
 }
-
-
 // ----------------------------------------------------------------------------
+/*	Function can write mobile number.
+ * For example 380XXXXXXXXX.
+ * And delete wrong entered digits.
+ * If entered all digits function finish work.
+ */
+bool enter_a_mobile_number(char * number)
+{
+	bool entered_number_status = false;
+
+	// 1. Clean OLED
+	int h = 16;
+	char str[30] = {0};
+	while(h != 46)
+	{
+		sprintf(str,"%s", "                    ");
+		ssd1306_SetCursor(00, h);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+
+		h = h +10;
+	}
+	ssd1306_UpdateScreen();
+	HAL_Delay(500);
+	//
+
+    // 2. Type numbers
+	sprintf(str,"%s", "Enter number:");
+	ssd1306_SetCursor(00, 16);
+	ssd1306_WriteString(str, Font_7x10, White);
+	memset(str, 0 , sizeof(str));
+
+	ssd1306_UpdateScreen();
+
+	uint8_t k = 0;
+	char sing_number;
+	//char number[13]={0};
+	do{
+		sing_number = read_one_sign_from_keyboard();
+		if ((sing_number != '\0') && (sing_number != 'D'))  	// Enter one digit
+		{
+			number[k] = sing_number;
+			k++;
+
+			// print all mumbers
+			sprintf(str,"%s", number);
+			ssd1306_SetCursor(00, 26);
+			ssd1306_WriteString(str, Font_7x10, White);
+			memset(str, 0 , sizeof(str));
+			ssd1306_UpdateScreen();
+
+		}
+		if((sing_number == 'D') && (k >=1))						// Delete one digit
+		{
+			k--;
+			number[k] = ' ';
+
+			sprintf(str,"%s", number);
+			ssd1306_SetCursor(00, 26);
+			ssd1306_WriteString(str, Font_7x10, White);
+			memset(str, 0 , sizeof(str));
+			ssd1306_UpdateScreen();
+		}
+
+		if(k == 12)												// If all digits was entered
+		{
+			entered_number_status = true;						// Status. All digit entered
+			//break;
+		}
+
+		HAL_Delay(200);
+	}while ((sing_number != '*') && (entered_number_status != true));
+
+	return entered_number_status;
+}
 // ----------------------------------------------------------------------------
+void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fifth)
+{
+	char str[32] = {0};
+	if(first == true)
+	{
+		sprintf(str,"%s", "                          ");
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+	}
+	if(second == true)
+	{
+		sprintf(str,"%s", "                          ");
+		ssd1306_SetCursor(00, 16);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+	}
+	if(third == true)
+	{
+		sprintf(str,"%s", "                          ");
+		ssd1306_SetCursor(00, 26);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+	}
+	if(fourth == true)
+	{
+		sprintf(str,"%s", "                          ");
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+	}
+	if(fifth == true)
+	{
+		sprintf(str,"%s", "                          ");
+		ssd1306_SetCursor(00, 46);
+		ssd1306_WriteString(str, Font_7x10, White);
+		memset(str, 0 , sizeof(str));
+	}
+	ssd1306_UpdateScreen();
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* USER CODE END 4 */

@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="call_on_number"/>
+		<item key="selection" value="exit"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="call_on_number"/>
-			<item value="call_status"/>
-			<item value="no_answer"/>
-			<item value="id"/>
-			<item value="wait_ansver_after_make_call_in_blok_mode"/>
+			<item value="EXIT"/>
+			<item value="print_main_menu"/>
+			<item value="GSM_INIT"/>
+			<item value="incoming_call_status"/>
+			<item value="AT_END_OF_CALL"/>
+			<item value="ansver_flag"/>
 			<item value="GSM_RX_buffer"/>
-			<item value="check_during_out_call"/>
-			<item value="OLED_prinr_all_data"/>
-			<item value="humidity_si7021"/>
-			<item value="GPS_SELECTED"/>
-			<item value="SENSORS_SELECTED"/>
-			<item value="print_GPS_data"/>
-			<item value="GPGGA_data_is_ready"/>
-			<item value="sign"/>
-			<item value="GPS_buff"/>
+			<item value="wait_incoming_call"/>
+			<item value="i"/>
+			<item value="if_RING_from_GSM"/>
+			<item value="parsing_ansver_from_GSM"/>
+			<item value="enter_a_mobile_number"/>
+			<item value="str"/>
+			<item value="enter_mobile_number"/>
+			<item value="handle_vCont_t"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="483"/>
-		<item key="DIALOG_Y_ORIGIN" value="476"/>
+		<item key="DIALOG_X_ORIGIN" value="940"/>
+		<item key="DIALOG_Y_ORIGIN" value="290"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
-		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|10.770833|0|GTK|1|"/>
 	</section>
 </section>
