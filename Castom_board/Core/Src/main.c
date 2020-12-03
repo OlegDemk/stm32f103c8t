@@ -94,6 +94,8 @@ bool SENSORS_MODE = false;
 
 bool EXIT_FROM_MODE = false;
 
+bool INCOMMING_RING_OR_SMS_STATUS = false;   // It status toggle in extern interrupt
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -229,6 +231,9 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  	  // Test led
+  	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
 
   #if SOUND
   	uint16_t pulse = 2;
@@ -318,7 +323,7 @@ while (1)
   }
   /* USER CODE END 3 */
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -680,7 +685,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, CS_M25Q_Pin|GPIO_PIN_3, GPIO_PIN_RESET);
@@ -694,6 +699,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA1 */
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : CS_M25Q_Pin */
   GPIO_InitStruct.Pin = CS_M25Q_Pin;
@@ -721,6 +732,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
 }
 
@@ -1073,136 +1088,136 @@ int gsm_mode(char sign)
 			// 1. Select mode
 			sign = read_one_sign_from_keyboard();								// Read sign from keyboard
 
-			// 2. Wait incoming call
-			char incoming_number[15] = {0};										// Buffer for incoming number
-			incoming_call_status = wait_incoming_call(incoming_number);
-
-			if(incoming_call_status == 2)										// If are incomming call
-			{
-				// 1. Clean OLED.
-				if(print_oled_status == 0)
-				{
-					claen_oled_lines(false, true, true, true, true);
-				}
-
-				// 2. Print message and incoming number.
-				if(incoming_call_status_oled == true)
-				{
-					sprintf(str_gsm,"%s", "Incoming CALL...");
-					ssd1306_SetCursor(00, 16);
-					ssd1306_WriteString(str_gsm, Font_7x10, White);
-					memset(str_gsm, 0 , sizeof(str_gsm));
-					ssd1306_UpdateScreen();
-
-					incoming_call_status_oled = false;
-				}
-				else
-				{
-					claen_oled_lines(false, true, false, false, false);		// Clean OLED
-
-					incoming_call_status_oled = true;
-				}
-
-				if (print_oled_status == 0)											// Print only one time
-				{
-					sprintf(str_gsm,"%s", incoming_number);
-					ssd1306_SetCursor(00, 26);
-					ssd1306_WriteString(incoming_number, Font_7x10, White);
-					memset(incoming_number, 0 , sizeof(incoming_number));
-
-					// 3. Print key action.
-					sprintf(str_gsm,"%s", "'A':pick up phone");
-					ssd1306_SetCursor(00, 36);
-					ssd1306_WriteString(str_gsm, Font_7x10, White);
-					memset(str_gsm, 0 , sizeof(str_gsm));
-
-					sprintf(str_gsm,"%s", "'*':end call");
-					ssd1306_SetCursor(00, 46);
-					ssd1306_WriteString(str_gsm, Font_7x10, White);
-					memset(str_gsm, 0 , sizeof(str_gsm));
-				}
-				print_oled_status++;
-
-				//ssd1306_UpdateScreen();
-
-				// 4. Read action from keyboard
-				sign = read_one_sign_from_keyboard();							// Read sign from keyboard
-				if(sign == '*')													// Call end
-				{
-					if(end_of_call() == 1)										// Send "end call" command in GSM module
-					{
-						claen_oled_lines(false, true, true, true, true);		// Clean OLED
-
-						sprintf(str_gsm,"%s", "CALL END");
-						ssd1306_SetCursor(00, 16);
-						ssd1306_WriteString(str_gsm, Font_7x10, White);
-						memset(str_gsm, 0 , sizeof(str_gsm));
-
-						ssd1306_UpdateScreen();
-
-						HAL_Delay(2000);
-
-						sign = '*';
-					}
-				}
-				if(sign == 'A')													// Pick up the phone
-				{
-					if(accepts_on_incomming_call() == 1);						// Send "pick up the phone" command in GSM module
-					{
-						claen_oled_lines(false, true, true, true, true);		// Clean OLED
-
-						sprintf(str_gsm,"%s", "SPEAK...");
-						ssd1306_SetCursor(00, 16);
-						ssd1306_WriteString(str_gsm, Font_7x10, White);
-						memset(str_gsm, 0 , sizeof(str_gsm));
-
-						sprintf(str_gsm,"%s", "#:end call");
-						ssd1306_SetCursor(00, 46);
-						ssd1306_WriteString(str_gsm, Font_7x10, White);
-						memset(str_gsm, 0 , sizeof(str_gsm));
-
-						ssd1306_UpdateScreen();
-
-						do{
-							sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-							HAL_Delay(200);
-						}while (sign != '#');
-
-						if(sign == '#')											// Call end
-						{
-							end_of_call();
-
-							claen_oled_lines(false, true, true, true, true);
-
-							sprintf(str_gsm,"%s", "CALL END");
-							ssd1306_SetCursor(00, 16);
-							ssd1306_WriteString(str_gsm, Font_7x10, White);
-							memset(str_gsm, 0 , sizeof(str_gsm));
-
-							ssd1306_UpdateScreen();
-
-							HAL_Delay(2000);
-
-						}
-					}
-
-				}
-
-				first_time_after_call = true;
-
-
-
-			}
-
-			// PROBLEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			// деколи програма злітає сюди і виводить логовне меню
-			//жжж
-			sssss
-			if((incoming_call_status == 1) && (first_time_after_call == true))   // For exit from incoming call menu
-			{
-				sign = '*';
-				first_time_after_call = false;
-			}
+//			// 2. Wait incoming call
+//			char incoming_number[15] = {0};										// Buffer for incoming number
+//			incoming_call_status = wait_incoming_call(incoming_number);
+//
+//			if(incoming_call_status == 2)										// If are incomming call
+//			{
+//				// 1. Clean OLED.
+//				if(print_oled_status == 0)
+//				{
+//					claen_oled_lines(false, true, true, true, true);
+//				}
+//
+//				// 2. Print message and incoming number.
+//				if(incoming_call_status_oled == true)
+//				{
+//					sprintf(str_gsm,"%s", "Incoming CALL...");
+//					ssd1306_SetCursor(00, 16);
+//					ssd1306_WriteString(str_gsm, Font_7x10, White);
+//					memset(str_gsm, 0 , sizeof(str_gsm));
+//					ssd1306_UpdateScreen();
+//
+//					incoming_call_status_oled = false;
+//				}
+//				else
+//				{
+//					claen_oled_lines(false, true, false, false, false);		// Clean OLED
+//
+//					incoming_call_status_oled = true;
+//				}
+//
+//				if (print_oled_status == 0)											// Print only one time
+//				{
+//					sprintf(str_gsm,"%s", incoming_number);
+//					ssd1306_SetCursor(00, 26);
+//					ssd1306_WriteString(incoming_number, Font_7x10, White);
+//					memset(incoming_number, 0 , sizeof(incoming_number));
+//
+//					// 3. Print key action.
+//					sprintf(str_gsm,"%s", "'A':pick up phone");
+//					ssd1306_SetCursor(00, 36);
+//					ssd1306_WriteString(str_gsm, Font_7x10, White);
+//					memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//					sprintf(str_gsm,"%s", "'*':end call");
+//					ssd1306_SetCursor(00, 46);
+//					ssd1306_WriteString(str_gsm, Font_7x10, White);
+//					memset(str_gsm, 0 , sizeof(str_gsm));
+//				}
+//				print_oled_status++;
+//
+//				//ssd1306_UpdateScreen();
+//
+//				// 4. Read action from keyboard
+//				sign = read_one_sign_from_keyboard();							// Read sign from keyboard
+//				if(sign == '*')													// Call end
+//				{
+//					if(end_of_call() == 1)										// Send "end call" command in GSM module
+//					{
+//						claen_oled_lines(false, true, true, true, true);		// Clean OLED
+//
+//						sprintf(str_gsm,"%s", "CALL END");
+//						ssd1306_SetCursor(00, 16);
+//						ssd1306_WriteString(str_gsm, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//						ssd1306_UpdateScreen();
+//
+//						HAL_Delay(2000);
+//
+//						sign = '*';
+//					}
+//				}
+//				if(sign == 'A')													// Pick up the phone
+//				{
+//					if(accepts_on_incomming_call() == 1);						// Send "pick up the phone" command in GSM module
+//					{
+//						claen_oled_lines(false, true, true, true, true);		// Clean OLED
+//
+//						sprintf(str_gsm,"%s", "SPEAK...");
+//						ssd1306_SetCursor(00, 16);
+//						ssd1306_WriteString(str_gsm, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//						sprintf(str_gsm,"%s", "#:end call");
+//						ssd1306_SetCursor(00, 46);
+//						ssd1306_WriteString(str_gsm, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//						ssd1306_UpdateScreen();
+//
+//						do{
+//							sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+//							HAL_Delay(200);
+//						}while (sign != '#');
+//
+//						if(sign == '#')											// Call end
+//						{
+//							end_of_call();
+//
+//							claen_oled_lines(false, true, true, true, true);
+//
+//							sprintf(str_gsm,"%s", "CALL END");
+//							ssd1306_SetCursor(00, 16);
+//							ssd1306_WriteString(str_gsm, Font_7x10, White);
+//							memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//							ssd1306_UpdateScreen();
+//
+//							HAL_Delay(2000);
+//
+//						}
+//					}
+//
+//				}
+//
+//				first_time_after_call = true;
+//
+//
+//
+//			}
+//
+//			// PROBLEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//			// деколи програма злітає сюди і виводить логовне меню
+//			//жжж
+//			//sssss
+//			if((incoming_call_status == 1) && (first_time_after_call == true))   // For exit from incoming call menu
+//			{
+//				sign = '*';
+//				first_time_after_call = false;
+//			}
 
 			if(sign == '1')    // If select Call mode
 			{
@@ -1837,6 +1852,22 @@ void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fif
 		memset(str, 0 , sizeof(str));
 	}
 	ssd1306_UpdateScreen();
+}
+// ----------------------------------------------------------------------------
+/* Interrupt can detect signal "ring" from "ring" pin from GSM module.
+ * That STATUS must check timer every 0.5 sec
+ * If INCOMMING_RING_OR_SMS_STATUS == true
+ * 		turn on "incoming call" function
+ */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	if(GPIO_Pin == GPIO_PIN_1)
+	{
+		INCOMMING_RING_OR_SMS_STATUS = !INCOMMING_RING_OR_SMS_STATUS;		// Check it status if it is 'true' we have incoming ring or sms
+
+		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////

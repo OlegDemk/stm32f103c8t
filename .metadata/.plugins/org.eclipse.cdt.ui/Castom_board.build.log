@@ -1,83 +1,10 @@
-18:33:33 **** Incremental Build of configuration Debug for project Castom_board ****
+22:42:23 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-../Core/Src/main.c:53:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
- extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
-        ^~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:205:6: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
-      I2C_1_scaner();
-      ^~~~~~~~~~~~
-../Core/Src/main.c:265:7: warning: unused variable 'str' [-Wunused-variable]
-  char str[50]={0};
-       ^~~
-../Core/Src/main.c: In function 'gsm_mode':
-../Core/Src/main.c:1085:6: warning: implicit declaration of function 'claen_oled_lines' [-Wimplicit-function-declaration]
-      claen_oled_lines(false, true, true, true, true);
-      ^~~~~~~~~~~~~~~~
-../Core/Src/main.c:1150:6: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
-      if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
-      ^~
-../Core/Src/main.c:1151:6: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
-      {
-      ^
-../Core/Src/main.c:1200:4: error: 'sssss' undeclared (first use in this function)
-    sssss
-    ^~~~~
-../Core/Src/main.c:1200:4: note: each undeclared identifier is reported only once for each function it appears in
-../Core/Src/main.c:1201:4: error: expected ';' before 'if'
-    if((incoming_call_status == 1) && (first_time_after_call == true))   // For exit from incoming call menu
-    ^~
-../Core/Src/main.c:1047:11: warning: variable 'first_time_after_call' set but not used [-Wunused-but-set-variable]
-      bool first_time_after_call = false;
-           ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'show_sratus_call':
-../Core/Src/main.c:1648:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-   memset(str_gsm, 0 , sizeof(str_gsm));
-                             ^
-../Core/Src/main.c:1653:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-   memset(str_gsm, 0 , sizeof(str_gsm));
-                             ^
-../Core/Src/main.c:1662:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-   memset(str_gsm, 0 , sizeof(str_gsm));
-                             ^
-../Core/Src/main.c:1682:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-   memset(str_gsm, 0 , sizeof(str_gsm));
-                             ^
-../Core/Src/main.c:1695:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-    memset(str_gsm, 0 , sizeof(str_gsm));
-                              ^
-../Core/Src/main.c:1706:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-    memset(str_gsm, 0 , sizeof(str_gsm));
-                              ^
-../Core/Src/main.c:1717:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
-    memset(str_gsm, 0 , sizeof(str_gsm));
-                              ^
-../Core/Src/main.c: At top level:
-../Core/Src/main.c:1801:6: warning: conflicting types for 'claen_oled_lines'
- void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fifth)
-      ^~~~~~~~~~~~~~~~
-../Core/Src/main.c:1085:6: note: previous implicit declaration of 'claen_oled_lines' was here
-      claen_oled_lines(false, true, true, true, true);
-      ^~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'gps_mode':
-../Core/Src/main.c:994:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-../Core/Src/main.c: In function 'gsm_mode':
-../Core/Src/main.c:1270:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-../Core/Src/main.c: In function 'fingerprint_mode':
-../Core/Src/main.c:1439:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-../Core/Src/main.c: In function 'sensors_mode':
-../Core/Src/main.c:1619:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-make: *** [Core/Src/subdir.mk:87: Core/Src/main.o] Error 1
-"make -j8 all" terminated with exit code 2. Build might be incomplete.
+arm-none-eabi-size   Castom_board.elf 
+   text	   data	    bss	    dec	    hex	filename
+  56648	    576	   3912	  61136	   eed0	Castom_board.elf
+Finished building: default.size.stdout
+ 
 
-18:33:34 Build Failed. 3 errors, 18 warnings. (took 882ms)
+22:42:24 Build Finished. 0 errors, 0 warnings. (took 645ms)
 

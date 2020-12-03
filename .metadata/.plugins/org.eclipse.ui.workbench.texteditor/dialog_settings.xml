@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="exit"/>
+		<item key="selection" value="13"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="13"/>
+			<item value="HAL_GPIO_WritePin"/>
+			<item value="PC13"/>
 			<item value="EXIT"/>
 			<item value="print_main_menu"/>
 			<item value="GSM_INIT"/>
@@ -20,18 +23,15 @@
 			<item value="if_RING_from_GSM"/>
 			<item value="parsing_ansver_from_GSM"/>
 			<item value="enter_a_mobile_number"/>
-			<item value="str"/>
-			<item value="enter_mobile_number"/>
-			<item value="handle_vCont_t"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="940"/>
-		<item key="DIALOG_Y_ORIGIN" value="290"/>
+		<item key="DIALOG_X_ORIGIN" value="137"/>
+		<item key="DIALOG_Y_ORIGIN" value="382"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
-		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|10.770833|0|GTK|1|"/>
+		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
 	</section>
 </section>
