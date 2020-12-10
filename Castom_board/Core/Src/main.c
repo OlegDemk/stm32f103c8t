@@ -70,6 +70,8 @@ int gsm_mode(char sign);
 int gps_mode(char sign);
 int fingerprint_mode(char sign);
 int sensors_mode(char sign);
+
+void detect_and_process_incoming_call_or_sms(void);
 //void gps_mode(char sign);
 
 uint8_t GPS_buff[512];      						// main buffer for stream from GPS
@@ -1060,7 +1062,7 @@ int gsm_mode(char sign)
     {
     	char incoming_call_status = 0;					// Call status.
     	bool first_time_after_call = false;
-    	bool incoming_call_status_oled = false;			// Status for blinky
+
     	int print_oled_status = 0;
 
 		// Print GSM menu
@@ -1082,12 +1084,127 @@ int gsm_mode(char sign)
 
 		ssd1306_UpdateScreen();
 
-		// Select GSM menu or EXIT
-		do																		// Wait on your choice
-		{
-			// 1. Select mode
-			sign = read_one_sign_from_keyboard();								// Read sign from keyboard
+		bool incoming_call_status_oled = false;				// Status for blinky
 
+		char sign='\0';
+
+		do
+		{
+			do
+			{
+				// Wait incoming call
+				char incoming_number[15] = {0};											// Buffer for incoming number
+				incoming_call_status = wait_incoming_call(incoming_number);
+
+				if(incoming_call_status == 2)											// detect incoming call
+				{
+					sign = read_one_sign_from_keyboard();								// Read sign from keyboard
+					incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM
+
+					// For print one time
+					if(incoming_call_status_oled == false)
+					{
+						claen_oled_lines(false, true, true, true, true);
+
+						sprintf(str_gsm,"%s", "'A':pick up phone");
+						ssd1306_SetCursor(00, 36);
+						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						memset(str_gsm, 0 , sizeof(str_gsm));
+
+						sprintf(str_gsm,"%s", "'*':end call");
+						ssd1306_SetCursor(00, 46);
+						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						memset(str_gsm, 0 , sizeof(str_gsm));
+
+						sprintf(str_gsm,"%s", "Incoming CALL...");
+						ssd1306_SetCursor(00, 16);
+						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						memset(str_gsm, 0 , sizeof(str_gsm));
+
+						sprintf(str_gsm,"%s", incoming_number);
+						ssd1306_SetCursor(00, 26);
+						ssd1306_WriteString(incoming_number, Font_7x10, White);
+						memset(incoming_number, 0 , sizeof(incoming_number));
+
+						ssd1306_UpdateScreen();
+					}
+					incoming_call_status_oled = true;
+				}
+				HAL_Delay(200);
+			}while (INCOMMING_RING_OR_SMS_STATUS == true);									// If "Ring" pin is in low (active) state
+
+			// if no any incoming calls or sms
+			if((INCOMMING_RING_OR_SMS_STATUS == false) && (incoming_call_status == 1))
+			{
+				if(incoming_call_status_oled == true)										// print menu, only after incoming call or sms
+				{
+					claen_oled_lines(false, true, true, true, true);
+
+					// Print GSM menu
+					sprintf(str_gsm,"%s", "1.CALL to me");
+					ssd1306_SetCursor(00, 16);
+					ssd1306_WriteString(str_gsm, Font_7x10, White);
+					memset(str_gsm, 0 , sizeof(str_gsm));
+
+					sprintf(str_gsm,"%s", "2.CALL on number");
+					ssd1306_SetCursor(00, 26);
+					ssd1306_WriteString(str_gsm, Font_7x10, White);
+					memset(str_gsm, 0 , sizeof(str_gsm));
+
+					sprintf(str_gsm,"%s", "3.For send SMS");
+					ssd1306_SetCursor(00, 36);
+					ssd1306_WriteString(str_gsm, Font_7x10, White);
+					memset(str_gsm, 0 , sizeof(str_gsm));
+
+					ssd1306_UpdateScreen();
+
+					incoming_call_status_oled = false;
+				}
+
+				HAL_Delay(200);
+				sign = read_one_sign_from_keyboard();
+
+				if(sign == '1')																// Call to me
+				{
+					int call_status = call_on_mu_number();
+					show_sratus_call (call_status, str_gsm, sign, 1);
+					incoming_call_status_oled = true;
+				}
+
+				if(sign == '2')  															// call on number
+				{
+					// 1. Type mobile number.
+					char number[13]={0};													// Buffer where will be save entered number
+					uint8_t size_number = 0;												// How many entered digits in number
+					bool entered_number_status = false;										// Status number buffer.
+					entered_number_status = enter_a_mobile_number(number);					// Enter number
+
+					for(size_number = 0; number[size_number] != '\0'; size_number++){}		// Count digits
+
+					// 2. Call on entered number.
+					if(entered_number_status == true)										// If entered all digits will be call on this number
+					{
+						int call_status = call_on_number(number, size_number);
+						show_sratus_call(call_status, str_gsm, sign, 0);
+					}
+					incoming_call_status_oled = true;
+				}
+
+				if(sign == '3')	// sms
+				{
+
+				}
+			}
+
+
+		}while ( sign != '*');     // Select one from 3 modes
+
+		// Select GSM menu or EXIT
+//		do																		// Wait on your choice
+//		{
+//			// 1. Select mode
+//			sign = read_one_sign_from_keyboard();								// Read sign from keyboard
+//
 //			// 2. Wait incoming call
 //			char incoming_number[15] = {0};										// Buffer for incoming number
 //			incoming_call_status = wait_incoming_call(incoming_number);
@@ -1218,54 +1335,54 @@ int gsm_mode(char sign)
 //				sign = '*';
 //				first_time_after_call = false;
 //			}
+//
+//			if(sign == '1')    // If select Call mode
+//			{
+//				int call_status = call_on_mu_number();
+//				show_sratus_call (call_status, str_gsm, sign, 1);
+//			}
+//
+//			if(sign == '2')
+//			{
+//				// 1. Type mobile number.
+//				char number[13]={0};										// Buffer where will be save entered number
+//				uint8_t size_number = 0;									// How many entered digits in number
+//				bool entered_number_status = false;							// Status number buffer.
+//				entered_number_status = enter_a_mobile_number(number);		// Enter number
+//
+//				for(size_number = 0; number[size_number] != '\0'; size_number++){}		// Count digits
+//
+//				// 2. Call on entered number.
+//				if(entered_number_status == true)										// If entered all digits will be call on this number
+//				{
+//					int call_status = call_on_number(number, size_number);
+//					show_sratus_call(call_status, str_gsm, sign, 0);
+//				}
+//			}
+//
+//			if(sign == '3')    // If select SMS mode (don't realised)
+//			{
+//
+//			}
+//
+//			if(sign == '*')    // If select EXIT  // Exit in main menu
+//			{
+//				// Clear all OLED
+//				ssd1306_Fill(Black);
+//				ssd1306_UpdateScreen();
+//
+//				GPS_MODE = false;
+//				GSM_MODE = false;
+//				FINGERPRINT_MODE = false;
+//				SENSORS_MODE = false;
+//
+//				return 1;  			 // Flag_fro exit from there
+//			}
+//
+//			ssd1306_UpdateScreen();
+//			HAL_Delay(200);
 
-			if(sign == '1')    // If select Call mode
-			{
-				int call_status = call_on_mu_number();
-				show_sratus_call (call_status, str_gsm, sign, 1);
-			}
-
-			if(sign == '2')
-			{
-				// 1. Type mobile number.
-				char number[13]={0};										// Buffer where will be save entered number
-				uint8_t size_number = 0;									// How many entered digits in number
-				bool entered_number_status = false;							// Status number buffer.
-				entered_number_status = enter_a_mobile_number(number);		// Enter number
-
-				for(size_number = 0; number[size_number] != '\0'; size_number++){}		// Count digits
-
-				// 2. Call on entered number.
-				if(entered_number_status == true)										// If entered all digits will be call on this number
-				{
-					int call_status = call_on_number(number, size_number);
-					show_sratus_call(call_status, str_gsm, sign, 0);
-				}
-			}
-
-			if(sign == '3')    // If select SMS mode (don't realised)
-			{
-
-			}
-
-			if(sign == '*')    // If select EXIT  // Exit in main menu
-			{
-				// Clear all OLED
-				ssd1306_Fill(Black);
-				ssd1306_UpdateScreen();
-
-				GPS_MODE = false;
-				GSM_MODE = false;
-				FINGERPRINT_MODE = false;
-				SENSORS_MODE = false;
-
-				return 1;  			 // Flag_fro exit from there
-			}
-
-			ssd1306_UpdateScreen();
-			HAL_Delay(200);
-
-		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*'));     // Select one from 3 modes
+//		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*'));     // Select one from 3 modes
 	}
     else     				// If error init GSM module. Exit from GSM menu
     {
@@ -1863,12 +1980,28 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	if(GPIO_Pin == GPIO_PIN_1)
 	{
-		INCOMMING_RING_OR_SMS_STATUS = !INCOMMING_RING_OR_SMS_STATUS;		// Check it status if it is 'true' we have incoming ring or sms
-
-		HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
+		if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_1) == GPIO_PIN_RESET)
+		{
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+			INCOMMING_RING_OR_SMS_STATUS = true;				// Check it status if it is 'true' we have incoming ring or sms
+		}
+		if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_1) == GPIO_PIN_SET)
+		{
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+			INCOMMING_RING_OR_SMS_STATUS = false;
+		}
+		//HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
 	}
 }
+// ----------------------------------------------------------------------------
+void detect_and_process_incoming_call_or_sms(void)
+{
+
+
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* USER CODE END 4 */

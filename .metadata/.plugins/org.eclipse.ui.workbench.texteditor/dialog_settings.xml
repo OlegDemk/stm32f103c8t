@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="13"/>
+		<item key="selection" value="wait_incoming_call"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="wait_incoming_call"/>
 			<item value="13"/>
 			<item value="HAL_GPIO_WritePin"/>
 			<item value="PC13"/>
@@ -18,7 +19,6 @@
 			<item value="AT_END_OF_CALL"/>
 			<item value="ansver_flag"/>
 			<item value="GSM_RX_buffer"/>
-			<item value="wait_incoming_call"/>
 			<item value="i"/>
 			<item value="if_RING_from_GSM"/>
 			<item value="parsing_ansver_from_GSM"/>
