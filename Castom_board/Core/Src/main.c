@@ -1060,7 +1060,7 @@ int gsm_mode(char sign)
 
     if(GSM_INIT == 1)
     {
-    	char incoming_call_status = 0;					// Call status.
+    	int incoming_call_status = 0;					// Call status.
     	bool first_time_after_call = false;
 
     	int print_oled_status = 0;
@@ -1085,7 +1085,7 @@ int gsm_mode(char sign)
 		ssd1306_UpdateScreen();
 
 		bool incoming_call_status_oled = false;				// Status for blinky
-
+		char incoming_number[15] = {0};											// Buffer for incoming number
 		char sign='\0';
 
 		do
@@ -1093,7 +1093,7 @@ int gsm_mode(char sign)
 			do
 			{
 				// Wait incoming call
-				char incoming_number[15] = {0};											// Buffer for incoming number
+
 				incoming_call_status = wait_incoming_call(incoming_number);
 
 				if(incoming_call_status == 2)											// detect incoming call
@@ -1128,12 +1128,140 @@ int gsm_mode(char sign)
 
 						ssd1306_UpdateScreen();
 					}
+
+					// Waiting for action on incoming call or sms
+					do{
+						sign = read_one_sign_from_keyboard();
+						incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM
+						HAL_Delay(200);
+					}while ((sign != '*') && (sign != 'A') && (incoming_call_status != 1));
+
+					if(sign == '*')			// Збити трубку
+					{
+						if(end_of_call() != 1)										// Send "end call" command in GSM module
+						{
+							// ERROR
+						}
+						else
+						{
+							uint8_t i, res = 0;
+							for(i=0; i<=6; i++)
+							{
+								res = i%2;
+								if(res)
+								{
+									sprintf(str_gsm,"%s", "CALL END");
+									ssd1306_SetCursor(00, 16);
+									ssd1306_WriteString(str_gsm, Font_7x10, White);
+									memset(str_gsm, 0 , sizeof(str_gsm));
+
+									ssd1306_UpdateScreen();
+									HAL_Delay(200);
+								}
+								else
+								{
+									claen_oled_lines(false, true, true, true, true);		// Clean OLED
+									HAL_Delay(200);
+								}
+							}
+
+						}
+					}
+
+					if(sign == 'A')													// Pick up the phone
+					{
+						if(accepts_on_incomming_call() == 1);						// Send "pick up the phone" command in GSM module
+						{
+							claen_oled_lines(false, true, true, true, true);		// Clean OLED
+
+							sprintf(str_gsm,"%s", "SPEAK...");
+							ssd1306_SetCursor(00, 16);
+							ssd1306_WriteString(str_gsm, Font_7x10, White);
+							memset(str_gsm, 0 , sizeof(str_gsm));
+
+							sprintf(str_gsm,"%s", "'*':end call");
+							ssd1306_SetCursor(00, 46);
+							ssd1306_WriteString(str_gsm, Font_7x10, White);
+							memset(str_gsm, 0 , sizeof(str_gsm));
+
+							ssd1306_UpdateScreen();
+
+							do{
+								HAL_Delay(200);
+								sign = read_one_sign_from_keyboard();                      				// Read sign from keyboard
+								HAL_Delay(20);
+								incoming_call_status = wait_incoming_call(incoming_number);				// Read answer from GSM
+
+								if(incoming_call_status == 1)											// Sometimes GSM module sends wrong answer (BUG)
+								{
+									HAL_Delay(200);
+									incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM again
+								}
+
+							}while ((sign != '*') && (incoming_call_status == 3) );
+
+							if(incoming_call_status == 1)												// If end call from phone
+							{
+								uint8_t i, res = 0;
+								for(i=0; i<=6; i++)
+								{
+									res = i%2;
+									if(res)
+									{
+										sprintf(str_gsm,"%s", "CALL END");
+										ssd1306_SetCursor(00, 16);
+										ssd1306_WriteString(str_gsm, Font_7x10, White);
+										memset(str_gsm, 0 , sizeof(str_gsm));
+
+										ssd1306_UpdateScreen();
+										HAL_Delay(200);
+									}
+									else
+									{
+										claen_oled_lines(false, true, true, true, true);				// Clean OLED
+										HAL_Delay(200);
+									}
+								}
+							}
+							if(sign == '*')																// If end call from GSM mode
+							{
+								if(end_of_call() != 1)													// Send "end call" command in GSM module
+								{
+																									// ERROR
+								}
+								else
+								{
+									uint8_t i, res = 0;
+									for(i=0; i<=6; i++)
+									{
+										res = i%2;
+										if(res)
+										{
+											sprintf(str_gsm,"%s", "CALL END");
+											ssd1306_SetCursor(00, 16);
+											ssd1306_WriteString(str_gsm, Font_7x10, White);
+											memset(str_gsm, 0 , sizeof(str_gsm));
+
+											ssd1306_UpdateScreen();
+											HAL_Delay(200);
+										}
+										else
+										{
+											claen_oled_lines(false, true, true, true, true);		// Clean OLED
+											HAL_Delay(200);
+										}
+									}
+								}
+							}
+						}
+					}
 					incoming_call_status_oled = true;
 				}
 				HAL_Delay(200);
 			}while (INCOMMING_RING_OR_SMS_STATUS == true);									// If "Ring" pin is in low (active) state
 
 			// if no any incoming calls or sms
+			incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM
 			if((INCOMMING_RING_OR_SMS_STATUS == false) && (incoming_call_status == 1))
 			{
 				if(incoming_call_status_oled == true)										// print menu, only after incoming call or sms
@@ -1167,7 +1295,25 @@ int gsm_mode(char sign)
 				if(sign == '1')																// Call to me
 				{
 					int call_status = call_on_mu_number();
+//					if(call_status == 1)
+//					{
+//						// 1. Clean OLED
+//						int h = 16;
+//						char str[30] = {0};
+//						while(h != 46)
+//						{
+//							sprintf(str,"%s", "                    ");
+//							ssd1306_SetCursor(00, h);
+//							ssd1306_WriteString(str, Font_7x10, White);
+//							memset(str, 0 , sizeof(str));
+//
+//							h = h +10;
+//						}
+//						ssd1306_UpdateScreen();
+//					}
 					show_sratus_call (call_status, str_gsm, sign, 1);
+//					incoming_call_status = wait_incoming_call(incoming_number);				// Read answer from GSM
+
 					incoming_call_status_oled = true;
 				}
 

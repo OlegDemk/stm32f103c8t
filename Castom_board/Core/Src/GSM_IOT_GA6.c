@@ -565,7 +565,7 @@ int wait_incoming_call(char *incoming_number)
 		id++;														// Increment timeout
 		DelayMicro(10);
 
-		if(ansver_flag ==1)					// waite flag from interrupt
+		if(ansver_flag == 1)					// waite flag from interrupt
 		{
 			if (strstr(GSM_RX_buffer, "OK"))   					// NO incoming call
 			{
@@ -611,6 +611,17 @@ int wait_incoming_call(char *incoming_number)
 
 				return 2;
 			}
+			//+CLCC: 1,1,0,0,0,"+380931482354",145,""
+			if(strstr(GSM_RX_buffer, "+CLCC: 1,1,0,0,0,"))		// Піднята трубка
+			{
+				return 3;
+			}
+
+			if(strstr(GSM_RX_buffer, "+CLCC: 1,0,0,0,0,"))		// Піднята трубка вихідного звінка з GSM
+			{
+				return 4;
+			}
+
 		}
 
 		if(id  >= timeout_counter)													// Out of timeout

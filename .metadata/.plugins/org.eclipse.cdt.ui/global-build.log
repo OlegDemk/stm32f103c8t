@@ -1,4 +1,4 @@
-22:39:05 **** Incremental Build of configuration Debug for project Castom_board ****
+17:53:39 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
 ../Core/Src/main.c:53:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
@@ -15,7 +15,13 @@ arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_
 ../Core/Src/main.c:1107:7: warning: implicit declaration of function 'claen_oled_lines' [-Wimplicit-function-declaration]
        claen_oled_lines(false, true, true, true, true);
        ^~~~~~~~~~~~~~~~
-../Core/Src/main.c:1170:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
+../Core/Src/main.c:1173:7: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+       if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
+       ^~
+../Core/Src/main.c:1174:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+       {
+       ^
+../Core/Src/main.c:1314:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
       show_sratus_call (call_status, str_gsm, sign, 1);
       ^~~~~~~~~~~~~~~~
 ../Core/Src/main.c:1066:10: warning: unused variable 'print_oled_status' [-Wunused-variable]
@@ -25,36 +31,36 @@ arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_
       bool first_time_after_call = false;
            ^~~~~~~~~~~~~~~~~~~~~
 ../Core/Src/main.c: At top level:
-../Core/Src/main.c:1755:6: warning: conflicting types for 'show_sratus_call'
+../Core/Src/main.c:1901:6: warning: conflicting types for 'show_sratus_call'
  void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
       ^~~~~~~~~~~~~~~~
-../Core/Src/main.c:1170:6: note: previous implicit declaration of 'show_sratus_call' was here
+../Core/Src/main.c:1314:6: note: previous implicit declaration of 'show_sratus_call' was here
       show_sratus_call (call_status, str_gsm, sign, 1);
       ^~~~~~~~~~~~~~~~
 ../Core/Src/main.c: In function 'show_sratus_call':
-../Core/Src/main.c:1780:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1926:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
    memset(str_gsm, 0 , sizeof(str_gsm));
                              ^
-../Core/Src/main.c:1785:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1931:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
    memset(str_gsm, 0 , sizeof(str_gsm));
                              ^
-../Core/Src/main.c:1794:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1940:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
    memset(str_gsm, 0 , sizeof(str_gsm));
                              ^
-../Core/Src/main.c:1814:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1960:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
    memset(str_gsm, 0 , sizeof(str_gsm));
                              ^
-../Core/Src/main.c:1827:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1973:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
     memset(str_gsm, 0 , sizeof(str_gsm));
                               ^
-../Core/Src/main.c:1838:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1984:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
     memset(str_gsm, 0 , sizeof(str_gsm));
                               ^
-../Core/Src/main.c:1849:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+../Core/Src/main.c:1995:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
     memset(str_gsm, 0 , sizeof(str_gsm));
                               ^
 ../Core/Src/main.c: At top level:
-../Core/Src/main.c:1933:6: warning: conflicting types for 'claen_oled_lines'
+../Core/Src/main.c:2079:6: warning: conflicting types for 'claen_oled_lines'
  void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fifth)
       ^~~~~~~~~~~~~~~~
 ../Core/Src/main.c:1107:7: note: previous implicit declaration of 'claen_oled_lines' was here
@@ -65,15 +71,15 @@ arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_
  }
  ^
 ../Core/Src/main.c: In function 'gsm_mode':
-../Core/Src/main.c:1402:1: warning: control reaches end of non-void function [-Wreturn-type]
+../Core/Src/main.c:1548:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
 ../Core/Src/main.c: In function 'fingerprint_mode':
-../Core/Src/main.c:1571:1: warning: control reaches end of non-void function [-Wreturn-type]
+../Core/Src/main.c:1717:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
 ../Core/Src/main.c: In function 'sensors_mode':
-../Core/Src/main.c:1751:1: warning: control reaches end of non-void function [-Wreturn-type]
+../Core/Src/main.c:1897:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -84,16 +90,16 @@ arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
 Finished building: Castom_board.bin
  
-Finished building: Castom_board.list
- 
    text	   data	    bss	    dec	    hex	filename
-  58080	    576	   3912	  62568	   f468	Castom_board.elf
+  59088	    584	   3912	  63584	   f860	Castom_board.elf
 Finished building: default.size.stdout
  
-22:39:11 **** Incremental Build of configuration Debug for project Castom_board ****
+Finished building: Castom_board.list
+ 
+17:53:47 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  58080	    576	   3912	  62568	   f468	Castom_board.elf
+  59088	    584	   3912	  63584	   f860	Castom_board.elf
 Finished building: default.size.stdout
  
