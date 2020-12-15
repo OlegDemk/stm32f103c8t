@@ -1,4 +1,6 @@
-Core/Src/fingerprint_GT_511C3.o: ../Core/Src/fingerprint_GT_511C3.c \
+Core/Src/Fingerprint_sensor_GT511C3.o: \
+ ../Core/Src/Fingerprint_sensor_GT511C3.c \
+ ../Core/Inc/Fingerprint_sensor_GT511C3.h ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -24,8 +26,11 @@ Core/Src/fingerprint_GT_511C3.o: ../Core/Src/fingerprint_GT_511C3.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
- ../Core/Inc/fingerprint_GT_511C3.h
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+
+../Core/Inc/Fingerprint_sensor_GT511C3.h:
+
+../Core/Inc/main.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 
@@ -78,5 +83,3 @@ Core/Src/fingerprint_GT_511C3.o: ../Core/Src/fingerprint_GT_511C3.c \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
-
-../Core/Inc/fingerprint_GT_511C3.h:

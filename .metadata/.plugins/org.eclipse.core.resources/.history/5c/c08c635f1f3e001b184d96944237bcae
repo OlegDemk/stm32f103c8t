@@ -1,0 +1,21 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+unsigned long LastError;
+
+
+// ----------------------------------------------------------------------------
+void fingerprint_first_test(void)
+{
+	CmosLed(1);
+
+
+
+}
+// ----------------------------------------------------------------------------

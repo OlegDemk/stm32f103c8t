@@ -1,0 +1,52 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+
+// ----------------------------------------------------------------------------
+void finger_print_test_function(void)
+{
+
+}
+// ----------------------------------------------------------------------------
+int LED(unsigned char State)
+{
+//	SB_OEM_PKT* Command_Packet;
+//	unsigned char Buffer[12];
+//	unsigned char DataBuff[26];
+	int rtn;
+	unsigned char i;
+	unsigned long tmp = 0;
+//	Command_Packet = Buffer;
+	/*********Change Baudrate Command***********/
+	Command_Packet.Head1 = COMMAND_START_CODE1;
+	Command_Packet.Head2 = COMMAND_START_CODE2;
+	Command_Packet.wDevId = DEVICE_ID;
+	Command_Packet.nParam = State;
+	Command_Packet.wCmd = CMOSLED;
+	tmp = CalcChkSumOfCmdAckPkt(&Command_Packet);
+	Command_Packet.wChkSum = tmp;
+	/*********Change Baudrate Command***********/
+
+	rtn = SendCommand(&Command_Packet.Head1,SB_OEM_PKT_SIZE);
+	if(rtn == FAIL)
+		return FAIL;
+
+	rtn = ReceiveCommand(&Command_Packet.Head1,SB_OEM_PKT_SIZE);
+	if(rtn == FAIL)
+		return FAIL;
+
+	if(Command_Packet.wCmd != ACK)
+		return Command_Packet.nParam;
+
+	rtn = CheckChkSumOfRpsAckPkt(&Command_Packet);
+	if(rtn != OK)
+		return rtn;
+
+	return OK;
+}

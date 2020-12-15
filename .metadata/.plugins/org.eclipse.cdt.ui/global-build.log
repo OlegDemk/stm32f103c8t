@@ -1,7 +1,65 @@
-17:59:50 **** Incremental Build of configuration Debug for project Castom_board ****
+15:47:36 **** Incremental Build of configuration Debug for project Castom_board ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/Fingerprint_sensor_GT511C3.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Fingerprint_sensor_GT511C3.d" -MT"Core/Src/Fingerprint_sensor_GT511C3.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Fingerprint_sensor_GT511C3.o"
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'LED':
+../Core/Src/Fingerprint_sensor_GT511C3.c:90:30: warning: passing argument 1 of 'CalcChkSumOfCmdAckPkt' from incompatible pointer type [-Wincompatible-pointer-types]
+  tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
+                              ^~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:26:5: note: expected 'SB_OEM_PKT * {aka struct <anonymous> *}' but argument is of type 'struct test_struct *'
+ int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
+     ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:93:35: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
+                                   ^~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Inc/Fingerprint_sensor_GT511C3.h:11,
+                 from ../Core/Src/Fingerprint_sensor_GT511C3.c:8:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct test_struct *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:105:30: warning: passing argument 1 of 'CalcChkSumOfCmdAckPkt' from incompatible pointer type [-Wincompatible-pointer-types]
+  tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
+                              ^~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:26:5: note: expected 'SB_OEM_PKT * {aka struct <anonymous> *}' but argument is of type 'struct test_struct *'
+ int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
+     ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:110:35: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
+                                   ^~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
+                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Inc/Fingerprint_sensor_GT511C3.h:11,
+                 from ../Core/Src/Fingerprint_sensor_GT511C3.c:8:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct test_struct *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:44:16: warning: unused variable 'i' [-Wunused-variable]
+  unsigned char i;
+                ^
+../Core/Src/Fingerprint_sensor_GT511C3.c:43:6: warning: variable 'rtn' set but not used [-Wunused-but-set-variable]
+  int rtn;
+      ^~~
+arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Castom_board.elf
+ 
+arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
+arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
+arm-none-eabi-size   Castom_board.elf 
+   text	   data	    bss	    dec	    hex	filename
+  59400	    584	   3944	  63928	   f9b8	Castom_board.elf
+Finished building: default.size.stdout
+ 
+Finished building: Castom_board.bin
+ 
+Finished building: Castom_board.list
+ 
+15:47:39 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  59088	    584	   3912	  63584	   f860	Castom_board.elf
+  59400	    584	   3944	  63928	   f9b8	Castom_board.elf
 Finished building: default.size.stdout
  

@@ -1,0 +1,73 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+unsigned long LastError;
+
+
+// ----------------------------------------------------------------------------
+void fingerprint_first_test(void)
+{
+	CmosLed(1);
+
+
+
+}
+// ----------------------------------------------------------------------------
+int SendCommand(unsigned long Parameter,unsigned short Command)
+{
+    unsigned short sum = 0;
+    int idx = 0;
+    int i;
+
+    SET_AND_SUMADD(idx,0x55); idx++;
+    SET_AND_SUMADD(idx,0xAA); idx++;
+    SET_AND_SUMADD(idx,0x01); idx++;
+    SET_AND_SUMADD(idx,0x00); idx++;
+    SET_AND_SUMADD(idx,Parameter & 0xff); idx++;
+    SET_AND_SUMADD(idx,(Parameter >> 8) & 0xff); idx++;
+    SET_AND_SUMADD(idx,(Parameter >> 16) & 0xff); idx++;
+    SET_AND_SUMADD(idx,(Parameter >> 24) & 0xff); idx++;
+    SET_AND_SUMADD(idx,Command & 0xff); idx++;
+    SET_AND_SUMADD(idx,(Command >> 8) & 0xff); idx++;
+    sendbuf[idx] = sum & 0xff; idx++;
+    sendbuf[idx] = (sum >> 8) & 0xff; idx++;
+
+	sendUData(AB_USART_2,sendbuf,12);
+    return 0;
+}
+// ----------------------------------------------------------------------------
+int SendRecv(unsigned short Command,unsigned long *Parameter,unsigned short *Response)
+{
+    int sts;
+    if((sts = SendCommand(*Parameter,Command)) == 0){
+        *Parameter = 0;
+        if((sts = RecvResponse(Parameter,Response)) != 0){
+            *Response = CMD_Nack;
+            *Parameter = NACK_IO_ERR;
+        }
+    }
+    if(*Response == CMD_Nack){
+        LastError = *Parameter;
+    }
+    return sts;
+}
+// ----------------------------------------------------------------------------
+int CmosLed(int onoff)
+{
+    unsigned long Parameter = onoff & 1;
+    unsigned short Response = 0;
+    int sts = 0;
+
+    sts = SendRecv(CMD_CmosLed,&Parameter,&Response);
+    if((sts != 0) || (Response != CMD_Ack)){
+        return -1;
+    }
+    return 0;
+}
+// ----------------------------------------------------------------------------

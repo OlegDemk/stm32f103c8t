@@ -1,0 +1,70 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+extern UART_HandleTypeDef huart2;
+
+devinfo gDeviceInfo;
+
+extern SB_OEM_PKT Command_Packet;
+
+// ----------------------------------------------------------------------------
+void finger_print_test_function(void)
+{
+
+}
+// ----------------------------------------------------------------------------
+int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
+{
+	unsigned short wChkSum = 0;
+	unsigned char * pBuf = (unsigned char*)pPkt;
+	int i;
+
+	for(i=0;i<(sizeof(SB_OEM_PKT)-SB_OEM_CHK_SUM_SIZE);i++)
+		wChkSum += pBuf[i];
+
+	return wChkSum;
+}
+// ----------------------------------------------------------------------------
+int LED(unsigned char State)
+{
+//	SB_OEM_PKT* Command_Packet;
+//	unsigned char Buffer[12];
+//	unsigned char DataBuff[26];
+	int rtn;
+	unsigned char i;
+	unsigned long tmp = 0;
+//	Command_Packet = Buffer;
+	/*********Change Baudrate Command***********/
+	Command_Packet.Head1 = COMMAND_START_CODE1;
+	Command_Packet.Head2 = COMMAND_START_CODE2;
+	Command_Packet.wDevId = DEVICE_ID;
+	Command_Packet.nParam = State;
+	Command_Packet.wCmd = CMOSLED;
+	tmp = CalcChkSumOfCmdAckPkt(&Command_Packet);
+	Command_Packet.wChkSum = tmp;
+	/*********Change Baudrate Command***********/
+
+	//rtn = SendCommand(&Command_Packet.Head1,SB_OEM_PKT_SIZE);
+
+	if(rtn == FAIL)   // HAL_ERROR
+		return FAIL;
+
+	rtn = ReceiveCommand(&Command_Packet.Head1,SB_OEM_PKT_SIZE);
+	if(rtn == FAIL)
+		return FAIL;
+
+	if(Command_Packet.wCmd != ACK)
+		return Command_Packet.nParam;
+
+	rtn = CheckChkSumOfRpsAckPkt(&Command_Packet);
+	if(rtn != OK)
+		return rtn;
+
+	return OK;
+}

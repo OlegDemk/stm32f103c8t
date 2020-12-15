@@ -1,0 +1,13 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+void finger_print_test_function(void)
+{
+
+}

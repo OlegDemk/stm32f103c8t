@@ -37,7 +37,7 @@
 #include "Flash_W25Q.h"
 #include "w25qxx.h"
 
-#include "fingerprint_GT_511C3.h"
+#include "Fingerprint_sensor_GT511C3.h"
 
 #include "GSM_IOT_GA6.h"
 
@@ -267,6 +267,17 @@ int main(void)
 /////////////////////////////////////////////////////////////////////////////////////////////////
 while (1)
 {
+
+	/////////////////
+	int q = 0;
+	for(q = 0; q<=100; q++)
+	{
+		finger_print_test_function();
+	}
+
+
+
+	////////////////
 	EXIT = 0;
 
 	char str[50]={0};
@@ -1345,190 +1356,6 @@ int gsm_mode(char sign)
 
 		}while ( sign != '*');     // Select one from 3 modes
 
-		// Select GSM menu or EXIT
-//		do																		// Wait on your choice
-//		{
-//			// 1. Select mode
-//			sign = read_one_sign_from_keyboard();								// Read sign from keyboard
-//
-//			// 2. Wait incoming call
-//			char incoming_number[15] = {0};										// Buffer for incoming number
-//			incoming_call_status = wait_incoming_call(incoming_number);
-//
-//			if(incoming_call_status == 2)										// If are incomming call
-//			{
-//				// 1. Clean OLED.
-//				if(print_oled_status == 0)
-//				{
-//					claen_oled_lines(false, true, true, true, true);
-//				}
-//
-//				// 2. Print message and incoming number.
-//				if(incoming_call_status_oled == true)
-//				{
-//					sprintf(str_gsm,"%s", "Incoming CALL...");
-//					ssd1306_SetCursor(00, 16);
-//					ssd1306_WriteString(str_gsm, Font_7x10, White);
-//					memset(str_gsm, 0 , sizeof(str_gsm));
-//					ssd1306_UpdateScreen();
-//
-//					incoming_call_status_oled = false;
-//				}
-//				else
-//				{
-//					claen_oled_lines(false, true, false, false, false);		// Clean OLED
-//
-//					incoming_call_status_oled = true;
-//				}
-//
-//				if (print_oled_status == 0)											// Print only one time
-//				{
-//					sprintf(str_gsm,"%s", incoming_number);
-//					ssd1306_SetCursor(00, 26);
-//					ssd1306_WriteString(incoming_number, Font_7x10, White);
-//					memset(incoming_number, 0 , sizeof(incoming_number));
-//
-//					// 3. Print key action.
-//					sprintf(str_gsm,"%s", "'A':pick up phone");
-//					ssd1306_SetCursor(00, 36);
-//					ssd1306_WriteString(str_gsm, Font_7x10, White);
-//					memset(str_gsm, 0 , sizeof(str_gsm));
-//
-//					sprintf(str_gsm,"%s", "'*':end call");
-//					ssd1306_SetCursor(00, 46);
-//					ssd1306_WriteString(str_gsm, Font_7x10, White);
-//					memset(str_gsm, 0 , sizeof(str_gsm));
-//				}
-//				print_oled_status++;
-//
-//				//ssd1306_UpdateScreen();
-//
-//				// 4. Read action from keyboard
-//				sign = read_one_sign_from_keyboard();							// Read sign from keyboard
-//				if(sign == '*')													// Call end
-//				{
-//					if(end_of_call() == 1)										// Send "end call" command in GSM module
-//					{
-//						claen_oled_lines(false, true, true, true, true);		// Clean OLED
-//
-//						sprintf(str_gsm,"%s", "CALL END");
-//						ssd1306_SetCursor(00, 16);
-//						ssd1306_WriteString(str_gsm, Font_7x10, White);
-//						memset(str_gsm, 0 , sizeof(str_gsm));
-//
-//						ssd1306_UpdateScreen();
-//
-//						HAL_Delay(2000);
-//
-//						sign = '*';
-//					}
-//				}
-//				if(sign == 'A')													// Pick up the phone
-//				{
-//					if(accepts_on_incomming_call() == 1);						// Send "pick up the phone" command in GSM module
-//					{
-//						claen_oled_lines(false, true, true, true, true);		// Clean OLED
-//
-//						sprintf(str_gsm,"%s", "SPEAK...");
-//						ssd1306_SetCursor(00, 16);
-//						ssd1306_WriteString(str_gsm, Font_7x10, White);
-//						memset(str_gsm, 0 , sizeof(str_gsm));
-//
-//						sprintf(str_gsm,"%s", "#:end call");
-//						ssd1306_SetCursor(00, 46);
-//						ssd1306_WriteString(str_gsm, Font_7x10, White);
-//						memset(str_gsm, 0 , sizeof(str_gsm));
-//
-//						ssd1306_UpdateScreen();
-//
-//						do{
-//							sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
-//							HAL_Delay(200);
-//						}while (sign != '#');
-//
-//						if(sign == '#')											// Call end
-//						{
-//							end_of_call();
-//
-//							claen_oled_lines(false, true, true, true, true);
-//
-//							sprintf(str_gsm,"%s", "CALL END");
-//							ssd1306_SetCursor(00, 16);
-//							ssd1306_WriteString(str_gsm, Font_7x10, White);
-//							memset(str_gsm, 0 , sizeof(str_gsm));
-//
-//							ssd1306_UpdateScreen();
-//
-//							HAL_Delay(2000);
-//
-//						}
-//					}
-//
-//				}
-//
-//				first_time_after_call = true;
-//
-//
-//
-//			}
-//
-//			// PROBLEM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//			// деколи програма злітає сюди і виводить логовне меню
-//			//жжж
-//			//sssss
-//			if((incoming_call_status == 1) && (first_time_after_call == true))   // For exit from incoming call menu
-//			{
-//				sign = '*';
-//				first_time_after_call = false;
-//			}
-//
-//			if(sign == '1')    // If select Call mode
-//			{
-//				int call_status = call_on_mu_number();
-//				show_sratus_call (call_status, str_gsm, sign, 1);
-//			}
-//
-//			if(sign == '2')
-//			{
-//				// 1. Type mobile number.
-//				char number[13]={0};										// Buffer where will be save entered number
-//				uint8_t size_number = 0;									// How many entered digits in number
-//				bool entered_number_status = false;							// Status number buffer.
-//				entered_number_status = enter_a_mobile_number(number);		// Enter number
-//
-//				for(size_number = 0; number[size_number] != '\0'; size_number++){}		// Count digits
-//
-//				// 2. Call on entered number.
-//				if(entered_number_status == true)										// If entered all digits will be call on this number
-//				{
-//					int call_status = call_on_number(number, size_number);
-//					show_sratus_call(call_status, str_gsm, sign, 0);
-//				}
-//			}
-//
-//			if(sign == '3')    // If select SMS mode (don't realised)
-//			{
-//
-//			}
-//
-//			if(sign == '*')    // If select EXIT  // Exit in main menu
-//			{
-//				// Clear all OLED
-//				ssd1306_Fill(Black);
-//				ssd1306_UpdateScreen();
-//
-//				GPS_MODE = false;
-//				GSM_MODE = false;
-//				FINGERPRINT_MODE = false;
-//				SENSORS_MODE = false;
-//
-//				return 1;  			 // Flag_fro exit from there
-//			}
-//
-//			ssd1306_UpdateScreen();
-//			HAL_Delay(200);
-
-//		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*'));     // Select one from 3 modes
 	}
     else     				// If error init GSM module. Exit from GSM menu
     {

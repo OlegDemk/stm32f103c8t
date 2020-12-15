@@ -1,0 +1,175 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+#include "stdbool.h"
+
+unsigned long LastError;
+
+// ----------------------------------------------------------------------------
+uint16_t get_cmd_response(uint32_t * params) {
+    GT5X_State state = GT5X_STATE_READ_HEADER;
+    const uint16_t COMBINED_PACKET_HEADER = ((uint16_t)GT5X_CMD_START_CODE1 << 8) | GT5X_CMD_START_CODE2;
+
+    uint16_t header = 0;
+    uint16_t rcode = 0;
+    uint32_t last_read = millis();
+
+    while ((uint32_t)(millis() - last_read) < GT5X_DEFAULT_TIMEOUT) {
+        yield();
+
+        switch (state) {
+            case GT5X_STATE_READ_HEADER: {
+                if (port->available() == 0)
+                    continue;
+
+                last_read = millis();
+                uint8_t byte = port->read();
+                header <<= 8; header |= byte;
+                if (header != COMBINED_PACKET_HEADER)
+                    break;
+
+                state = GT5X_STATE_READ_DEVID;
+                header = 0;
+
+                GT5X_DEBUG_PRINTLN("\r\n[+]Got header");
+                break;
+            }
+            case GT5X_STATE_READ_DEVID: {
+                if (port->available() < 2)
+                    continue;
+
+                last_read = millis();
+                uint16_t devid;
+                port->readBytes((uint8_t *)&devid, 2);
+
+                /* check device id */
+                if (devid != GT5X_DEVICEID) {
+                    state = GT5X_STATE_READ_HEADER;
+                    GT5X_DEBUG_PRINTLN("[+]Wrong device ID");
+                    break;
+                }
+
+                state = GT5X_STATE_READ_PARAMS;
+                GT5X_DEBUG_PRINT("[+]ID: 0x"); GT5X_DEBUG_HEXLN(devid);
+
+                break;
+            }
+            case GT5X_STATE_READ_PARAMS:
+                if (port->available() < 4)
+                    continue;
+
+                /* store output parameter or error code */
+                last_read = millis();
+                port->readBytes((uint8_t *)params, 4);
+
+                state = GT5X_STATE_READ_RESPONSE;
+                GT5X_DEBUG_PRINT("[+]Params: 0x"); GT5X_DEBUG_HEXLN(*params);
+
+                break;
+            case GT5X_STATE_READ_RESPONSE: {
+                if (port->available() < 2)
+                    continue;
+
+                /* read ACK/NACK */
+                last_read = millis();
+                port->readBytes((uint8_t *)&rcode, 2);
+
+                state = GT5X_STATE_READ_CHECKSUM;
+                GT5X_DEBUG_PRINT("[+]Response code: "); GT5X_DEBUG_DECLN(rcode);
+                break;
+            }
+            case GT5X_STATE_READ_CHECKSUM: {
+                if (port->available() < 2)
+                    continue;
+
+                last_read = millis();
+                uint16_t temp;
+                port->readBytes((uint8_t *)&temp, 2);
+
+                uint16_t chksum = GT5X_CMD_START_CODE1 + GT5X_CMD_START_CODE2
+                                  + (uint8_t)GT5X_DEVICEID + (GT5X_DEVICEID >> 8);
+
+                /* 4 from size of params */
+                for (int i = 0; i < 4; i++) {
+                    chksum += ((uint8_t *)params)[i];
+                }
+
+                chksum += rcode >> 8;
+                chksum += (uint8_t)rcode;
+
+                /* compare chksum */
+                if (temp != chksum) {
+                    state = GT5X_STATE_READ_HEADER;
+                    GT5X_DEBUG_PRINTLN("\r\n[+]Wrong chksum");
+                    continue;
+                }
+
+                GT5X_DEBUG_PRINTLN("\r\n[+]Read complete");
+                return rcode;
+            }
+        }
+    }
+
+    GT5X_DEBUG_PRINTLN("[+]Timeout.");
+    return GT5X_TIMEOUT;
+}
+// ----------------------------------------------------------------------------
+void write_cmd_packet(uint16_t cmd, uint32_t params) {
+    uint8_t preamble[] = {GT5X_CMD_START_CODE1, GT5X_CMD_START_CODE2,
+                          (uint8_t)GT5X_DEVICEID, (uint8_t)(GT5X_DEVICEID >> 8)};
+
+    uint16_t chksum = 0;
+    for (int i = 0; i < sizeof(preamble); i++) {
+        chksum += preamble[i];
+    }
+
+    memcpy(buffer, &params, sizeof(params));
+    memcpy(buffer + sizeof(params), &cmd, sizeof(cmd));
+
+    for (int i = 0; i < GT5X_PARAM_CMD_LEN; i++) {
+        chksum += buffer[i];
+    }
+
+    port->write(preamble, sizeof(preamble));
+    port->write(buffer, GT5X_PARAM_CMD_LEN);
+    port->write((uint8_t *)&chksum, 2);
+}
+// ----------------------------------------------------------------------------
+bool test_function(void)
+{
+	 uint16_t cmd = GT5X_OPEN;
+	 uint32_t params = 1;
+
+	 write_cmd_packet(cmd, params);
+	 uint16_t rc = get_cmd_response(&params);
+
+	  if (rc != GT5X_ACK)
+	      return false;
+	  else if (rc == GT5X_TIMEOUT)
+	      return rc;
+
+	  rc = get_data_response((uint8_t *)&devinfo, sizeof(GT5X_DeviceInfo));
+	  if (rc != sizeof(GT5X_DeviceInfo))
+	      return false;
+
+	  if (info != NULL) {
+	      memcpy(info, &devinfo, sizeof(GT5X_DeviceInfo));
+	  }
+
+	  return true;
+}
+// ----------------------------------------------------------------------------
+void main_fingerprint_function(void)
+{
+	test_function();
+
+
+
+}
+// ----------------------------------------------------------------------------

@@ -1,0 +1,46 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+#include "stdbool.h"
+
+unsigned long LastError;
+
+// ----------------------------------------------------------------------------
+bool test_function(void)
+{
+	 uint16_t cmd = GT5X_OPEN;
+	 uint32_t params = 1;
+
+	 write_cmd_packet(cmd, params);
+	 uint16_t rc = get_cmd_response(&params);
+
+	  if (rc != GT5X_ACK)
+	      return false;
+	  else if (rc == GT5X_TIMEOUT)
+	      return rc;
+
+	  rc = get_data_response((uint8_t *)&devinfo, sizeof(GT5X_DeviceInfo));
+	  if (rc != sizeof(GT5X_DeviceInfo))
+	      return false;
+
+	  if (info != NULL) {
+	      memcpy(info, &devinfo, sizeof(GT5X_DeviceInfo));
+	  }
+
+	  return true;
+}
+// ----------------------------------------------------------------------------
+void main_fingerprint_function(void)
+{
+	test_function();
+
+
+
+}
+// ----------------------------------------------------------------------------
