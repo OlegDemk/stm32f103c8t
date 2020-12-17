@@ -240,6 +240,7 @@ int Enroll_Start(int ID)
 
 	return OK;
 }
+
 int CaptureFinger(char cFlag)
 {
 //	SB_OEM_PKT* Command_Packet;
@@ -273,6 +274,7 @@ int CaptureFinger(char cFlag)
 
 	return OK;
 }
+
 int Enroll_nth(char Count)
 {
 //	SB_OEM_PKT* Command_Packet;
@@ -306,6 +308,7 @@ int Enroll_nth(char Count)
 
 	return OK;
 }
+
 int RemoveFinger()
 {
 //	SB_OEM_PKT* Command_Packet;

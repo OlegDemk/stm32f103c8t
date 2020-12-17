@@ -184,20 +184,20 @@ int main(void)
 						{
 							delay_ms(10);
 							rtn = CaptureFinger(1);
-              GPIO_ClearOutBits(GPIOB,LED_ENROLL);
-              buzzer_control(1);
+              						GPIO_ClearOutBits(GPIOB,LED_ENROLL);
+             						 buzzer_control(1);
 						}
 						if(Command_Packet.wCmd == ACK)
 							break;
-            if(rtn == FAIL)
-            {
-    					Button_State = FAIL;
-    					while(Button_State != DEL_CLICK)
+            				if(rtn == FAIL)
+            				{
+    						Button_State = FAIL;
+    						while(Button_State != DEL_CLICK)
     						Button_State = Button_Detect();
-    					LED(0);
-    					GPIO_SetOutBits(GPIOB,LED_ENROLL);
-              break;
-            }
+    						LED(0);
+    						GPIO_SetOutBits(GPIOB,LED_ENROLL);
+              					break;
+            				}
 						if(gwSysTickCnt >= DELAY_TIME)
 						{
 							gwSysTickCnt = 0;

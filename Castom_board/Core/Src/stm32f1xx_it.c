@@ -48,6 +48,10 @@ uint8_t counter_GSM_RX_buffer = 0;
 extern uint8_t ansver_flag;        // if ansver_flag == 1 data(ansver) are in buffer GSM_RX_buffer
 extern char uart_1_answer_buffer[40];
 extern uint8_t count;
+
+extern unsigned char receive_data_from_fingerprint[50]; // tx buffer for fingerprint
+extern uint8_t fingerprint_count_bytes;
+extern uint8_t data_from_fingerprint_module;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -301,6 +305,27 @@ void USART1_IRQHandler(void)
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
+
+  uint8_t data = USART2->DR;
+
+//  if(data != '\0')
+//  {
+
+	  if(fingerprint_count_bytes >= 11)  // 11  // 5
+	  {
+		  fingerprint_count_bytes = 0;
+		  data_from_fingerprint_module = 1;
+
+		  //memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
+	  }
+	  else
+	  {
+		  receive_data_from_fingerprint[fingerprint_count_bytes] = data;
+		  data_from_fingerprint_module = 0;
+		  fingerprint_count_bytes ++;
+	  }
+//  }
+
 
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);

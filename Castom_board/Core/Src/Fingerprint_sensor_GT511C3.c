@@ -9,18 +9,52 @@
 
 extern UART_HandleTypeDef huart2;
 
+unsigned char receive_data_from_fingerprint[50]={0};
+uint8_t fingerprint_count_bytes = 0;
+uint8_t data_from_fingerprint_module = 0;
+
 devinfo gDeviceInfo;
 
 SB_OEM_PKT Command_Packet;				 // extern SB_OEM_PKT Command_Packet;
 //unsigned short DEVICE_ID = 0;
 
+struct test_struct
+{
+	unsigned char 	Head1;
+	unsigned char 	Head2;
+	unsigned short	wDevId;
+	unsigned int	nParam;
+	unsigned short	wCmd;// or nAck
+	unsigned short 	wChkSum;
+} tx_structure;
+
 // ----------------------------------------------------------------------------
 void finger_print_test_function(void)
 {
-	LED(1);
+	//LED(1);
 	HAL_Delay(500);
-	LED(0);
-	HAL_Delay(500);
+	open();
+	int u=0;
+	for(u = 0; u<10; u++)
+	{
+		HAL_Delay(200);
+		LED(1);
+		HAL_Delay(200);
+		LED(0);
+	}
+
+
+//	while(1)
+//	{
+//		removeFinger();
+//		HAL_Delay(100);
+//	}
+
+//	LED(1);
+//	HAL_Delay(1000);
+	//captureFinger();
+	//HAL_Delay(1000);
+//	LED(0);
 }
 // ----------------------------------------------------------------------------
 int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
@@ -37,49 +71,61 @@ int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
 // ----------------------------------------------------------------------------
 int LED(unsigned char State)
 {
-//	SB_OEM_PKT* Command_Packet;
-//	unsigned char Buffer[12];
-//	unsigned char DataBuff[26];
 	int rtn;
 	unsigned char i;
 	unsigned long tmp = 0;
 
-	struct test_struct
+	// Test structure
+	struct test_struct * p_tx_structure = & tx_structure;
+	p_tx_structure -> Head1 = COMMAND_START_CODE1;
+	p_tx_structure -> Head2 = COMMAND_START_CODE2;
+	p_tx_structure -> wDevId = DEVICE_ID;
+	p_tx_structure -> nParam= State;
+	p_tx_structure -> wCmd= CMOSLED;
+	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
+	p_tx_structure -> wChkSum = tmp;
+
+	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
+	if(rtn != HAL_OK)
 	{
-		unsigned char 	Head1;
-		unsigned char 	Head2;
-		unsigned short	wDevId;
-		unsigned int	nParam;
-		unsigned short	wCmd;// or nAck
-		unsigned short 	wChkSum;
-	} tx_structure;
+		// Error connection
+	}
 
-	//tx_structure.Head1 = 1;
+//	if(data_from_fingerprint_module == 1)   // Data in buffer
+//	{
+//		if(receive_data_from_fingerprint[3] == 48)
+//		{
+//			fingerprint_count_bytes = 0;
+//			memset(receive_data_from_fingerprint, 0 , 50);
+//		}
+//
+//
+//		//memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
+//	}
+//	uint8_t one = '1';
+//	HAL_UART_Transmit(&huart2, &one, 1, 10000);
 
-//	Command_Packet = Buffer;
-	/*********Change Baudrate Command***********/
-//	tx_structure.Head1 = COMMAND_START_CODE1;
-//	tx_structure.Head2 = COMMAND_START_CODE2;
-//	tx_structure.wDevId = DEVICE_ID;
-//	tx_structure.nParam = State;
-//	tx_structure.wCmd = CMOSLED;
-//	tmp = CalcChkSumOfCmdAckPkt(&Command_Packet);
-//	tx_structure.wChkSum = tmp;
-	/*********Change Baudrate Command***********/
+	//if()
 
-	//DEVICE_ID++;
+//	if (data_from_fingerprint_module == 1)
+//	{
+//		int j= 999;
+//		memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
+//	}
 
-	// OPEN
-//	Command_Packet.Head1 = COMMAND_START_CODE1;
-//		Command_Packet.Head2 = COMMAND_START_CODE2;
-//		Command_Packet.wDevId = DEVICE_ID;
-//		Command_Packet.nParam = Flag;
-//		Command_Packet.wCmd = OPEN;
-//		tmp = CalcChkSumOfCmdAckPkt(&Command_Packet);
-//		Command_Packet.wChkSum = tmp;
+	// Waiting answer from fingerprint module   (from interrupt)
 
-	//unsigned short DEVICE_ID = 1;
-	//DEVICE_ID =0;
+
+
+	return HAL_OK;
+}
+// ---------------------------------------------------------------------------
+void open(void)
+{
+	int rtn;
+	unsigned char i;
+	unsigned long tmp = 0;
+
 
 	struct test_struct * p_tx_structure = & tx_structure;
 	p_tx_structure -> Head1 = COMMAND_START_CODE1;
@@ -89,74 +135,89 @@ int LED(unsigned char State)
 	p_tx_structure -> wCmd= OPEN;
 	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
 	p_tx_structure -> wChkSum = tmp;
-	//int temp = p_tx_structure -> Head1;
-	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
+		//int temp = p_tx_structure -> Head1;
+	//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
 
-	HAL_Delay(1000);
+	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
+	if(rtn != HAL_OK)
+	{
+		// Error connection
+	}
+	///////////////////////////////
+	unsigned char DataBuffer[12];
 
-	tmp = 0;
-	// Test structure
-	//struct test_struct * p_tx_structure = & tx_structure;
+	if(data_from_fingerprint_module == 1)   // Data in buffer
+		{
+//			if(receive_data_from_fingerprint[3] == 48)
+//			{
+//
+//				fingerprint_count_bytes = 0;
+//				memset(receive_data_from_fingerprint, 0 , 50);
+//			}
+
+
+			//memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
+		}
+}
+// ---------------------------------------------------------------------------
+void removeFinger(void)
+{
+	int rtn;
+	unsigned char i;
+	unsigned long tmp = 0;
+
+	struct test_struct * p_tx_structure = & tx_structure;
 	p_tx_structure -> Head1 = COMMAND_START_CODE1;
 	p_tx_structure -> Head2 = COMMAND_START_CODE2;
 	p_tx_structure -> wDevId = DEVICE_ID;
-	p_tx_structure -> nParam= State;
-	p_tx_structure -> wCmd= CMOSLED;
+	p_tx_structure -> nParam= ZERO;
+	p_tx_structure -> wCmd= ISPRESSFINGER;
 	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
 	p_tx_structure -> wChkSum = tmp;
-	//int temp = p_tx_structure -> Head1;
+		//int temp = p_tx_structure -> Head1;
+		//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
 
+	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
+	if(rtn != HAL_OK)
+	{
+			// Error connection
+	}
 
-	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
+	if(data_from_fingerprint_module == 1)   // Data in buffer
+	{
+//				if(receive_data_from_fingerprint[3] == 48)
+//				{
 //
-//	HAL_Delay(500);
+//					fingerprint_count_bytes = 0;
+//					memset(receive_data_from_fingerprint, 0 , 50);
+//				}
 
 
+				//memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
+	}
 
-//	if(DEVICE_ID == 1000)
-//	{
-//		int k =999;
-//
-//	}
-
-	//tx_structure.Head1 = 0x01;
-	//rtn = HAL_UART_Transmit(&huart2, &tx_structure.Head1, SB_OEM_PKT_SIZE, 1000);
-
-	//rtn = SendCommand(&Command_Packet.Head1,SB_OEM_PKT_SIZE);
-
-// Test structure
-	//	struct test_struct * p_tx_structure = & tx_structure;
-	//	p_tx_structure -> Head1 = 1;
-	//	int temp = p_tx_structure -> Head1;
-
-	// Test send Data   work
-//	uint8_t test_transmit = 2;
-//	uint8_t *p_test_transmit = &test_transmit;
-//	rtn = HAL_UART_Transmit(&huart2, p_test_transmit, 1, 1000);
-
-	// Work too
-//	uint8_t test_transmit[3] = {1,2,3};
-//	rtn = HAL_UART_Transmit(&huart2, test_transmit, 3, 1000);
-
-
-
-
-
-//	rtn = HAL_UART_Transmit(&huart2, Command_Packet.Head1, SB_OEM_PKT_SIZE, 1000);
-//	if(rtn == HAL_ERROR)
-//	{
-//		return HAL_ERROR;
-//	}
-//	rtn = ReceiveCommand(&Command_Packet.Head1,SB_OEM_PKT_SIZE);
-//	if(rtn == FAIL)
-//		return FAIL;
-//
-//	if(Command_Packet.wCmd != ACK)
-//		return Command_Packet.nParam;
-//
-//	rtn = CheckChkSumOfRpsAckPkt(&Command_Packet);
-//	if(rtn != OK)
-//		return rtn;
-
-	return HAL_OK;
 }
+
+//OPEN
+//
+//int rtn;
+//	unsigned char i;
+//	unsigned long tmp = 0;
+//
+//	struct test_struct * p_tx_structure = & tx_structure;
+//	p_tx_structure -> Head1 = COMMAND_START_CODE1;
+//	p_tx_structure -> Head2 = COMMAND_START_CODE2;
+//	p_tx_structure -> wDevId = DEVICE_ID;
+//	p_tx_structure -> nParam= 0;
+//	p_tx_structure -> wCmd= OPEN;
+//	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
+//	p_tx_structure -> wChkSum = tmp;
+//	//int temp = p_tx_structure -> Head1;
+//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
+//
+//	HAL_Delay(1000);
+
+
+
+
+

@@ -161,6 +161,8 @@ static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
+//__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -226,6 +228,9 @@ int main(void)
   	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
 	#endif
 
+  	// Turn on interrupt, if in RX buffer are one byte
+  	// Register CR1-> RXNEIE
+  	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
 
    //choose_mode();
   /* USER CODE END 2 */
@@ -269,11 +274,12 @@ while (1)
 {
 
 	/////////////////
-	int q = 0;
-	for(q = 0; q<=100; q++)
-	{
+
 		finger_print_test_function();
-	}
+//		HAL_UART_Transmit(&huart2, &test_var, 1, 10000);
+//		test_var++;
+//
+
 
 
 
