@@ -49,9 +49,10 @@ extern uint8_t ansver_flag;        // if ansver_flag == 1 data(ansver) are in bu
 extern char uart_1_answer_buffer[40];
 extern uint8_t count;
 
-extern unsigned char receive_data_from_fingerprint[50]; // tx buffer for fingerprint
+//extern unsigned char receive_data_from_fingerprint[50]; // tx buffer for fingerprint
 extern uint8_t fingerprint_count_bytes;
 extern uint8_t data_from_fingerprint_module;
+#include "Fingerprint_sensor_GT511C3.h"
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -320,7 +321,7 @@ void USART2_IRQHandler(void)
 	  }
 	  else
 	  {
-		  receive_data_from_fingerprint[fingerprint_count_bytes] = data;
+		  response_packet[fingerprint_count_bytes] = data;
 		  data_from_fingerprint_module = 0;
 		  fingerprint_count_bytes ++;
 	  }

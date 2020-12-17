@@ -1,84 +1,46 @@
-16:09:52 **** Incremental Build of configuration Debug for project Castom_board ****
+19:43:09 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/Fingerprint_sensor_GT511C3.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Fingerprint_sensor_GT511C3.d" -MT"Core/Src/Fingerprint_sensor_GT511C3.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Fingerprint_sensor_GT511C3.o"
 ../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'finger_print_test_function':
-../Core/Src/Fingerprint_sensor_GT511C3.c:36:2: warning: implicit declaration of function 'open'; did you mean 'Open'? [-Wimplicit-function-declaration]
-  open();
-  ^~~~
-  Open
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'LED':
-../Core/Src/Fingerprint_sensor_GT511C3.c:85:30: warning: passing argument 1 of 'CalcChkSumOfCmdAckPkt' from incompatible pointer type [-Wincompatible-pointer-types]
-  tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-                              ^~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:60:5: note: expected 'SB_OEM_PKT * {aka struct <anonymous> *}' but argument is of type 'struct test_struct *'
- int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
-     ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:88:35: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
-  rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
-                                   ^~~~~~~~~~~~~~
-In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
-                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
-                 from ../Core/Inc/main.h:31,
-                 from ../Core/Inc/Fingerprint_sensor_GT511C3.h:11,
-                 from ../Core/Src/Fingerprint_sensor_GT511C3.c:8:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct test_struct *'
- HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-                   ^~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:75:16: warning: unused variable 'i' [-Wunused-variable]
-  unsigned char i;
-                ^
+../Core/Src/Fingerprint_sensor_GT511C3.c:35:5: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
+     touch_bakcklight(0);
+     ^~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:39:12: warning: implicit declaration of function 'touch_is_press_finger' [-Wimplicit-function-declaration]
+    while (!touch_is_press_finger())
+            ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:43:8: warning: unused variable 'f' [-Wunused-variable]
+    int f = 9999;
+        ^
 ../Core/Src/Fingerprint_sensor_GT511C3.c: At top level:
-../Core/Src/Fingerprint_sensor_GT511C3.c:123:6: warning: conflicting types for 'open'
- void open(void)
-      ^~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:36:2: note: previous implicit declaration of 'open' was here
-  open();
-  ^~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'open':
-../Core/Src/Fingerprint_sensor_GT511C3.c:136:30: warning: passing argument 1 of 'CalcChkSumOfCmdAckPkt' from incompatible pointer type [-Wincompatible-pointer-types]
-  tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-                              ^~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:60:5: note: expected 'SB_OEM_PKT * {aka struct <anonymous> *}' but argument is of type 'struct test_struct *'
- int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
-     ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:141:35: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
-  rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
-                                   ^~~~~~~~~~~~~~
-In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
-                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
-                 from ../Core/Inc/main.h:31,
-                 from ../Core/Inc/Fingerprint_sensor_GT511C3.h:11,
-                 from ../Core/Src/Fingerprint_sensor_GT511C3.c:8:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct test_struct *'
- HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-                   ^~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:147:16: warning: unused variable 'DataBuffer' [-Wunused-variable]
-  unsigned char DataBuffer[12];
-                ^~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:126:16: warning: unused variable 'i' [-Wunused-variable]
-  unsigned char i;
-                ^
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'removeFinger':
-../Core/Src/Fingerprint_sensor_GT511C3.c:175:30: warning: passing argument 1 of 'CalcChkSumOfCmdAckPkt' from incompatible pointer type [-Wincompatible-pointer-types]
-  tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-                              ^~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:60:5: note: expected 'SB_OEM_PKT * {aka struct <anonymous> *}' but argument is of type 'struct test_struct *'
- int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
-     ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:180:35: warning: passing argument 2 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
-  rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
-                                   ^~~~~~~~~~~~~~
-In file included from ../Core/Inc/stm32f1xx_hal_conf.h:337:0,
-                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
-                 from ../Core/Inc/main.h:31,
-                 from ../Core/Inc/Fingerprint_sensor_GT511C3.h:11,
-                 from ../Core/Src/Fingerprint_sensor_GT511C3.c:8:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:700:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'struct test_struct *'
- HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-                   ^~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:166:16: warning: unused variable 'i' [-Wunused-variable]
-  unsigned char i;
-                ^
+../Core/Src/Fingerprint_sensor_GT511C3.c:113:6: warning: conflicting types for 'touch_bakcklight'
+ void touch_bakcklight(int value)
+      ^~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:35:5: note: previous implicit declaration of 'touch_bakcklight' was here
+     touch_bakcklight(0);
+     ^~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_bakcklight':
+../Core/Src/Fingerprint_sensor_GT511C3.c:123:4: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+    printf("Touch: Backlight ON");
+    ^~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:123:4: warning: incompatible implicit declaration of built-in function 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:123:4: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:125:4: warning: incompatible implicit declaration of built-in function 'printf'
+    printf("Touch: Backlight OFF");
+    ^~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:125:4: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_is_press_finger':
+../Core/Src/Fingerprint_sensor_GT511C3.c:138:3: warning: incompatible implicit declaration of built-in function 'printf'
+   printf("Touch: Finger Press");
+   ^~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:138:3: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:141:2: warning: incompatible implicit declaration of built-in function 'printf'
+  printf("Touch: No Finger Press");
+  ^~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:141:2: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_rcv':
+../Core/Src/Fingerprint_sensor_GT511C3.c:62:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Castom_board.elf
  
@@ -88,22 +50,15 @@ arm-none-eabi-size   Castom_board.elf
 Finished building: Castom_board.bin
  
    text	   data	    bss	    dec	    hex	filename
-  59528	    584	   4008	  64120	   fa78	Castom_board.elf
+  62996	    584	   3952	  67532	  107cc	Castom_board.elf
 Finished building: default.size.stdout
  
 Finished building: Castom_board.list
  
-16:10:29 **** Incremental Build of configuration Debug for project Castom_board ****
+19:43:25 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  59528	    584	   4008	  64120	   fa78	Castom_board.elf
-Finished building: default.size.stdout
- 
-16:11:47 **** Incremental Build of configuration Debug for project Castom_board ****
-make -j8 all 
-arm-none-eabi-size   Castom_board.elf 
-   text	   data	    bss	    dec	    hex	filename
-  59528	    584	   4008	  64120	   fa78	Castom_board.elf
+  62996	    584	   3952	  67532	  107cc	Castom_board.elf
 Finished building: default.size.stdout
  
