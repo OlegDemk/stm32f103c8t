@@ -29,12 +29,19 @@
 #define ENROLL3_CMD 0x25
 #define ISPRESSFINGER_CMD 0x26
 
+#define IDENTIFY				0x51
+
 #define DELETE_ALL_FINGERPRINTS_CMD 0x41
 
 #define CAPTUREFINGERPRINT_CMD 0x60
 
 static uint8_t command_packet[12];
 static uint8_t response_packet[12];
+
+
+//#define RESPONSE_START_CODE1 0x55
+//#define RESPONSE_START_CODE2 0xAA
+
 
 //#define OK              0
 //#define FAIL          -1

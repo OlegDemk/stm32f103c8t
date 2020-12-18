@@ -1,44 +1,63 @@
-19:43:09 **** Incremental Build of configuration Debug for project Castom_board ****
+16:58:05 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/Fingerprint_sensor_GT511C3.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Fingerprint_sensor_GT511C3.d" -MT"Core/Src/Fingerprint_sensor_GT511C3.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Fingerprint_sensor_GT511C3.o"
 ../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'finger_print_test_function':
-../Core/Src/Fingerprint_sensor_GT511C3.c:35:5: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
-     touch_bakcklight(0);
-     ^~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:39:12: warning: implicit declaration of function 'touch_is_press_finger' [-Wimplicit-function-declaration]
-    while (!touch_is_press_finger())
-            ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:43:8: warning: unused variable 'f' [-Wunused-variable]
-    int f = 9999;
-        ^
+../Core/Src/Fingerprint_sensor_GT511C3.c:36:2: warning: implicit declaration of function 'touch_open' [-Wimplicit-function-declaration]
+  touch_open(0);
+  ^~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:62:4: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
+    touch_bakcklight(0);
+    ^~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:76:4: warning: implicit declaration of function 'identify' [-Wimplicit-function-declaration]
+    identify();
+    ^~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_send':
+../Core/Src/Fingerprint_sensor_GT511C3.c:149:7: warning: unused variable 'g' [-Wunused-variable]
+   int g = 999;
+       ^
 ../Core/Src/Fingerprint_sensor_GT511C3.c: At top level:
-../Core/Src/Fingerprint_sensor_GT511C3.c:113:6: warning: conflicting types for 'touch_bakcklight'
+../Core/Src/Fingerprint_sensor_GT511C3.c:207:6: warning: conflicting types for 'touch_bakcklight'
  void touch_bakcklight(int value)
       ^~~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:35:5: note: previous implicit declaration of 'touch_bakcklight' was here
-     touch_bakcklight(0);
-     ^~~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:62:4: note: previous implicit declaration of 'touch_bakcklight' was here
+    touch_bakcklight(0);
+    ^~~~~~~~~~~~~~~~
 ../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_bakcklight':
-../Core/Src/Fingerprint_sensor_GT511C3.c:123:4: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+../Core/Src/Fingerprint_sensor_GT511C3.c:217:4: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
     printf("Touch: Backlight ON");
     ^~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:123:4: warning: incompatible implicit declaration of built-in function 'printf'
-../Core/Src/Fingerprint_sensor_GT511C3.c:123:4: note: include '<stdio.h>' or provide a declaration of 'printf'
-../Core/Src/Fingerprint_sensor_GT511C3.c:125:4: warning: incompatible implicit declaration of built-in function 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:217:4: warning: incompatible implicit declaration of built-in function 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:217:4: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:219:4: warning: incompatible implicit declaration of built-in function 'printf'
     printf("Touch: Backlight OFF");
     ^~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:125:4: note: include '<stdio.h>' or provide a declaration of 'printf'
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_is_press_finger':
-../Core/Src/Fingerprint_sensor_GT511C3.c:138:3: warning: incompatible implicit declaration of built-in function 'printf'
-   printf("Touch: Finger Press");
+../Core/Src/Fingerprint_sensor_GT511C3.c:219:4: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_enroll_3':
+../Core/Src/Fingerprint_sensor_GT511C3.c:312:3: warning: incompatible implicit declaration of built-in function 'printf'
+   printf("s");
    ^~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:138:3: note: include '<stdio.h>' or provide a declaration of 'printf'
-../Core/Src/Fingerprint_sensor_GT511C3.c:141:2: warning: incompatible implicit declaration of built-in function 'printf'
-  printf("Touch: No Finger Press");
-  ^~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c:141:2: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c:312:3: note: include '<stdio.h>' or provide a declaration of 'printf'
+../Core/Src/Fingerprint_sensor_GT511C3.c: At top level:
+../Core/Src/Fingerprint_sensor_GT511C3.c:317:6: warning: conflicting types for 'touch_open'
+ void touch_open(int verbose){
+      ^~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:36:2: note: previous implicit declaration of 'touch_open' was here
+  touch_open(0);
+  ^~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identification_check':
+../Core/Src/Fingerprint_sensor_GT511C3.c:452:16: warning: statement with no effect [-Wunused-value]
+   for(id_chesk == 1; id_chesk<=5; id_chesk++)
+       ~~~~~~~~~^~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:454:4: warning: implicit declaration of function 'touch_check_enrolled'; did you mean 'touch_enroll_3'? [-Wimplicit-function-declaration]
+    touch_check_enrolled(id_chesk);
+    ^~~~~~~~~~~~~~~~~~~~
+    touch_enroll_3
 ../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_rcv':
-../Core/Src/Fingerprint_sensor_GT511C3.c:62:1: warning: control reaches end of non-void function [-Wreturn-type]
+../Core/Src/Fingerprint_sensor_GT511C3.c:156:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identify':
+../Core/Src/Fingerprint_sensor_GT511C3.c:403:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
@@ -50,15 +69,15 @@ arm-none-eabi-size   Castom_board.elf
 Finished building: Castom_board.bin
  
    text	   data	    bss	    dec	    hex	filename
-  62996	    584	   3952	  67532	  107cc	Castom_board.elf
+  63272	    584	   3952	  67808	  108e0	Castom_board.elf
 Finished building: default.size.stdout
  
 Finished building: Castom_board.list
  
-19:43:25 **** Incremental Build of configuration Debug for project Castom_board ****
+16:58:10 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  62996	    584	   3952	  67532	  107cc	Castom_board.elf
+  63272	    584	   3952	  67808	  108e0	Castom_board.elf
 Finished building: default.size.stdout
  
