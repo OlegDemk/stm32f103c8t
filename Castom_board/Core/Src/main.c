@@ -71,8 +71,6 @@ int gps_mode(char sign);
 int fingerprint_mode(char sign);
 int sensors_mode(char sign);
 
-void detect_and_process_incoming_call_or_sms(void);
-
 void clearing_buffer(char *array, int size);
 //void gps_mode(char sign);
 
@@ -248,7 +246,7 @@ int main(void)
 
 while (1)
 {
-	test_function(); 				// TEST FUNCTUION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	//test_function(); 				// TEST FUNCTUION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	EXIT = 0;
 	char sign = 0;													// Char for keyboard
@@ -1242,7 +1240,7 @@ int gsm_mode(char sign)
 				{
 					claen_oled_lines(false, true, true, true, true);
 
-					// Print GSM menu <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,
+					// Print GSM menu
 					sprintf(str_gsm,"%s", "1.CALL to me");
 					ssd1306_SetCursor(00, 16);
 					ssd1306_WriteString(str_gsm, Font_7x10, White);
@@ -1269,24 +1267,7 @@ int gsm_mode(char sign)
 				if(sign == '1')																// Call to me
 				{
 					int call_status = call_on_mu_number();
-//					if(call_status == 1)
-//					{
-//						// 1. Clean OLED
-//						int h = 16;
-//						char str[30] = {0};
-//						while(h != 46)
-//						{
-//							sprintf(str,"%s", "                    ");
-//							ssd1306_SetCursor(00, h);
-//							ssd1306_WriteString(str, Font_7x10, White);
-//							memset(str, 0 , sizeof(str));
-//
-//							h = h +10;
-//						}
-//						ssd1306_UpdateScreen();
-//					}
 					show_sratus_call (call_status, str_gsm, sign, 1);
-//					incoming_call_status = wait_incoming_call(incoming_number);				// Read answer from GSM
 
 					incoming_call_status_oled = true;
 				}
@@ -1349,32 +1330,27 @@ int fingerprint_mode(char sign)
 	sprintf(str_fingerprint,"%s", "3.FINGERPRINT");
 	ssd1306_SetCursor(00, 00);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	// Print meu fingerprint
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	sprintf(str_fingerprint,"%s", "1. Enroll finger");
 	ssd1306_SetCursor(00, 16);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	sprintf(str_fingerprint,"%s", "2. ID management");
 	ssd1306_SetCursor(00, 26);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	sprintf(str_fingerprint,"%s", "3. Identify");
 	ssd1306_SetCursor(00, 36);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	sprintf(str_fingerprint,"%s", "'*' to EXIT");
 	ssd1306_SetCursor(00, 46);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	ssd1306_UpdateScreen();
 
@@ -1406,15 +1382,14 @@ int fingerprint_mode(char sign)
 	        sprintf(str_fingerprint,"%s", "1. Enroll finger");
 	        ssd1306_SetCursor(00, 00);
 	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        //memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	        ssd1306_UpdateScreen();
 
-	        do                                                            // Whaite for choise
+	        do                                                            	// Waiting choice
 	        {
 	            // Place for code function 1
 
-	            sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+	            sign = read_one_sign_from_keyboard();                      	// Read sign from keyboard
 
 	            if(sign == '*')    // If select EXIT  // Exit in main menu
 	            {
@@ -1444,7 +1419,6 @@ int fingerprint_mode(char sign)
 	        sprintf(str_fingerprint,"%s", "2. ID management");
 	        ssd1306_SetCursor(00, 00);
 	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        //memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	        ssd1306_UpdateScreen();
 
@@ -1482,8 +1456,6 @@ int fingerprint_mode(char sign)
 	          sprintf(str_fingerprint,"%s", "3. Identify");
 	          ssd1306_SetCursor(00, 00);
 	          ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	          //memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-
 	          ssd1306_UpdateScreen();
 
 	          do                                                            // Whaite for choise
@@ -1492,15 +1464,13 @@ int fingerprint_mode(char sign)
 	        	 	sprintf(str_fingerprint,"%s", "Put your finger..");
 	        	 	ssd1306_SetCursor(00, 16);
 	        	 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        	 	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	        	 	ssd1306_UpdateScreen();
 
 	        	 	//HAL_Delay(500);
 	        	 	uint8_t ID = 0;
 	        	 	ID = identify();
 
-	        	 	/////////////////////////////
-	        	 	if(ID == 0)
+	        	 	if(ID == 0)														// If no any ID
 	        	 	{
 	        	 		// Make blinky
 	        	 		static bool triger = false;
@@ -1523,7 +1493,7 @@ int fingerprint_mode(char sign)
 	        	 		}
 	        	 	}
 	        	 	// Print on OLED
-	        	 	if(ID >=1)
+	        	 	if(ID >=1)														// If ID founded
 	        	 	{
 	        	 		claen_oled_lines(false, false, true, false, false);			// Clear previous OLED line
 
@@ -1556,33 +1526,15 @@ int fingerprint_mode(char sign)
 	        	 		uint8_t i =0;
 
 	        	 		// Find end of the string
-//	        	 		bool find_flag = true;
-//	        	 		do{
-//	        	 			i++;
-//	        	 		}while (str_fingerprint[i] != '\0');
-//	        	 		// Add ID to the end of string
-//	        	 		for(uint8_t k=0; k<=sizeof(string_ID); k++)
-//	        	 		{
-//	        	 			str_fingerprint[i] = string_ID[k];
-//	        	 			i++;
-//	        	 		}
-
-
-	        	 		for(i = 0; i<= 11; i++)
+	        	 		bool find_flag = true;
+	        	 		do{
+	        	 			i++;
+	        	 		}while (str_fingerprint[i] != '\0');
+	        	 		// Add ID to the end of string
+	        	 		for(uint8_t k=0; k<=sizeof(string_ID); k++)
 	        	 		{
-	        	 			if(str_fingerprint[i] == '\0')
-	        	 			{
-	        	 				str_fingerprint[i] = string_ID[0];
-	        	 				i++;
-
-	        	 				str_fingerprint[i] = string_ID[1];
-	        	 				i++;
-
-	        	 				str_fingerprint[i] = string_ID[2];
-	        	 				i++;
-
-	        	 				str_fingerprint[i] = string_ID[3];
-	        	 			}
+	        	 			str_fingerprint[i] = string_ID[k];
+	        	 			i++;
 	        	 		}
 
 	        	 		// 3. Print ID on OLED.
@@ -1913,7 +1865,7 @@ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_c
 		}
 }
 // ----------------------------------------------------------------------------
-/*	Function can write mobile number.
+/*	Function can writes mobile number.
  * For example 380XXXXXXXXX.
  * And delete wrong entered digits.
  * If entered all digits function finish work.
@@ -1921,20 +1873,9 @@ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_c
 bool enter_a_mobile_number(char * number)
 {
 	bool entered_number_status = false;
-
-	// 1. Clean OLED
-	int h = 16;
 	char str[30] = {0};
-	while(h != 46)
-	{
-		sprintf(str,"%s", "                    ");
-		ssd1306_SetCursor(00, h);
-		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
-
-		h = h +10;
-	}
-	ssd1306_UpdateScreen();
+	// 1. Clean OLED
+	claen_oled_lines(false, true, true, true, true);
 	HAL_Delay(500);
 	//
 
@@ -1991,40 +1932,32 @@ bool enter_a_mobile_number(char * number)
 void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fifth)
 {
 	char str[32] = {0};
+	sprintf(str,"%s", "                          ");
+
 	if(first == true)
 	{
-		sprintf(str,"%s", "                          ");
 		ssd1306_SetCursor(00, 00);
 		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
 	}
 	if(second == true)
 	{
-		sprintf(str,"%s", "                          ");
 		ssd1306_SetCursor(00, 16);
 		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
 	}
 	if(third == true)
 	{
-		sprintf(str,"%s", "                          ");
 		ssd1306_SetCursor(00, 26);
 		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
 	}
 	if(fourth == true)
 	{
-		sprintf(str,"%s", "                          ");
 		ssd1306_SetCursor(00, 36);
 		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
 	}
 	if(fifth == true)
 	{
-		sprintf(str,"%s", "                          ");
 		ssd1306_SetCursor(00, 46);
 		ssd1306_WriteString(str, Font_7x10, White);
-		memset(str, 0 , sizeof(str));
 	}
 	ssd1306_UpdateScreen();
 }
@@ -2053,47 +1986,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 // ----------------------------------------------------------------------------
-void detect_and_process_incoming_call_or_sms(void)
-{
 
-
-}
-// ----------------------------------------------------------------------------
-
-
-// Clean array function!!!!!!!!!!!
-void clearing_buffer(char *array, int size)
-{
-	memset(array, 49 , size);
-
-	int test = 9999;
-}
-// ---------------------------------------
-void test_function(void)
-{
-	char test_arrey[100] = {0};
-	for(int i = 0; i<=100; i++)
-	{
-		test_arrey[i] = i;
-	}
-
-
-	clearing_buffer(test_arrey, sizeof(test_arrey));
-
-	ssd1306_SetCursor(00, 00);
-	ssd1306_WriteString(test_arrey, Font_7x10, White);
-	ssd1306_UpdateScreen();
-
-	int test = 9999;
-
-//	memset(str_sensors, 0 , sizeof(str_sensors));
-//    sprintf(str_sensors,"%s", "1. Run all sensors");
-//    ssd1306_SetCursor(00, 00);
-//    ssd1306_WriteString(str_sensors, Font_7x10, White);
-
-}
-
-// memset(str_gsm, 0 , sizeof(str_gsm));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
