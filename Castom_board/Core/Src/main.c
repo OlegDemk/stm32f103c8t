@@ -228,6 +228,10 @@ int main(void)
   	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
 	#endif
 
+  	// Turn off Fingerprint modeul LED
+  	touch_bakcklight(0);
+
+
   	// Turn on interrupt, if in RX buffer are one byte
   	// Register CR1-> RXNEIE
   	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
@@ -273,11 +277,13 @@ int main(void)
 while (1)
 {
 
-	/////////////////
+	/////////////////  TEST LOOP ///////////////////////
+//	while(1)
+//	{
+//		finger_print_test_function();
+//	}
 
-		finger_print_test_function();
-//		HAL_UART_Transmit(&huart2, &test_var, 1, 10000);
-//		test_var++;
+	/////////////////
 //
 
 
@@ -288,6 +294,9 @@ while (1)
 
 	char str[50]={0};
 	char sign = 0;
+
+	// Turn off Fingerprint modeul LED
+	touch_bakcklight(0);
 
 	print_main_menu();  // Print main menu on OLED
 
@@ -1387,37 +1396,55 @@ int fingerprint_mode(char sign)
 	ssd1306_UpdateScreen();
 	// Fingerprint code place where
 	// Print mode in head
-	char str_fingerprint[50]={0};
+	char str_fingerprint[30]={0};
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	sprintf(str_fingerprint,"%s", "3.FINGERPRINT");
 	ssd1306_SetCursor(00, 00);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	// Print meu fingerprint
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "1. function 1");
+	sprintf(str_fingerprint,"%s", "1. Enroll finger");
 	ssd1306_SetCursor(00, 16);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "2. function 2");
+	sprintf(str_fingerprint,"%s", "2. ID management");
 	ssd1306_SetCursor(00, 26);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "3. function 3");
+	sprintf(str_fingerprint,"%s", "3. Identify");
 	ssd1306_SetCursor(00, 36);
 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	sprintf(str_fingerprint,"%s", "'*' to EXIT");
+	ssd1306_SetCursor(00, 46);
+	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	ssd1306_UpdateScreen();
+
+	// Init fingerprint mogule
+	touch_open(0);
+	int u=0;
+	for(u = 0; u<=3; u++)
+	{
+		HAL_Delay(50);
+		touch_bakcklight(0);
+		HAL_Delay(50);
+		touch_bakcklight(1);
+	}
 
 	do                                                            // Whaite for choise
 	{
 		// Place for sensors code
+		HAL_Delay(200);
 		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
 	    if(sign == '1')
 	    {
@@ -1428,10 +1455,10 @@ int fingerprint_mode(char sign)
 
 	        // Ptint selected menu
 	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	        sprintf(str_fingerprint,"%s", "1. function 1");
+	        sprintf(str_fingerprint,"%s", "1. Enroll finger");
 	        ssd1306_SetCursor(00, 00);
 	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        //memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	        ssd1306_UpdateScreen();
 
@@ -1466,10 +1493,10 @@ int fingerprint_mode(char sign)
 
 	        // Ptint selected menu
 	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	        sprintf(str_fingerprint,"%s", "1. function 2");
+	        sprintf(str_fingerprint,"%s", "2. ID management");
 	        ssd1306_SetCursor(00, 00);
 	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        //memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	        ssd1306_UpdateScreen();
 
@@ -1504,16 +1531,120 @@ int fingerprint_mode(char sign)
 
 	          // Ptint selected menu
 	          memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	          sprintf(str_fingerprint,"%s", "1. function 3");
+	          sprintf(str_fingerprint,"%s", "3. Identify");
 	          ssd1306_SetCursor(00, 00);
 	          ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	          memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	          //memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 
 	          ssd1306_UpdateScreen();
 
 	          do                                                            // Whaite for choise
 	          {
-	        	  // Place for code function 3
+	        	  	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        	 	sprintf(str_fingerprint,"%s", "Put your finger..");
+	        	 	ssd1306_SetCursor(00, 16);
+	        	 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	        	 	//memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        	 	ssd1306_UpdateScreen();
+
+	        	 	//HAL_Delay(500);
+	        	 	uint8_t ID = 0;
+	        	 	ID = identify();
+
+	        	 	/////////////////////////////
+	        	 	if(ID == 0)
+	        	 	{
+	        	 		// Make blinky
+	        	 		static bool triger = false;
+	        	 		if(triger == false)
+	        	 		{
+	        	 			memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        	 			sprintf(str_fingerprint,"%s", "Access denied   ");
+	        	 			ssd1306_SetCursor(00, 26);
+	        	 			ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	        	 			ssd1306_UpdateScreen();
+	        	 			HAL_Delay(400);
+
+	        	 			triger = true;
+	        	 		}
+	        	 		else
+	        	 		{
+	        	 			claen_oled_lines(false, false, true, false, false);
+	        	 			triger = false;
+	        	 			HAL_Delay(400);
+	        	 		}
+	        	 	}
+	        	 	// Print on OLED
+	        	 	if(ID >=1)
+	        	 	{
+	        	 		claen_oled_lines(false, false, true, false, false);			// Clear previous OLED line
+
+	        	 		memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	        	 		sprintf(str_fingerprint,"%s", "Your ID: ");					// Add ID to the end of it string
+
+	        	 		// 1. Convert ID number in char
+	        	 		char units = 0;
+	        	 		char dozens = 0;
+	        	 		char hundreds = 0;
+	        	 		char string_ID[4] = {0};
+
+	        	 		hundreds = ID/100;
+	        	 		dozens = (ID/10)%10;
+	        	 		units = ID%10;
+
+	        	 		string_ID[0] = hundreds + 48;
+	        	 		string_ID[1] = dozens + 48;
+	        	 		string_ID[2] = units + 48;
+	        	 		string_ID[3] = '\0';
+
+	        	 		// BUG:
+	        	 		// sometimes fingerprint module can return '9' if touch unknown finger.
+//	        	 		if(string_ID[2] ==  '9')
+//	        	 		{
+//	        	 			int l = 9999;
+//	        	 		}
+
+	        	 		// 2. Add string wit ID to str_fingerprint.
+	        	 		uint8_t i =0;
+
+	        	 		// Find end of the string
+//	        	 		bool find_flag = true;
+//	        	 		do{
+//	        	 			i++;
+//	        	 		}while (str_fingerprint[i] != '\0');
+//	        	 		// Add ID to the end of string
+//	        	 		for(uint8_t k=0; k<=sizeof(string_ID); k++)
+//	        	 		{
+//	        	 			str_fingerprint[i] = string_ID[k];
+//	        	 			i++;
+//	        	 		}
+
+
+	        	 		for(i = 0; i<= 11; i++)
+	        	 		{
+	        	 			if(str_fingerprint[i] == '\0')
+	        	 			{
+	        	 				str_fingerprint[i] = string_ID[0];
+	        	 				i++;
+
+	        	 				str_fingerprint[i] = string_ID[1];
+	        	 				i++;
+
+	        	 				str_fingerprint[i] = string_ID[2];
+	        	 				i++;
+
+	        	 				str_fingerprint[i] = string_ID[3];
+	        	 			}
+	        	 		}
+
+	        	 		// 3. Print ID on OLED.
+	        	 		ssd1306_SetCursor(00, 26);
+	        	 		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	        	 		ssd1306_UpdateScreen();
+
+	        	 		HAL_Delay(2000);
+	        	 	}
+
 
 	               sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
 

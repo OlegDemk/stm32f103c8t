@@ -1,3 +1,8 @@
-GSM_RX_buffer
-GSM_RX_buffer
-uart_1_answer_buffer
+packet
+command_packet
+command_packet
+packet
+response_packet
+response_packet
+package
+packet

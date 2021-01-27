@@ -15,7 +15,6 @@
 
 extern UART_HandleTypeDef huart2;
 
-//unsigned char receive_data_from_fingerprint[50]={0};
 uint8_t fingerprint_count_bytes = 0;
 uint8_t data_from_fingerprint_module = 0;
 
@@ -33,7 +32,7 @@ typedef struct __attribute__((packed)) dev_info{
 void finger_print_test_function(void)
 {
 	//touch_delete_all_fingerprints();
-	touch_open(0);
+	//touch_open(0);
 	while(1)
 	{
 //		//LED(1);
@@ -54,15 +53,15 @@ void finger_print_test_function(void)
 
 		//touch_open(0);
 
-		HAL_Delay(1000);
-		int u=0;
-		for(u = 0; u<3; u++)
-		{
-			HAL_Delay(300);
-			touch_bakcklight(0);
-			HAL_Delay(300);
-			touch_bakcklight(1);
-		}
+//		HAL_Delay(1000);
+//		int u=0;
+//		for(u = 0; u<3; u++)
+//		{
+//			HAL_Delay(300);
+//			touch_bakcklight(0);
+//			HAL_Delay(300);
+//			touch_bakcklight(1);
+//		}
 
 		//////////////////////////    Checked work functions:
 		// touch_delete_all_fingerprints();      	// WORK OK		 Видаляє всі ID
@@ -70,11 +69,28 @@ void finger_print_test_function(void)
 		// touch_check_enrolled(id_chesk);			// WORK OK		 Перевіряє, чи зареєстрований ID в памяті модуля fingerprint
 		// ----------------------------------------
 
+
+//		touch_open(0);
+//
+//		HAL_Delay(1000);
+//		int u=0;
+//		for(u = 0; u<=3; u++)
+//		{
+//			HAL_Delay(50);
+//			touch_bakcklight(0);
+//			HAL_Delay(50);
+//			touch_bakcklight(1);
+//		}
+
 		while(1)
 		{
 			HAL_Delay(1000);
-			identify();
-
+			int finger_id = identify();
+			if(finger_id == 0)
+			{
+				// Не має збігів
+			}
+			HAL_Delay(500);
 		}
 
 
@@ -138,7 +154,16 @@ void finger_print_test_function(void)
 
 }
 // ----------------------------------------------------------------------------
-void touch_send(uint8_t* packet, int len)
+//int main_fingerprint(int)
+//{
+//
+//
+//
+//
+//}
+// ----------------------------------------------------------------------------
+// Send data in fingerprint module
+int touch_send(uint8_t* packet, int len)
 {
 	//HAL_UART_Transmit(&huart1,packet,len,1000);
 	int rtn;
@@ -146,13 +171,22 @@ void touch_send(uint8_t* packet, int len)
 	if(rtn != HAL_OK)
 	{
 		// Error connection
-		int g = 999;
+		return 9;
 	}
+	return HAL_OK;
 }
 // ----------------------------------------------------------------------------
+// Receive data in fingerprint module
 int touch_rcv(uint8_t* packet, int len,int timeout)
 {
+	int rtn;
 	HAL_UART_Receive(&huart2, packet, len, timeout);
+	if(rtn != HAL_OK)
+	{
+		// Error connection
+		return 9;
+	}
+	return HAL_OK;
 }
 // ----------------------------------------------------------------------------
 uint16_t get_checksum(uint8_t *package, int len)
@@ -184,13 +218,14 @@ void create_command_package(uint32_t param, uint16_t command,uint8_t* package)
     package[11] = (checksum >> 8) & 0xFF;
 }
 // ----------------------------------------------------------------------------
+// Check answer from fingerprint module
 int rcv_ack(uint8_t* packet, int len,int timeout)
 {
 	uint16_t calc_checksum;
 	uint16_t recv_checksum;
 	touch_rcv(packet,len,timeout);
 	recv_checksum = packet[len - 2]  | packet[len - 1] << 8;
-	calc_checksum = get_checksum(packet,len);   // PROBLEM !!!!!
+	calc_checksum = get_checksum(packet,len);
 	if(recv_checksum != calc_checksum){
 		return 9;
 	}else if(packet[8] != ACK){
@@ -236,12 +271,12 @@ int touch_is_press_finger(){
 	return 0;
 }
 // ----------------------------------------------------------------------------
-void touch_delete_all_fingerprints(){
+int touch_delete_all_fingerprints(){
 	create_command_package(0, DELETE_ALL_FINGERPRINTS_CMD, command_packet);
 	touch_send(command_packet,COMMAND_PACKET_LEN);
 	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
 		//Error Handling
-		return;
+		return 9;
 	}
 }
 // ----------------------------------------------------------------------------
@@ -355,6 +390,10 @@ int touch_enrolled_count(){
 	}
 }
 // ----------------------------------------------------------------------------
+/*
+ * return ID, if found.
+ * return 0, if no matches.
+ */
 int identify(void)
 {
 	// 1. Finger is presed?
@@ -370,37 +409,28 @@ int identify(void)
 			create_command_package(0, IDENTIFY, command_packet);
 			touch_send(command_packet,COMMAND_PACKET_LEN);
 			ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
+
+			int ID = 0;
 			switch(ack_reponse_code)
 			{
 					case HAL_OK:
-						return 1;
+						ID = response_packet[4];
+						// BUG:
+						// sometimes fingerprint module can return '9' if touch unknown finger.
+//						if(ID ==  9)
+//						{
+//							int l = 9999;
+//						}
+						return ID;
 					case 9:
 						return 0;
 					default:
 						return -1;
 			}
-
 		}
 	}
-
-
-
-//	int ack_reponse_code;
-//	//Non zero argument to capture best image posible
-//	create_command_package(0, IDENTIFY, command_packet);
-//	touch_send(command_packet,COMMAND_PACKET_LEN);
-//	ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
-//	switch(ack_reponse_code)
-//	{
-//		case HAL_OK:
-//			return 1;
-//		case 9:
-//			return 0;
-//		default:
-//			return -1;
-//	}
-
 }
+// ----------------------------------------------------------------------------
 
 ////////////// MAIN FUNCTIONS //////////////////////////
 // ----------------------------------------------------------------------------
@@ -418,44 +448,40 @@ void wait_for_finger_release() {
 	}
 }
 // ----------------------------------------------------------------------------
-void identification_enroll_user()
+void identification_enroll_user(int id_set)
 {
-	//touch_delete_all_fingerprints();
+	// ADD MESSEGES AND FERIFY
 
-	int id_set = 0;
-	for(id_set = 1; id_set<=3; id_set ++)
+	touch_enroll_start(id_set);
+	wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_1();
+	wait_for_finger_release();			// Забрати палець
+	wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_2();
+	wait_for_finger_release();			// Забрати палець
+	wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_3(0);
+	wait_for_finger_release();			// Забрати палець
+
+	touch_check_enrolled(id_set);
+	if(touch_check_enrolled(id_set) == HAL_OK )
 	{
-		touch_enroll_start(id_set);
-		wait_for_finger();
-		touch_capture_finger();
-		touch_enroll_1();
-		wait_for_finger_release();			// Забрати палець
-		wait_for_finger();
-		touch_capture_finger();
-		touch_enroll_2();
-		wait_for_finger_release();			// Забрати палець
-		wait_for_finger();
-		touch_capture_finger();
-		touch_enroll_3(0);
-		wait_for_finger_release();			// Забрати палець
+		//id set OK
 	}
-
-
-
-}
-// ----------------------------------------------------------------------------
-void identification_check()
-{
-	while(1)
+	else
 	{
-		int id_chesk = 1;
-		for(id_chesk == 1; id_chesk<=5; id_chesk++)
-		{
-			touch_check_enrolled(id_chesk);
-		}
+		// PROBLEM tru second time, or EXIT from where
 	}
 }
+
 // ----------------------------------------------------------------------------
+/* Check if ID used or no.
+ * return HAL_OK if used.
+ * return HAL_OK if not used.
+ */
 int touch_check_enrolled(int id){
 	int ack_reponse_code;
 	//Non zero argument to capture best image posible
@@ -463,12 +489,12 @@ int touch_check_enrolled(int id){
 	touch_send(command_packet,COMMAND_PACKET_LEN);
 	ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
 	switch(ack_reponse_code){
-	case HAL_OK:
-		return 1;
-	case 9:       // Error
-		return 0;
-	default:
-		return -1;
+		case HAL_OK:
+			return 1;
+		case 9:       // Error
+			return 0;
+		default:
+			return -1;
 	}
 }
 // ----------------------------------------------------------------------------
@@ -513,216 +539,6 @@ int touch_check_enrolled(int id){
 
 
 
-
-
-
-
-////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-//devinfo gDeviceInfo;
-//
-//SB_OEM_PKT Command_Packet;				 // extern SB_OEM_PKT Command_Packet;
-////unsigned short DEVICE_ID = 0;
-//
-//struct test_struct
-//{
-//	unsigned char 	Head1;
-//	unsigned char 	Head2;
-//	unsigned short	wDevId;
-//	unsigned int	nParam;
-//	unsigned short	wCmd;// or nAck
-//	unsigned short 	wChkSum;
-//} tx_structure;
-//
-//// ----------------------------------------------------------------------------
-//void finger_print_test_function(void)
-//{
-//	//LED(1);
-//	HAL_Delay(500);
-//	open();
-//	int u=0;
-//	for(u = 0; u<10; u++)
-//	{
-//		HAL_Delay(200);
-//		LED(1);
-//		HAL_Delay(200);
-//		LED(0);
-//	}
-//
-//
-////	while(1)
-////	{
-////		removeFinger();
-////		HAL_Delay(100);
-////	}
-//
-////	LED(1);
-////	HAL_Delay(1000);
-//	//captureFinger();
-//	//HAL_Delay(1000);
-////	LED(0);
-//}
-//// ----------------------------------------------------------------------------
-//int CalcChkSumOfCmdAckPkt( SB_OEM_PKT* pPkt )
-//{
-//	unsigned short wChkSum = 0;
-//	unsigned char * pBuf = (unsigned char*)pPkt;
-//	int i;
-//
-//	for(i=0;i<(sizeof(SB_OEM_PKT)-SB_OEM_CHK_SUM_SIZE);i++)
-//		wChkSum += pBuf[i];
-//
-//	return wChkSum;
-//}
-//// ----------------------------------------------------------------------------
-//int LED(unsigned char State)
-//{
-//	int rtn;
-//	unsigned char i;
-//	unsigned long tmp = 0;
-//
-//	// Test structure
-//	struct test_struct * p_tx_structure = & tx_structure;
-//	p_tx_structure -> Head1 = COMMAND_START_CODE1;
-//	p_tx_structure -> Head2 = COMMAND_START_CODE2;
-//	p_tx_structure -> wDevId = DEVICE_ID;
-//	p_tx_structure -> nParam= State;
-//	p_tx_structure -> wCmd= CMOSLED;
-//	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-//	p_tx_structure -> wChkSum = tmp;
-//
-//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
-//	if(rtn != HAL_OK)
-//	{
-//		// Error connection
-//	}
-//
-////	if(data_from_fingerprint_module == 1)   // Data in buffer
-////	{
-////		if(receive_data_from_fingerprint[3] == 48)
-////		{
-////			fingerprint_count_bytes = 0;
-////			memset(receive_data_from_fingerprint, 0 , 50);
-////		}
-////
-////
-////		//memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
-////	}
-////	uint8_t one = '1';
-////	HAL_UART_Transmit(&huart2, &one, 1, 10000);
-//
-//	//if()
-//
-////	if (data_from_fingerprint_module == 1)
-////	{
-////		int j= 999;
-////		memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
-////	}
-//
-//	// Waiting answer from fingerprint module   (from interrupt)
-//
-//
-//
-//	return HAL_OK;
-//}
-//// ---------------------------------------------------------------------------
-//void open(void)
-//{
-//	int rtn;
-//	unsigned char i;
-//	unsigned long tmp = 0;
-//
-//
-//	struct test_struct * p_tx_structure = & tx_structure;
-//	p_tx_structure -> Head1 = COMMAND_START_CODE1;
-//	p_tx_structure -> Head2 = COMMAND_START_CODE2;
-//	p_tx_structure -> wDevId = DEVICE_ID;
-//	p_tx_structure -> nParam= 0;
-//	p_tx_structure -> wCmd= OPEN;
-//	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-//	p_tx_structure -> wChkSum = tmp;
-//		//int temp = p_tx_structure -> Head1;
-//	//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
-//
-//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
-//	if(rtn != HAL_OK)
-//	{
-//		// Error connection
-//	}
-//	///////////////////////////////
-//	unsigned char DataBuffer[12];
-//
-//	if(data_from_fingerprint_module == 1)   // Data in buffer
-//		{
-////			if(receive_data_from_fingerprint[3] == 48)
-////			{
-////
-////				fingerprint_count_bytes = 0;
-////				memset(receive_data_from_fingerprint, 0 , 50);
-////			}
-//
-//
-//			//memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
-//		}
-//}
-//// ---------------------------------------------------------------------------
-//void removeFinger(void)
-//{
-//	int rtn;
-//	unsigned char i;
-//	unsigned long tmp = 0;
-//
-//	struct test_struct * p_tx_structure = & tx_structure;
-//	p_tx_structure -> Head1 = COMMAND_START_CODE1;
-//	p_tx_structure -> Head2 = COMMAND_START_CODE2;
-//	p_tx_structure -> wDevId = DEVICE_ID;
-//	p_tx_structure -> nParam= ZERO;
-//	p_tx_structure -> wCmd= ISPRESSFINGER;
-//	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-//	p_tx_structure -> wChkSum = tmp;
-//		//int temp = p_tx_structure -> Head1;
-//		//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
-//
-//	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, (uint16_t)SB_OEM_PKT_SIZE, 10000);
-//	if(rtn != HAL_OK)
-//	{
-//			// Error connection
-//	}
-//
-//	if(data_from_fingerprint_module == 1)   // Data in buffer
-//	{
-////				if(receive_data_from_fingerprint[3] == 48)
-////				{
-////
-////					fingerprint_count_bytes = 0;
-////					memset(receive_data_from_fingerprint, 0 , 50);
-////				}
-//
-//
-//				//memset(receive_data_from_fingerprint, 0 , sizeof(receive_data_from_fingerprint));
-//	}
-//
-//}
-//
-////OPEN
-////
-////int rtn;
-////	unsigned char i;
-////	unsigned long tmp = 0;
-////
-////	struct test_struct * p_tx_structure = & tx_structure;
-////	p_tx_structure -> Head1 = COMMAND_START_CODE1;
-////	p_tx_structure -> Head2 = COMMAND_START_CODE2;
-////	p_tx_structure -> wDevId = DEVICE_ID;
-////	p_tx_structure -> nParam= 0;
-////	p_tx_structure -> wCmd= OPEN;
-////	tmp = CalcChkSumOfCmdAckPkt(p_tx_structure);
-////	p_tx_structure -> wChkSum = tmp;
-////	//int temp = p_tx_structure -> Head1;
-////	rtn = HAL_UART_Transmit(&huart2, p_tx_structure, SB_OEM_PKT_SIZE, 10000);
-////
-////	HAL_Delay(1000);
 
 
 

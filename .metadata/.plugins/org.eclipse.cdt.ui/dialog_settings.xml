@@ -19,4 +19,6 @@
 		<item key="DIALOG_HEIGHT" value="488"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|18.104166|0|GTK|1|"/>
 	</section>
+	<section name="CResourceRenameRefactoringInputPage">
+	</section>
 </section>
