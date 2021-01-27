@@ -72,6 +72,8 @@ int fingerprint_mode(char sign);
 int sensors_mode(char sign);
 
 void detect_and_process_incoming_call_or_sms(void);
+
+void clearing_buffer(char *array, int size);
 //void gps_mode(char sign);
 
 uint8_t GPS_buff[512];      						// main buffer for stream from GPS
@@ -88,13 +90,13 @@ uint8_t GPS_buff[512];      						// main buffer for stream from GPS
 #define SOUND OFF       // WARNING !!!! IF "ON" Sound UART1 CAN'T WORK !!!!
 #define FINGERPRINT OFF
 
-// Ьain modes devices
+// main modes devices
 bool GSM_MODE = false;
 bool GPS_MODE = false;
 bool FINGERPRINT_MODE = false;
 bool SENSORS_MODE = false;
 
-bool EXIT_FROM_MODE = false;
+//bool EXIT_FROM_MODE = false;
 
 bool INCOMMING_RING_OR_SMS_STATUS = false;   // It status toggle in extern interrupt
 
@@ -102,12 +104,9 @@ bool INCOMMING_RING_OR_SMS_STATUS = false;   // It status toggle in extern inter
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
-
 SPI_HandleTypeDef hspi2;
-
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
-
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
@@ -117,37 +116,17 @@ DMA_HandleTypeDef hdma_usart3_rx;
 // -----------------------------------------------------------------------------
 // Receive data from GPS module
 #if GPS
-	// GPS receive part///////////////////////////////////////////////////////
 	uint8_t flag = 0;					// Flag signals what GPS buffer is full
 	void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)    // was   void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		flag = 1;
 	}
-	///////////////////////////////////////////////////////////////////////////
-	// GSM
 #endif
 // ----------------------------------------------------------------------------
-
-
-
-//// GSM variables
-//char GSM_RX_buffer[60]={0};    // buffer for receive data ansver from GSM module
-//char uart_1_answer_buffer[40] = {0};
-//uint8_t ansver_flag =0;        // if ansver_flag == 1 data(ansver) are in buffer GSM_RX_buffer
-//uint8_t count =0;
-
-// variable for init gsm
-bool at_ready = false;
-bool ast_poweron = false;
-bool creg_2 = false;
-bool call_ready = false;
-bool creg_1 = false;
-//
 
 uint8_t interrupt_flag = 0;
 
 /* USER CODE END PV */
-
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
@@ -161,7 +140,6 @@ static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
-//__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
 
 /* USER CODE END PFP */
 
@@ -208,41 +186,35 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 	#if I2C_SCANNER
-  	  I2C_1_scaner();
+  		I2C_1_scaner();
 	#endif
 
 	#if H_a_T_SI7021
-  	  read_T_and_H_SI7021();
+  		read_T_and_H_SI7021();
 	#endif
 
 	#if OLED
-  	  init_oled();
+  		init_oled();
 	  //test_oled();
 	#endif
 
-  	  HAL_TIM_Base_Start_IT(&htim2);
-
 	#if GPS
-//  	  uint8_t GPS_buff[512];      						// main buffer for stream from GPS
-  	  memset(GPS_buff ,0 ,sizeof(GPS_buff));
-  	  HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
+  		memset(GPS_buff ,0 ,sizeof(GPS_buff));
+  		HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
 	#endif
 
-  	// Turn off Fingerprint modeul LED
-  	touch_bakcklight(0);
-
+  	HAL_TIM_Base_Start_IT(&htim2);
 
   	// Turn on interrupt, if in RX buffer are one byte
   	// Register CR1-> RXNEIE
   	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
 
-   //choose_mode();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  	  // Test led
+  	// Test led
   	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
 
 
@@ -273,36 +245,21 @@ int main(void)
   #endif
 
   int EXIT = 0;
-/////////////////////////////////////////////////////////////////////////////////////////////////
+
 while (1)
 {
+	test_function(); 				// TEST FUNCTUION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-	/////////////////  TEST LOOP ///////////////////////
-//	while(1)
-//	{
-//		finger_print_test_function();
-//	}
-
-	/////////////////
-//
-
-
-
-
-	////////////////
 	EXIT = 0;
+	char sign = 0;													// Char for keyboard
 
-	char str[50]={0};
-	char sign = 0;
+	touch_bakcklight(0);											// Turn off Fingerprint modeul LED
 
-	// Turn off Fingerprint modeul LED
-	touch_bakcklight(0);
+	print_main_menu();  											// Print main menu on OLED
 
-	print_main_menu();  // Print main menu on OLED
-
-	do                                                            // Wait for choice
+	do                                                            	// Wait for choice
 	{
-		sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+		sign = read_one_sign_from_keyboard();                     	// Read sign from keyboard
 
 		// For debug ///////////
 		//sign = '1';    // turn on GSM mode
@@ -783,17 +740,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 // Function for generate
 void buzzer_fricvency_setings(TIM_HandleTypeDef timer, uint32_t channel, uint16_t period, uint16_t pulse)
 {
-	 HAL_TIM_PWM_Stop(&timer, channel); // stop generation of pwm
+	 HAL_TIM_PWM_Stop(&timer, channel); 					// stop generation of pwm
 	 TIM_OC_InitTypeDef sConfigOC;
 	 timer.Init.Prescaler = 720;
-	 timer.Init.Period = period; // set the period duration
-	 HAL_TIM_PWM_Init(&timer); // reinititialise with new period value
+	 timer.Init.Period = period; 							// set the period duration
+	 HAL_TIM_PWM_Init(&timer); 								// reinititialise with new period value
 	 sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	 sConfigOC.Pulse = pulse; // set the pulse duration
+	 sConfigOC.Pulse = pulse; 								// set the pulse duration
 	 sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	 sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	 HAL_TIM_PWM_ConfigChannel(&timer, &sConfigOC, channel);
-	 HAL_TIM_PWM_Start(&timer, channel); // start pwm generation
+	 HAL_TIM_PWM_Start(&timer, channel); 					// start pwm generation
 }
 //------------------------------------------------------------------------------
 void generate_sound(void)
@@ -866,7 +823,7 @@ char read_one_sign_from_keyboard(void)
 
 		if((i == 2) && (readed_status != 1))
 		{
-			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     // For detect 123A
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_12, 1);     // For detect 456B
 			HAL_Delay(1);
 			if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
 			{
@@ -896,7 +853,7 @@ char read_one_sign_from_keyboard(void)
 
 		if((i == 3) && (readed_status != 1))
 		{
-		 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     // For detect 123A
+		 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_15, 1);     // For detect 789C
 		 	HAL_Delay(1);
 		 	if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
 		 	{
@@ -927,7 +884,7 @@ char read_one_sign_from_keyboard(void)
 
 		if((i == 3) && (readed_status != 1))
 		{
-		    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);     // For detect 123A
+		    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_3, 1);     // For detect *0#D
 		    HAL_Delay(1);
 
 		   	if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_9))
@@ -970,7 +927,7 @@ int gps_mode(char sign)
 	sprintf(str_gps,"%s", "2.GPS: waiting...");
 	ssd1306_SetCursor(00, 00);
 	ssd1306_WriteString(str_gps, Font_7x10, White);
-	memset(str_gps, 0 , sizeof(str_gps));
+	//memset(str_gps, 0 , sizeof(str_gps));
 
 	ssd1306_UpdateScreen();
 
@@ -1000,16 +957,14 @@ int gps_mode(char sign)
 			int select_print_data = 1;							// Flag for print GPS data on OLED
 			OLED_prinr_all_data(select_print_data);
 
-			if(GPGGA_data_is_ready == 1)					// Check if data from GPS device was correct ( parsed GPGLL line correct)
+			if(GPGGA_data_is_ready == 1)						// Check if data from GPS device was correct ( parsed GPGLL line correct)
 			{
 				// Print the data that GPS is valid
 				memset(str_gps, 0 , sizeof(str_gps));
 				sprintf(str_gps,"%s", "1.GPS: OK            ");
 				ssd1306_SetCursor(00, 00);
 				ssd1306_WriteString(str_gps, Font_7x10, White);
-				memset(str_gps, 0 , sizeof(str_gps));
 
-				//receive_gps_signal = 0;
 				broken_packet_counter = 0;
 				GPGGA_data_is_ready = 0;
 			}
@@ -1027,7 +982,6 @@ int gps_mode(char sign)
 					sprintf(str_gps,"%s", "1.GPS: NO SIGNAL  ");
 					ssd1306_SetCursor(00, 00);
 					ssd1306_WriteString(str_gps, Font_7x10, White);
-					memset(str_gps, 0 , sizeof(str_gps));
 				}
 			}
 
@@ -1047,20 +1001,17 @@ int gsm_mode(char sign)
 	ssd1306_SetCursor(00, 00);
 	ssd1306_WriteString(str_gsm, Font_7x10, White);
 	ssd1306_UpdateScreen();
+	memset(str_gsm, 0 , sizeof(str_gsm));
 
-	// Init GSM module///
+	// Init GSM module
 	init_GSM_uart_comunication();
 	if(init_gsm_module() == HAL_OK)
 	{
 		// init OK
 		GSM_INIT = 1;
+		claen_oled_lines(true, false, false, false, false);
 
-		sprintf(str_gsm,"%s", "                    ");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		ssd1306_UpdateScreen();
-
-		sprintf(str_gsm,"%s", "2.GSM: OK");
+		sprintf(str_gsm,"%s", "1.GSM: OK");
 		ssd1306_SetCursor(00, 00);
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
 		ssd1306_UpdateScreen();
@@ -1070,12 +1021,9 @@ int gsm_mode(char sign)
 		// GSM didn't init
 		GSM_INIT = 0;
 
-		sprintf(str_gsm,"%s", "                    ");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		ssd1306_UpdateScreen();
+		claen_oled_lines(true, false, false, false, false);
 
-		sprintf(str_gsm,"%s", "2.GSM: ERROR");
+		sprintf(str_gsm,"%s", "1.GSM: ERROR");
 		ssd1306_SetCursor(00, 00);
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
 		ssd1306_UpdateScreen();
@@ -1092,26 +1040,25 @@ int gsm_mode(char sign)
     	int print_oled_status = 0;
 
 		// Print GSM menu
+    	memset(str_gsm, 0 , sizeof(str_gsm));
 		sprintf(str_gsm,"%s", "1.CALL to me");
 		ssd1306_SetCursor(00, 16);
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		memset(str_gsm, 0 , sizeof(str_gsm));
 
+		memset(str_gsm, 0 , sizeof(str_gsm));
 		sprintf(str_gsm,"%s", "2.CALL on number");
 		ssd1306_SetCursor(00, 26);
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		memset(str_gsm, 0 , sizeof(str_gsm));
 
+		memset(str_gsm, 0 , sizeof(str_gsm));
 		sprintf(str_gsm,"%s", "3.For send SMS");
 		ssd1306_SetCursor(00, 36);
 		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		memset(str_gsm, 0 , sizeof(str_gsm));
-
 
 		ssd1306_UpdateScreen();
 
 		bool incoming_call_status_oled = false;				// Status for blinky
-		char incoming_number[15] = {0};											// Buffer for incoming number
+		char incoming_number[15] = {0};						// Buffer for incoming number
 		char sign='\0';
 
 		do
@@ -1132,21 +1079,22 @@ int gsm_mode(char sign)
 					{
 						claen_oled_lines(false, true, true, true, true);
 
+						memset(str_gsm, 0 , sizeof(str_gsm));
 						sprintf(str_gsm,"%s", "'A':pick up phone");
 						ssd1306_SetCursor(00, 36);
 						ssd1306_WriteString(str_gsm, Font_7x10, White);
-						memset(str_gsm, 0 , sizeof(str_gsm));
 
+						memset(str_gsm, 0 , sizeof(str_gsm));
 						sprintf(str_gsm,"%s", "'*':end call");
 						ssd1306_SetCursor(00, 46);
 						ssd1306_WriteString(str_gsm, Font_7x10, White);
-						memset(str_gsm, 0 , sizeof(str_gsm));
 
+						memset(str_gsm, 0 , sizeof(str_gsm));
 						sprintf(str_gsm,"%s", "Incoming CALL...");
 						ssd1306_SetCursor(00, 16);
 						ssd1306_WriteString(str_gsm, Font_7x10, White);
-						memset(str_gsm, 0 , sizeof(str_gsm));
 
+						memset(str_gsm, 0 , sizeof(str_gsm));
 						sprintf(str_gsm,"%s", incoming_number);
 						ssd1306_SetCursor(00, 26);
 						ssd1306_WriteString(incoming_number, Font_7x10, White);
@@ -1162,7 +1110,7 @@ int gsm_mode(char sign)
 						HAL_Delay(200);
 					}while ((sign != '*') && (sign != 'A') && (incoming_call_status != 1));
 
-					if(sign == '*')			// Збити трубку
+					if(sign == '*')													// Збити трубку
 					{
 						if(end_of_call() != 1)										// Send "end call" command in GSM module
 						{
@@ -1176,10 +1124,10 @@ int gsm_mode(char sign)
 								res = i%2;
 								if(res)
 								{
+									memset(str_gsm, 0 , sizeof(str_gsm));
 									sprintf(str_gsm,"%s", "CALL END");
 									ssd1306_SetCursor(00, 16);
 									ssd1306_WriteString(str_gsm, Font_7x10, White);
-									memset(str_gsm, 0 , sizeof(str_gsm));
 
 									ssd1306_UpdateScreen();
 									HAL_Delay(200);
@@ -1234,10 +1182,10 @@ int gsm_mode(char sign)
 									res = i%2;
 									if(res)
 									{
+										memset(str_gsm, 0 , sizeof(str_gsm));
 										sprintf(str_gsm,"%s", "CALL END");
 										ssd1306_SetCursor(00, 16);
 										ssd1306_WriteString(str_gsm, Font_7x10, White);
-										memset(str_gsm, 0 , sizeof(str_gsm));
 
 										ssd1306_UpdateScreen();
 										HAL_Delay(200);
@@ -1253,7 +1201,7 @@ int gsm_mode(char sign)
 							{
 								if(end_of_call() != 1)													// Send "end call" command in GSM module
 								{
-																									// ERROR
+																										// ERROR
 								}
 								else
 								{
@@ -1263,10 +1211,10 @@ int gsm_mode(char sign)
 										res = i%2;
 										if(res)
 										{
+											memset(str_gsm, 0 , sizeof(str_gsm));
 											sprintf(str_gsm,"%s", "CALL END");
 											ssd1306_SetCursor(00, 16);
 											ssd1306_WriteString(str_gsm, Font_7x10, White);
-											memset(str_gsm, 0 , sizeof(str_gsm));
 
 											ssd1306_UpdateScreen();
 											HAL_Delay(200);
@@ -1287,14 +1235,14 @@ int gsm_mode(char sign)
 			}while (INCOMMING_RING_OR_SMS_STATUS == true);									// If "Ring" pin is in low (active) state
 
 			// if no any incoming calls or sms
-			incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM
+			incoming_call_status = wait_incoming_call(incoming_number);						// Read answer from GSM
 			if((INCOMMING_RING_OR_SMS_STATUS == false) && (incoming_call_status == 1))
 			{
 				if(incoming_call_status_oled == true)										// print menu, only after incoming call or sms
 				{
 					claen_oled_lines(false, true, true, true, true);
 
-					// Print GSM menu
+					// Print GSM menu <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<,
 					sprintf(str_gsm,"%s", "1.CALL to me");
 					ssd1306_SetCursor(00, 16);
 					ssd1306_WriteString(str_gsm, Font_7x10, White);
@@ -2110,7 +2058,42 @@ void detect_and_process_incoming_call_or_sms(void)
 
 
 }
+// ----------------------------------------------------------------------------
 
+
+// Clean array function!!!!!!!!!!!
+void clearing_buffer(char *array, int size)
+{
+	memset(array, 49 , size);
+
+	int test = 9999;
+}
+// ---------------------------------------
+void test_function(void)
+{
+	char test_arrey[100] = {0};
+	for(int i = 0; i<=100; i++)
+	{
+		test_arrey[i] = i;
+	}
+
+
+	clearing_buffer(test_arrey, sizeof(test_arrey));
+
+	ssd1306_SetCursor(00, 00);
+	ssd1306_WriteString(test_arrey, Font_7x10, White);
+	ssd1306_UpdateScreen();
+
+	int test = 9999;
+
+//	memset(str_sensors, 0 , sizeof(str_sensors));
+//    sprintf(str_sensors,"%s", "1. Run all sensors");
+//    ssd1306_SetCursor(00, 00);
+//    ssd1306_WriteString(str_sensors, Font_7x10, White);
+
+}
+
+// memset(str_gsm, 0 , sizeof(str_gsm));
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////

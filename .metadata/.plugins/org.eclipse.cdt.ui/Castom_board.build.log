@@ -1,10 +1,135 @@
-13:19:43 **** Incremental Build of configuration Debug for project Castom_board ****
+15:49:30 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:53:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
+ extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
+        ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:189:5: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
+     I2C_1_scaner();
+     ^~~~~~~~~~~~
+../Core/Src/main.c:251:2: warning: implicit declaration of function 'test_function' [-Wimplicit-function-declaration]
+  test_function();     // TEST FUNCTUION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  ^~~~~~~~~~~~~
+../Core/Src/main.c:256:2: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
+  touch_bakcklight(0);           // Turn off Fingerprint modeul LED
+  ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1012:3: warning: implicit declaration of function 'claen_oled_lines' [-Wimplicit-function-declaration]
+   claen_oled_lines(true, false, false, false, false);
+   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1147:7: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+       if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
+       ^~
+../Core/Src/main.c:1148:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+       {
+       ^
+../Core/Src/main.c:1288:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1040:10: warning: unused variable 'print_oled_status' [-Wunused-variable]
+      int print_oled_status = 0;
+          ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1038:11: warning: unused variable 'first_time_after_call' [-Wunused-variable]
+      bool first_time_after_call = false;
+           ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1382:2: warning: implicit declaration of function 'touch_open'; did you mean 'funopen'? [-Wimplicit-function-declaration]
+  touch_open(0);
+  ^~~~~~~~~~
+  funopen
+../Core/Src/main.c:1500:18: warning: implicit declaration of function 'identify' [-Wimplicit-function-declaration]
+             ID = identify();
+                  ^~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1813:6: warning: conflicting types for 'show_sratus_call'
+ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1288:6: note: previous implicit declaration of 'show_sratus_call' was here
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'show_sratus_call':
+../Core/Src/main.c:1838:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+   memset(str_gsm, 0 , sizeof(str_gsm));
+                             ^
+../Core/Src/main.c:1843:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+   memset(str_gsm, 0 , sizeof(str_gsm));
+                             ^
+../Core/Src/main.c:1852:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+   memset(str_gsm, 0 , sizeof(str_gsm));
+                             ^
+../Core/Src/main.c:1872:29: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+   memset(str_gsm, 0 , sizeof(str_gsm));
+                             ^
+../Core/Src/main.c:1885:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+    memset(str_gsm, 0 , sizeof(str_gsm));
+                              ^
+../Core/Src/main.c:1896:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+    memset(str_gsm, 0 , sizeof(str_gsm));
+                              ^
+../Core/Src/main.c:1907:30: warning: argument to 'sizeof' in 'memset' call is the same expression as the destination; did you mean to provide an explicit length? [-Wsizeof-pointer-memaccess]
+    memset(str_gsm, 0 , sizeof(str_gsm));
+                              ^
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1991:6: warning: conflicting types for 'claen_oled_lines'
+ void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fifth)
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1012:3: note: previous implicit declaration of 'claen_oled_lines' was here
+   claen_oled_lines(true, false, false, false, false);
+   ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'clearing_buffer':
+../Core/Src/main.c:2069:6: warning: unused variable 'test' [-Wunused-variable]
+  int test = 9999;
+      ^~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:2072:6: warning: conflicting types for 'test_function'
+ void test_function(void)
+      ^~~~~~~~~~~~~
+../Core/Src/main.c:251:2: note: previous implicit declaration of 'test_function' was here
+  test_function();     // TEST FUNCTUION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  ^~~~~~~~~~~~~
+../Core/Src/main.c: In function 'test_function':
+../Core/Src/main.c:2087:6: warning: unused variable 'test' [-Wunused-variable]
+  int test = 9999;
+      ^~~~
+../Core/Src/main.c: In function 'gps_mode':
+../Core/Src/main.c:991:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1338:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1629:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1809:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+In file included from ../Core/Src/main.c:40:0:
+At top level:
+../Core/Inc/Fingerprint_sensor_GT511C3.h:39:16: warning: 'response_packet' defined but not used [-Wunused-variable]
+ static uint8_t response_packet[12];
+                ^~~~~~~~~~~~~~~
+../Core/Inc/Fingerprint_sensor_GT511C3.h:38:16: warning: 'command_packet' defined but not used [-Wunused-variable]
+ static uint8_t command_packet[12];
+                ^~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Castom_board.elf
+ 
+arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
+arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
   63928	    584	   3952	  68464	  10b70	Castom_board.elf
 Finished building: default.size.stdout
  
+Finished building: Castom_board.bin
+ 
+Finished building: Castom_board.list
+ 
 
-13:19:43 Build Finished. 0 errors, 0 warnings. (took 525ms)
+15:49:31 Build Finished. 0 errors, 29 warnings. (took 1s.74ms)
 
