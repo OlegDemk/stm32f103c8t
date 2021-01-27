@@ -200,7 +200,7 @@ int init_gsm_module(void)
 		}
 	}
 
-	// Waiting answer "OK"
+	// Waite for answer "OK"
 	id = 0;
 	no_answer = false;
 	ansver_flag = 0;
@@ -227,6 +227,7 @@ int init_gsm_module(void)
 		}
 	}
 	HAL_Delay(DELAY);
+	////////////////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////////////////
 	// 4. Send command "Check registration in network"
@@ -300,9 +301,11 @@ int init_gsm_module(void)
 // -------------------------------------------------------------------
 int call_on_mu_number(void)
 {
+	////////////////////////
 	uint32_t id =0;               				 // Variable for timeout
 	bool no_answer = false;
 	int timeout_counter = 10000;
+	//
 
 	// Call on number
 	HAL_UART_Transmit(&huart1 , (uint8_t *)call_to_my_mobile_number, strlen(call_to_my_mobile_number), 1000);
@@ -335,20 +338,21 @@ int call_on_mu_number(void)
 
 int call_on_number(char *number, uint8_t size_number)
 {
+	////////////////////////
 	uint32_t id =0;               				 // Variable for timeout
 	bool no_answer = false;
 	int timeout_counter = 10000;
-
+	//
 	//char call_to_my_mobile_number[]="ATD+380931482354;\r\n";
 	char call_command[21]="ATD+ ";
 	char end_call_command[] = ";\r\n";
-	// 1. Find end of string call_command
+	// 1. Finr end of string call_command
 	uint8_t i = 0;
 	while(call_command[i] != '\0')
 	{
 		i++;
 	}
-	// 2. Add number to end of string
+	// 2. Add number to end of dtring
 	uint8_t k = 0;
 	while(k != size_number)
 	{
@@ -390,47 +394,55 @@ int call_on_number(char *number, uint8_t size_number)
 	}
 }
 // -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
 int end_of_call(void)
 {
-	uint32_t id =0;														// Variable for timeout
-	bool no_answer = false;
-	int timeout_counter = 10000;
+	////////////////////////
+		uint32_t id =0;               				 // Variable for timeout
+		bool no_answer = false;
+		int timeout_counter = 10000;
+		//
 
-	// Call on number
-	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_END_OF_CALL, strlen(AT_END_OF_CALL), 1000);
+		// Call on number
+		HAL_UART_Transmit(&huart1 , (uint8_t *)AT_END_OF_CALL, strlen(AT_END_OF_CALL), 1000);
 
-	ansver_flag = 0;
-	no_answer = false;
+		ansver_flag = 0;
+		no_answer = false;
 
-	while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
-	{
-		id++;
-		DelayMicro(100);
-
-		if(ansver_flag ==1)												// Waiting flag from interrupt
+		while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
 		{
-			if (strstr(GSM_RX_buffer, "OK"))
+			id++;
+		    DelayMicro(100);
+
+		    if(ansver_flag ==1)					// waite flag from interrupt
 		    {
-		    	memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-		    	ansver_flag = 1;
-		    	return 1;
+		    	if (strstr(GSM_RX_buffer, "OK"))
+		    	{
+		    		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+		    		ansver_flag = 1;
+		    		return 1;
+		    	}
+
+		    }
+
+		    if(id  >= timeout_counter)						// Timeout is goon
+		    {
+		    	no_answer = true;               // Out from waiting answer
+		    	return 0;
 		    }
 
 		}
 
-		if(id  >= timeout_counter)										// Timeout is goon
-		{
-			no_answer = true;											// Out from waiting answer
-			return 0;
-		}
-	}
 }
 // -------------------------------------------------------------------
 int accepts_on_incomming_call(void)
 {
-	uint32_t id =0;														// Variable for timeout
+	////////////////////////
+	uint32_t id =0;               				 // Variable for timeout
 	bool no_answer = false;
 	int timeout_counter = 10000;
+	//
 
 	// Call on number
 	HAL_UART_Transmit(&huart1 , (uint8_t *)ACCEPTS_INCOMMING_CALL, strlen(ACCEPTS_INCOMMING_CALL), 1000);
@@ -443,7 +455,7 @@ int accepts_on_incomming_call(void)
 		id++;
 		DelayMicro(100);
 
-		if(ansver_flag ==1)														// waiting flag from interrupt
+		if(ansver_flag ==1)					// waite flag from interrupt
 		{
 			if (strstr(GSM_RX_buffer, "OK"))
 			{
@@ -452,44 +464,48 @@ int accepts_on_incomming_call(void)
 				return 1;
 			}
 		}
-		if(id  >= timeout_counter)												// Timeout is goon
+		if(id  >= timeout_counter)						// Timeout is goon
 		{
-			no_answer = true;													// Out from waiting answer
+			no_answer = true;               // Out from waiting answer
 			return 0;
 		}
 	}
 }
+//char accepts_incomming_call[] = "ATA\r\n";
+
+
 // -------------------------------------------------------------------
 //	 // waite answer "BUSY" from GSM    WORK OK
 int wait_ansver_after_make_call_in_blok_mode(void)
 {
-	while (ansver_flag != 1)
-	{
-		// waite for answer
-	}
-	if(ansver_flag == 1)
-	{
-		if (strstr(GSM_RX_buffer, "BUSY"))                        // Звінок збитий  // Work OK
-		{
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-			ansver_flag = 1;
-			return 1;
-		}
 
-		if (strstr(GSM_RX_buffer, "NO ANSWER"))					  // Не відповідає  // Work OK
-		{
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-			ansver_flag = 1;
-			return 2;
-		}
+		 while (ansver_flag != 1)
+		 {
+			// waite for answer
+		 }
+		 if(ansver_flag == 1)
+		 {
+				if (strstr(GSM_RX_buffer, "BUSY"))                        // Звінок збитий  // Work OK
+			    {
+					memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+					ansver_flag = 1;
+					return 1;
+				}
 
-		if (strstr(GSM_RX_buffer, "NO CARRIER"))					  // Трубка піднята
-		{
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
-			ansver_flag = 1;
-			return 3;
+				if (strstr(GSM_RX_buffer, "NO ANSWER"))					  // Не відповідає  // Work OK
+			    {
+					memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+				    ansver_flag = 1;
+				    return 2;
+				}
+
+				if (strstr(GSM_RX_buffer, "NO CARRIER"))					  // Трубка піднята
+				{
+					memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
+				    ansver_flag = 1;
+				    return 3;
+				}
 		}
-	}
 }
 // ----------------------------------------------------------------------------
 /* The function checks for an incoming call.
@@ -504,23 +520,23 @@ int wait_ansver_after_make_call_in_blok_mode(void)
  */
 int wait_incoming_call(char *incoming_number)
 {
-	uint32_t id =0;											// Variable for timeout
+	uint32_t id =0;               				 // Variable for timeout
 	bool no_answer = false;
-	int timeout_counter = 10000;							// Variable for compare timeout
+	int timeout_counter = 10000;                 // Variable for compare timeout
 	ansver_flag = 0;
 	no_answer = false;
 
-	// Send check command
+	// Senc check command
 	char AT_CLCC[] = "AT+CLCC\r\n";
 	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CLCC, strlen(AT_CLCC), 1000);
 
 	// Wait for an answer
 	while ((ansver_flag != 1) && (id <= timeout_counter) && (no_answer == false))
 	{
-		id++;																	// Increment timeout
+		id++;														// Increment timeout
 		DelayMicro(10);
 
-		if(ansver_flag == 1)													// Waiting flag from interrupt
+		if(ansver_flag == 1)					// waite flag from interrupt
 		{
 			if (strstr(GSM_RX_buffer, "OK"))   					// NO incoming call
 			{

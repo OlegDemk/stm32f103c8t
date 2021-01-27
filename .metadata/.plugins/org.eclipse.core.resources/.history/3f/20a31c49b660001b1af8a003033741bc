@@ -510,7 +510,7 @@ int wait_incoming_call(char *incoming_number)
 	ansver_flag = 0;
 	no_answer = false;
 
-	// Send check command
+	// Senc check command
 	char AT_CLCC[] = "AT+CLCC\r\n";
 	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CLCC, strlen(AT_CLCC), 1000);
 
@@ -520,7 +520,7 @@ int wait_incoming_call(char *incoming_number)
 		id++;																	// Increment timeout
 		DelayMicro(10);
 
-		if(ansver_flag == 1)													// Waiting flag from interrupt
+		if(ansver_flag == 1)													// waite flag from interrupt
 		{
 			if (strstr(GSM_RX_buffer, "OK"))   					// NO incoming call
 			{

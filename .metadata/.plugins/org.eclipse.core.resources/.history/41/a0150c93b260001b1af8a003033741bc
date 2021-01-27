@@ -112,7 +112,6 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						float fractional_part_lat = 0;
 						char integer_part_char_lat[3]={0};
 						char fractional_part_char_lat[9]={0};
-						uint8_t k=0;
 
 						for(uint8_t k=0; k<=11; k++)
 						{

@@ -106,7 +106,7 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						sprintf(str,"%s", GPS_data.lat);
 						strcpy(gps_lat, str);
 
-						// Convert lat in coordinate for google maps
+						// Convert lat in coordinate for google mups
 						// 1. Separate degrees from minutes
 						float integer_part_lat = 0;
 						float fractional_part_lat = 0;
@@ -114,7 +114,7 @@ void parsing_GPGLL_line(char *str_GPGLL)
 						char fractional_part_char_lat[9]={0};
 						uint8_t k=0;
 
-						for(uint8_t k=0; k<=11; k++)
+						for(k=0; k<=11; k++)
 						{
 							if(k<=1)
 							{

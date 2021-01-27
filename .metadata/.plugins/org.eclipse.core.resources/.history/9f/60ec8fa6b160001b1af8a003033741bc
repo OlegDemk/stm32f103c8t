@@ -14,12 +14,13 @@
 
 extern TIM_HandleTypeDef htim1;
 
-extern int GPGGA_data_is_ready;   				// Flag. If time data is ready then print it on OLED.
+extern int GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
 
 void print_GPS_data(void);
 void print_all_sensors_data(void);
 void print_GSM_data(void);
 void print_fingerprint_data(void);
+
 
 // -----------------------------------------------------------------------------------
 void init_oled(void)
@@ -30,6 +31,7 @@ void init_oled(void)
 	ssd1306_UpdateScreen();
 }
 // -----------------------------------------------------------------------------------
+
 void OLED_prinr_all_data(int  select_print_data)
 {
 	switch (select_print_data)
