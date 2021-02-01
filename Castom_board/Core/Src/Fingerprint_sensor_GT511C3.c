@@ -12,6 +12,9 @@
 
 #include "Fingerprint_sensor_GT511C3.h"
 
+#include "ssd1306.h"
+#include "fonts.h"
+#include "oled_ssd1306.h"
 
 extern UART_HandleTypeDef huart2;
 
@@ -25,6 +28,7 @@ typedef struct __attribute__((packed)) dev_info{
 	uint8_t DeviceSerialNumber[16];
 	uint16_t checksum;
 }dev_info;
+
 
 
 //////////////////////////////////////
@@ -272,7 +276,7 @@ int touch_is_press_finger(){
 }
 // ----------------------------------------------------------------------------
 int touch_delete_all_fingerprints(){
-	create_command_package(0, DELETE_ALL_FINGERPRINTS_CMD, command_packet);
+	create_command_package(0, DELETEALL, command_packet);
 	touch_send(command_packet,COMMAND_PACKET_LEN);
 	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
 		//Error Handling
@@ -432,6 +436,7 @@ int identify(void)
 }
 // ----------------------------------------------------------------------------
 
+
 ////////////// MAIN FUNCTIONS //////////////////////////
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -450,6 +455,7 @@ void wait_for_finger_release() {
 // ----------------------------------------------------------------------------
 void identification_enroll_user(int id_set)
 {
+	char str_fingerprint[30]={0};
 	// ADD MESSEGES AND FERIFY
 
 	touch_enroll_start(id_set);
@@ -478,6 +484,95 @@ void identification_enroll_user(int id_set)
 }
 
 // ----------------------------------------------------------------------------
+// MY Entoles functions
+// ----------------------------------------------------------------------------
+ //ЗРОБИТИ ВІДОБРАЖЕННЯ НА ЕКРАНІ ПРОЦЕСУ   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>
+//void my_touch_enroll_start(int id){
+//	//if poss > 200 no save mode
+//	if(id >= 200){
+//		id = -1;
+//	}
+//	create_command_package(id, ENROLLSTART_CMD, command_packet);
+//	touch_send(command_packet,COMMAND_PACKET_LEN);
+//	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+//		//Error Handling
+//		return;
+//	}
+//}
+// ----------------------------------------------------------------------------
+void my_wait_for_finger() {
+	while (touch_is_press_finger() == 0) {
+		HAL_Delay(100);
+
+		char str_fingerprint[30]={0};
+		sprintf(str_fingerprint,"%s", "Put finger...");
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+		ssd1306_UpdateScreen();
+	}
+	claen_oled_lines(false, false, false, true, false);
+}
+// ----------------------------------------------------------------------------
+void my_wait_for_finger_release() {
+	while (touch_is_press_finger() == 1) {
+		HAL_Delay(100);
+
+		char str_fingerprint[30]={0};
+		sprintf(str_fingerprint,"%s", "Release finger...");
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+		ssd1306_UpdateScreen();
+	}
+	claen_oled_lines(false, false, false, true, false);
+}
+void my_identification_enroll_user(int id_set)
+{
+	char str_fingerprint[30]={0};
+	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+	sprintf(str_fingerprint,"%s", "Enrolling ...");
+	ssd1306_SetCursor(00, 26);
+	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	ssd1306_UpdateScreen();
+
+	touch_enroll_start(id_set);
+	my_wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_1();
+	my_wait_for_finger_release();			// Забрати палець
+	my_wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_2();
+	my_wait_for_finger_release();			// Забрати палець
+	my_wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_3(0);
+	my_wait_for_finger_release();			// Забрати палець
+
+	touch_check_enrolled(id_set);
+
+	claen_oled_lines(false, false, false, true, false);
+
+	if(touch_check_enrolled(id_set) == HAL_OK )
+	{
+		//id set OK
+		memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+		sprintf(str_fingerprint,"%s", "Enrolled OK");
+		ssd1306_SetCursor(00, 26);
+		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+		ssd1306_UpdateScreen();
+
+		HAL_Delay(2000);
+
+		claen_oled_lines(false, false, true, true, false);
+	}
+	else
+	{
+		// PROBLEM tru second time, or EXIT from where
+	}
+}
+
+
+// ----------------------------------------------------------------------------
 /* Check if ID used or no.
  * return HAL_OK if used.
  * return HAL_OK if not used.
@@ -489,7 +584,7 @@ int touch_check_enrolled(int id){
 	touch_send(command_packet,COMMAND_PACKET_LEN);
 	ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
 	switch(ack_reponse_code){
-		case HAL_OK:
+		case 0:
 			return 1;
 		case 9:       // Error
 			return 0;

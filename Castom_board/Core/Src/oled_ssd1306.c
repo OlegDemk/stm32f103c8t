@@ -7,6 +7,7 @@
 #include "ssd1306.h"
 #include "fonts.h"
 #include <string.h>
+#include "stdbool.h"
 
 #include "main.h"
 
@@ -262,8 +263,39 @@ void print_fingerprint_data(void)
 
 }
 // -----------------------------------------------------------------------------------
+void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fifth)
+{
+	char str[32] = {0};
+	sprintf(str,"%s", "                          ");
 
-
+	if(first == true)
+	{
+		ssd1306_SetCursor(00, 00);
+		ssd1306_WriteString(str, Font_7x10, White);
+	}
+	if(second == true)
+	{
+		ssd1306_SetCursor(00, 16);
+		ssd1306_WriteString(str, Font_7x10, White);
+	}
+	if(third == true)
+	{
+		ssd1306_SetCursor(00, 26);
+		ssd1306_WriteString(str, Font_7x10, White);
+	}
+	if(fourth == true)
+	{
+		ssd1306_SetCursor(00, 36);
+		ssd1306_WriteString(str, Font_7x10, White);
+	}
+	if(fifth == true)
+	{
+		ssd1306_SetCursor(00, 46);
+		ssd1306_WriteString(str, Font_7x10, White);
+	}
+	ssd1306_UpdateScreen();
+}
+// -----------------------------------------------------------------------------------
 
 
 

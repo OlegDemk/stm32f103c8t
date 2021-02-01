@@ -26,7 +26,9 @@ Core/Src/Fingerprint_sensor_GT511C3.o: \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
+ ../Core/Inc/ssd1306.h ../Core/Inc/fonts.h ../Core/Inc/fonts.h \
+ ../Core/Inc/oled_ssd1306.h
 
 ../Core/Inc/Fingerprint_sensor_GT511C3.h:
 
@@ -83,3 +85,11 @@ Core/Src/Fingerprint_sensor_GT511C3.o: \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
 
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
+
+../Core/Inc/ssd1306.h:
+
+../Core/Inc/fonts.h:
+
+../Core/Inc/fonts.h:
+
+../Core/Inc/oled_ssd1306.h:

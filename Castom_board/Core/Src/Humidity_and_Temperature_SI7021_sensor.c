@@ -67,7 +67,7 @@ void read_T_and_H_SI7021(void)
 	strcpy(temperature_si7021, str);
 	memset(str, 0 , sizeof(str));
 
-	//// Read humidity `///////////////////////////////////
+	// Read humidity
 	STATUS = -1;
 	STATUS = r_single_Si7021(&data, Humidity);
 	if(STATUS != 0)       	// If error
