@@ -925,13 +925,16 @@ int gps_mode(char sign)
 	ssd1306_UpdateScreen();
 	// Print mode in head
 	char str_gps[50]={0};
-	memset(str_gps, 0 , sizeof(str_gps));
-	sprintf(str_gps,"%s", "2.GPS: waiting...");
-	ssd1306_SetCursor(00, 00);
-	ssd1306_WriteString(str_gps, Font_7x10, White);
 	//memset(str_gps, 0 , sizeof(str_gps));
+	//sprintf(str_gps,"%s", "2.GPS: waiting...");
+	//strcpy(str_gps, "2.GPS: waiting...");
 
-	ssd1306_UpdateScreen();
+//	ssd1306_SetCursor(00, 00);
+//	ssd1306_WriteString(str_gps, Font_7x10, White);
+//	memset(str_gps, 0 , sizeof(str_gps));
+//
+//	ssd1306_UpdateScreen();
+	print_text_on_OLED(0, 1, true, "2.GPS: waiting...");
 
 	uint8_t broken_packet_counter = 0;
 
@@ -962,10 +965,11 @@ int gps_mode(char sign)
 			if(GPGGA_data_is_ready == 1)						// Check if data from GPS device was correct ( parsed GPGLL line correct)
 			{
 				// Print the data that GPS is valid
-				memset(str_gps, 0 , sizeof(str_gps));
-				sprintf(str_gps,"%s", "1.GPS: OK            ");
-				ssd1306_SetCursor(00, 00);
-				ssd1306_WriteString(str_gps, Font_7x10, White);
+//				memset(str_gps, 0 , sizeof(str_gps));
+//				sprintf(str_gps,"%s", "1.GPS: OK            ");
+//				ssd1306_SetCursor(00, 00);
+//				ssd1306_WriteString(str_gps, Font_7x10, White);
+				print_text_on_OLED(0, 1, false, "1.GPS: OK            ");
 
 				broken_packet_counter = 0;
 				GPGGA_data_is_ready = 0;
@@ -1328,7 +1332,7 @@ int fingerprint_mode(char sign)
 	ssd1306_Fill(Black);
 	ssd1306_UpdateScreen();
 	// Fingerprint code place where
-	// Print mode in head
+	// Print modes on OLED
 	char str_fingerprint[30]={0};
 	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	sprintf(str_fingerprint,"%s", "3.FINGERPRINT");
@@ -1980,6 +1984,31 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 // ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+// Function to avoid 'sprintf() function'
+// buffer: where save.
+// string: what need to save.
+// size: size of string.
+void write_data_in_buffer(char * buffer, char *string, uint8_t size)
+{
+	for(uint8_t i = 0; i<= size; i++)
+	{
+		if(string[i] != '\0')
+		{
+			buffer[i] = string[i];
+		}
+	}
+}
+// ----------------------------------------------------------------------------
+//void test_function(void)
+//{
+//	print_text_on_OLED(0, 1, true, "TEST STRING");
+//	HAL_Delay(100);
+//}
+// ----------------------------------------------------------------------------
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////

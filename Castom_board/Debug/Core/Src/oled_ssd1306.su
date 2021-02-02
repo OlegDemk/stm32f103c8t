@@ -6,3 +6,4 @@ oled_ssd1306.c:223:6:print_all_sensors_data	48	static
 oled_ssd1306.c:256:6:print_GSM_data	4	static
 oled_ssd1306.c:261:6:print_fingerprint_data	4	static
 oled_ssd1306.c:266:6:claen_oled_lines	56	static
+oled_ssd1306.c:300:6:print_text_on_OLED	48	static

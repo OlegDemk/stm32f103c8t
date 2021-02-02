@@ -296,7 +296,41 @@ void claen_oled_lines(bool first, bool second, bool third, bool fourth, bool fif
 	ssd1306_UpdateScreen();
 }
 // -----------------------------------------------------------------------------------
+// Print any text on OLED
+void print_text_on_OLED(uint8_t column, uint8_t row, bool update_oled, char text[])
+{
+	char message_buffer[30] = {0};
 
+	switch (row)
+	{
+		case 1:
+			ssd1306_SetCursor(column, 0);
+		break;
+
+		case 2:
+			ssd1306_SetCursor(column, 16);
+		break;
+
+		case 3:
+			ssd1306_SetCursor(column, 26);
+		break;
+
+		case 4:
+			ssd1306_SetCursor(column, 16);
+		break;
+
+		case 5:
+			ssd1306_SetCursor(column, 16);
+		break;
+	}
+	ssd1306_WriteString(text, Font_7x10, White);
+
+	if(update_oled == true)
+	{
+		ssd1306_UpdateScreen();
+	}
+}
+// ----------------------------------------------------------------------------
 
 
 
