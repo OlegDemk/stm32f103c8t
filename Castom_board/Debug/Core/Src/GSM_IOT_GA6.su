@@ -2,9 +2,9 @@ core_cm3.h:1511:22:__NVIC_EnableIRQ	16	static
 GSM_IOT_GA6.c:44:22:DelayMicro	16	static
 GSM_IOT_GA6.c:52:6:init_GSM_uart_comunication	8	static
 GSM_IOT_GA6.c:60:5:init_gsm_module	24	static
-GSM_IOT_GA6.c:301:5:call_on_mu_number	24	static
-GSM_IOT_GA6.c:336:5:call_on_number	56	static
-GSM_IOT_GA6.c:393:5:end_of_call	24	static
-GSM_IOT_GA6.c:429:5:accepts_on_incomming_call	24	static
-GSM_IOT_GA6.c:464:5:wait_ansver_after_make_call_in_blok_mode	8	static
-GSM_IOT_GA6.c:505:5:wait_incoming_call	48	static
+GSM_IOT_GA6.c:297:5:call_on_mu_number	24	static
+GSM_IOT_GA6.c:332:5:call_on_number	56	static
+GSM_IOT_GA6.c:389:5:end_of_call	24	static
+GSM_IOT_GA6.c:425:5:accepts_on_incomming_call	24	static
+GSM_IOT_GA6.c:460:5:wait_ansver_after_make_call_in_blok_mode	8	static
+GSM_IOT_GA6.c:501:5:wait_incoming_call	48	static

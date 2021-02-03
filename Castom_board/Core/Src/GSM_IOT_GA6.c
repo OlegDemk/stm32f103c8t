@@ -27,13 +27,13 @@ uint8_t count =0;
 
 
 // AT commands for init GSM module
-char AT[]="AT\r\n";                             // Simple command
-char turn_off_echo[]="ATE 0\r\n";    			// Turn OFF echo
-char AT_CSQ[]="AT+CSQ\r\n";                     // signal reception quality
-char CCID[] = "AT+CCID\r\n";
-char AT_CREG[] = "AT+CREG?\r\n";                // Registration in network
-char AT_END_OF_CALL[] = "ATH0\r\n";             // End of call
-char ACCEPTS_INCOMMING_CALL[] = "ATA\r\n";
+char AT[]=								"AT\r\n";               // Simple command
+char turn_off_echo[]=					"ATE 0\r\n";    		// Turn OFF echo
+char AT_CSQ[]=							"AT+CSQ\r\n";           // signal reception quality
+char CCID[] = 							"AT+CCID\r\n";
+char AT_CREG[] = 						"AT+CREG?\r\n";         // Registration in network
+char AT_END_OF_CALL[] = 				"ATH0\r\n";             // End of call
+char ACCEPTS_INCOMMING_CALL[] = 		"ATA\r\n";
 
 // Commands GSM module
 char call_to_my_mobile_number[]="ATD+380931482354;\r\n";
@@ -70,16 +70,14 @@ int init_gsm_module(void)
 	uint8_t answer_3 = 0;
 	uint8_t answer_4 = 0;
 
-	// Whaite only first time init
+	// Waiting only first time init
 	static bool init_GSM = false;
 	if (init_GSM == false)
 	{
-		HAL_Delay(8000);     // Must be near 7-8 sec
+		HAL_Delay(8000);     // Must be near 7-8 seconds
 	}
 	init_GSM = true;
 	//
-
-	//HAL_Delay(1000);     // Must be near 7-8 sec
 
 	uint32_t id =0;               				 // Variable for timeout
 	bool no_answer = false;
@@ -87,7 +85,7 @@ int init_gsm_module(void)
 
 	int timeout_counter = 10000;    //10000
 
-	// 1. Send command " Turn off echo" ///////////////////////////
+	// 1. Send command " Turn off echo"
 	HAL_UART_Transmit(&huart1 , (uint8_t *)turn_off_echo, strlen(turn_off_echo), 10000);
 
     // Waiting answer
@@ -113,7 +111,7 @@ int init_gsm_module(void)
 	}
     HAL_Delay(DELAY);
 
-	// 2. Send command "signal reception quality" //////////////////
+	// 2. Send command "signal reception quality"
 	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CSQ, strlen(AT_CSQ), 1000);
 
 	id = 0;
@@ -169,7 +167,6 @@ int init_gsm_module(void)
 		}
 	}
 	HAL_Delay(DELAY);
-	////////////////////////////////////////////////////////////////
 
 	// 3. Send command "signal reception quality" /////////////////////
 	HAL_UART_Transmit(&huart1 , (uint8_t *)CCID, strlen(CCID), 1000);
@@ -228,7 +225,6 @@ int init_gsm_module(void)
 	}
 	HAL_Delay(DELAY);
 
-	////////////////////////////////////////////////////////////////
 	// 4. Send command "Check registration in network"
 	HAL_UART_Transmit(&huart1 , (uint8_t *)AT_CREG, strlen(AT_CREG), 1000);
 
@@ -258,7 +254,7 @@ int init_gsm_module(void)
 		}
 	}
 
-	// Waite for answer "OK"
+	// Waiting for answer "OK"
 	id = 0;
 	no_answer = false;
 	ansver_flag = 0;

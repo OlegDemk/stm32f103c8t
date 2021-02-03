@@ -96,27 +96,31 @@ void print_GPS_data(void)
 {
 	// 1. Print Lat and Lon ////////////////////////////////
 	char str[50]={0};
-	memset(str, 0 , sizeof(str));
-
-	// Print data from GPS module  ( Lat )
-	char lat_str[]="Lat:";
-	memcpy(str, lat_str, sizeof(lat_str));
-	ssd1306_SetCursor(0, 16);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
+//	memset(str, 0 , sizeof(str));
+//
+//	// Print data from GPS module  ( Lat )
+//	char lat_str[]="Lat:";
+//	memcpy(str, lat_str, sizeof(lat_str));
+//	ssd1306_SetCursor(0, 16);
+//	ssd1306_WriteString(str, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+	print_text_on_OLED(0, 2, false, "Lat:");
 	// Print data
-	ssd1306_SetCursor(30, 16);
-	ssd1306_WriteString(gps_latitude, Font_7x10, White);
+//	ssd1306_SetCursor(30, 16);
+//	ssd1306_WriteString(gps_latitude, Font_7x10, White);
+	print_text_on_OLED(30, 2, false, gps_latitude);
 
 	// Print data from GPS module  ( Lon )
-	char lon_str[]="Lon:";
-	memcpy(str, lon_str, sizeof(lon_str));
-	ssd1306_SetCursor(0, 26);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
-
-	ssd1306_SetCursor(30, 26);
-	ssd1306_WriteString(gps_lontitude, Font_7x10, White);
+//	char lon_str[]="Lon:";
+//	memcpy(str, lon_str, sizeof(lon_str));
+//	ssd1306_SetCursor(0, 26);
+//	ssd1306_WriteString(str, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+	print_text_on_OLED(0, 3, false, "Lon:");
+	// Print data
+//	ssd1306_SetCursor(30, 26);
+//	ssd1306_WriteString(gps_lontitude, Font_7x10, White);
+	print_text_on_OLED(30, 3, false, gps_lontitude);
 
 	// 2. Print time  ////////////////////////////////
 	if (GPGGA_data_is_ready == 1)
@@ -204,25 +208,29 @@ void print_GPS_data(void)
 	}
 
 	// 3. Print number of satalits  ////////////////////////////////
-	char numbers_of_satalits_str[]="N:  ";
-	memcpy(str, numbers_of_satalits_str, sizeof(numbers_of_satalits_str));
-	ssd1306_SetCursor(40, 36);
-	ssd1306_WriteString(str, Font_7x10, White);
+//	char numbers_of_satalits_str[]="N:  ";
+//	memcpy(str, numbers_of_satalits_str, sizeof(numbers_of_satalits_str));
+//	ssd1306_SetCursor(40, 36);
+//	ssd1306_WriteString(str, Font_7x10, White);
+	print_text_on_OLED(40, 4, false, "N:  ");
 
-	memset(str, 0 , sizeof(str));
-	ssd1306_SetCursor(55, 36);
-	ssd1306_WriteString(gps_number_of_satellites, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+//	ssd1306_SetCursor(55, 36);
+//	ssd1306_WriteString(gps_number_of_satellites, Font_7x10, White);
+	print_text_on_OLED(55, 4, false, gps_number_of_satellites);
 
 	// 4. Print number of satalits  ////////////////////////////////
 	//gps_speed
-	char speed_str[]="S:    ";
-	memcpy(str, speed_str, sizeof(speed_str));
-	ssd1306_SetCursor(75, 36);
-	ssd1306_WriteString(str, Font_7x10, White);
+//	char speed_str[]="S:    ";
+//	memcpy(str, speed_str, sizeof(speed_str));
+//	ssd1306_SetCursor(75, 36);
+//	ssd1306_WriteString(str, Font_7x10, White);
+	print_text_on_OLED(75, 4, false, "S:    ");
 
-	memset(str, 0 , sizeof(str));
-	ssd1306_SetCursor(90, 36);
-	ssd1306_WriteString(gps_speed, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+//	ssd1306_SetCursor(90, 36);
+//	ssd1306_WriteString(gps_speed, Font_7x10, White);
+	print_text_on_OLED(90, 4, false, gps_speed);
 }
 // -----------------------------------------------------------------------------------
 void print_all_sensors_data(void)
@@ -234,8 +242,9 @@ void print_all_sensors_data(void)
 	strcat(str_1, temperature_si7021);
 	strcat(str_1, humidity_si7021);
 
-	ssd1306_SetCursor(0, 16);
-	ssd1306_WriteString(str_1, Font_7x10, White);
+//	ssd1306_SetCursor(0, 16);
+//	ssd1306_WriteString(str_1, Font_7x10, White);
+	print_text_on_OLED(0, 2, false, str_1);
 
 	memset(str_1, 0 , sizeof(str_1));
 
@@ -244,18 +253,20 @@ void print_all_sensors_data(void)
 	strcat(str_1, temperature_am3202);
 	strcat(str_1, humidity_am3202);
 
-	ssd1306_SetCursor(0, 26);
-	ssd1306_WriteString(str_1, Font_7x10, White);
+//	ssd1306_SetCursor(0, 26);
+//	ssd1306_WriteString(str_1, Font_7x10, White);
+	print_text_on_OLED(0, 3, false, str_1);
 
 	memset(str_1, 0 , sizeof(str_1));
 
 	// 3. Print data from 9066
 	strcpy(str_1, "2.9066 ");
 
-	ssd1306_SetCursor(0, 36);
-	ssd1306_WriteString(str_1, Font_7x10, White);
+//	ssd1306_SetCursor(0, 36);
+//	ssd1306_WriteString(str_1, Font_7x10, White);
+	print_text_on_OLED(0, 4, false, str_1);
 
-	memset(str_1, 0 , sizeof(str_1));
+	//memset(str_1, 0 , sizeof(str_1));
 }
 // -----------------------------------------------------------------------------------
 void print_GSM_data(void)

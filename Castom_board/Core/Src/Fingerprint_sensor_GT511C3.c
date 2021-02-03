@@ -29,142 +29,6 @@ typedef struct __attribute__((packed)) dev_info{
 	uint16_t checksum;
 }dev_info;
 
-
-
-//////////////////////////////////////
-// MAIN FINGERPRINT FUNCTION
-void finger_print_test_function(void)
-{
-	//touch_delete_all_fingerprints();
-	//touch_open(0);
-	while(1)
-	{
-//		//LED(1);
-//			HAL_Delay(500);
-//			int u=0;
-//			for(u = 0; u<10; u++)
-//			{
-//				HAL_Delay(100);
-//				touch_bakcklight(0);
-//				HAL_Delay(100);
-//				touch_bakcklight(1);
-//			}
-//			while (!touch_is_press_finger())
-//			{
-//					HAL_Delay(100);
-//			}
-//			int f = 9999;
-
-		//touch_open(0);
-
-//		HAL_Delay(1000);
-//		int u=0;
-//		for(u = 0; u<3; u++)
-//		{
-//			HAL_Delay(300);
-//			touch_bakcklight(0);
-//			HAL_Delay(300);
-//			touch_bakcklight(1);
-//		}
-
-		//////////////////////////    Checked work functions:
-		// touch_delete_all_fingerprints();      	// WORK OK		 Видаляє всі ID
-		// identification_enroll_user();            // Work OK       Записує пальці з певним ID
-		// touch_check_enrolled(id_chesk);			// WORK OK		 Перевіряє, чи зареєстрований ID в памяті модуля fingerprint
-		// ----------------------------------------
-
-
-//		touch_open(0);
-//
-//		HAL_Delay(1000);
-//		int u=0;
-//		for(u = 0; u<=3; u++)
-//		{
-//			HAL_Delay(50);
-//			touch_bakcklight(0);
-//			HAL_Delay(50);
-//			touch_bakcklight(1);
-//		}
-
-		while(1)
-		{
-			HAL_Delay(1000);
-			int finger_id = identify();
-			if(finger_id == 0)
-			{
-				// Не має збігів
-			}
-			HAL_Delay(500);
-		}
-
-
-
-		/////////////////////////////////////////////////////////////
-		/////////////////////////////////////////////////////////////
-		// IDENTIFY PART  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// in module is 1 and 3 ID
-		// mision: Identyfy 1 and 3 fingers !
-
-
-
-
-
-
-		//////////////////////////////////////////////
-
-
-		//identification_check();
-
-//		while(1)
-//		{
-//		    HAL_Delay(1000);
-//		    int status = 4;
-//		    status = touch_is_press_finger();		//  Чи палець приставлений?
-//		    if (status == 1)
-//		    {
-//		    	//identify();
-//		    	identification_check();
-//		    }
-//		    HAL_Delay(1000);
-//		}
-		// ----------------------------------------
-
-//		while(1)
-//		{
-//			wait_for_finger();
-//			wait_for_finger_release();
-//			HAL_Delay(300);
-//		}
-
-
-
-
-
-		//////////////////////////////////////////////////
-//		while(1)
-//		{
-//			touch_is_press_finger();
-//		}
-
-
-
-
-
-
-//		HAL_Delay(1000);
-//		identification_check();
-//		HAL_Delay(1000);
-	}
-
-}
-// ----------------------------------------------------------------------------
-//int main_fingerprint(int)
-//{
-//
-//
-//
-//
-//}
 // ----------------------------------------------------------------------------
 // Send data in fingerprint module
 int touch_send(uint8_t* packet, int len)
@@ -253,9 +117,9 @@ void touch_bakcklight(int value)
 			return;
 		}
 		if(value != 0){
-			printf("Touch: Backlight ON");
+			//printf("Touch: Backlight ON");
 		}else{
-			printf("Touch: Backlight OFF");
+			//printf("Touch: Backlight OFF");
 		}
 }
 // ----------------------------------------------------------------------------
@@ -348,7 +212,7 @@ void touch_enroll_3(int no_save_mode){
 	touch_rcv(extra_data,498,10000);
 	//TODO: Info handling
 	if(extra_data[1]){
-		printf("s");
+		//printf("s");
 	}
 	return;
 }
@@ -486,29 +350,16 @@ void identification_enroll_user(int id_set)
 // ----------------------------------------------------------------------------
 // MY Entoles functions
 // ----------------------------------------------------------------------------
- //ЗРОБИТИ ВІДОБРАЖЕННЯ НА ЕКРАНІ ПРОЦЕСУ   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>
-//void my_touch_enroll_start(int id){
-//	//if poss > 200 no save mode
-//	if(id >= 200){
-//		id = -1;
-//	}
-//	create_command_package(id, ENROLLSTART_CMD, command_packet);
-//	touch_send(command_packet,COMMAND_PACKET_LEN);
-//	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
-//		//Error Handling
-//		return;
-//	}
-//}
-// ----------------------------------------------------------------------------
 void my_wait_for_finger() {
 	while (touch_is_press_finger() == 0) {
 		HAL_Delay(100);
 
-		char str_fingerprint[30]={0};
-		sprintf(str_fingerprint,"%s", "Put finger...");
-		ssd1306_SetCursor(00, 36);
-		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-		ssd1306_UpdateScreen();
+//		char str_fingerprint[30]={0};
+//		sprintf(str_fingerprint,"%s", "Put finger...");
+//		ssd1306_SetCursor(00, 36);
+//		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//		ssd1306_UpdateScreen();
+		print_text_on_OLED(0, 4, true, "Put finger...");
 	}
 	claen_oled_lines(false, false, false, true, false);
 }
@@ -517,22 +368,24 @@ void my_wait_for_finger_release() {
 	while (touch_is_press_finger() == 1) {
 		HAL_Delay(100);
 
-		char str_fingerprint[30]={0};
-		sprintf(str_fingerprint,"%s", "Release finger...");
-		ssd1306_SetCursor(00, 36);
-		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-		ssd1306_UpdateScreen();
+//		char str_fingerprint[30]={0};
+//		sprintf(str_fingerprint,"%s", "Release finger...");
+//		ssd1306_SetCursor(00, 36);
+//		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//		ssd1306_UpdateScreen();
+		print_text_on_OLED(0, 4, true, "Release finger...");
 	}
 	claen_oled_lines(false, false, false, true, false);
 }
 void my_identification_enroll_user(int id_set)
 {
-	char str_fingerprint[30]={0};
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "Enrolling ...");
-	ssd1306_SetCursor(00, 26);
-	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	ssd1306_UpdateScreen();
+//	char str_fingerprint[30]={0};
+//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	sprintf(str_fingerprint,"%s", "Enrolling ...");
+//	ssd1306_SetCursor(00, 26);
+//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	ssd1306_UpdateScreen();
+	print_text_on_OLED(0, 3, true, "Enrolling ...");
 
 	touch_enroll_start(id_set);
 	my_wait_for_finger();
@@ -555,11 +408,12 @@ void my_identification_enroll_user(int id_set)
 	if(touch_check_enrolled(id_set) == HAL_OK )
 	{
 		//id set OK
-		memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-		sprintf(str_fingerprint,"%s", "Enrolled OK");
-		ssd1306_SetCursor(00, 26);
-		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-		ssd1306_UpdateScreen();
+//		memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//		sprintf(str_fingerprint,"%s", "Enrolled OK");
+//		ssd1306_SetCursor(00, 26);
+//		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//		ssd1306_UpdateScreen();
+		print_text_on_OLED(0, 3, true, "Enrolled OK");
 
 		HAL_Delay(2000);
 
@@ -568,6 +422,7 @@ void my_identification_enroll_user(int id_set)
 	else
 	{
 		// PROBLEM tru second time, or EXIT from where
+		print_text_on_OLED(0, 3, true, "Enrolled ERROR");
 	}
 }
 

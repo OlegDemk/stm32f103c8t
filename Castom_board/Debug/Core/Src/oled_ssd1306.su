@@ -1,9 +1,9 @@
 oled_ssd1306.c:26:6:init_oled	8	static
 oled_ssd1306.c:34:6:OLED_prinr_all_data	16	static
 oled_ssd1306.c:56:6:print_main_menu	8	static
-oled_ssd1306.c:95:6:print_GPS_data	112	static
-oled_ssd1306.c:228:6:print_all_sensors_data	48	static
-oled_ssd1306.c:261:6:print_GSM_data	4	static
-oled_ssd1306.c:266:6:print_fingerprint_data	4	static
-oled_ssd1306.c:271:6:claen_oled_lines	56	static
-oled_ssd1306.c:305:6:print_text_on_OLED	48	static
+oled_ssd1306.c:95:6:print_GPS_data	80	static
+oled_ssd1306.c:236:6:print_all_sensors_data	48	static
+oled_ssd1306.c:272:6:print_GSM_data	4	static
+oled_ssd1306.c:277:6:print_fingerprint_data	4	static
+oled_ssd1306.c:282:6:claen_oled_lines	56	static
+oled_ssd1306.c:316:6:print_text_on_OLED	48	static
