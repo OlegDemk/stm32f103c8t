@@ -984,10 +984,11 @@ int gps_mode(char sign)
 					GPGGA_data_is_ready = 0;
 					broken_packet_counter = 0;
 
-					memset(str_gps, 0 , sizeof(str_gps));
-					sprintf(str_gps,"%s", "1.GPS: NO SIGNAL  ");
-					ssd1306_SetCursor(00, 00);
-					ssd1306_WriteString(str_gps, Font_7x10, White);
+//					memset(str_gps, 0 , sizeof(str_gps));
+//					sprintf(str_gps,"%s", "1.GPS: NO SIGNAL  ");
+//					ssd1306_SetCursor(00, 00);
+//					ssd1306_WriteString(str_gps, Font_7x10, White);
+					print_text_on_OLED(0, 1, false, "1.GPS: NO SIGNAL  ");
 				}
 			}
 
@@ -1003,11 +1004,12 @@ int gsm_mode(char sign)
 	ssd1306_UpdateScreen();
 	// Print mode in head
 	char str_gsm[50]={0};
-	sprintf(str_gsm,"%s", "1.GSM: waiting...");
-	ssd1306_SetCursor(00, 00);
-	ssd1306_WriteString(str_gsm, Font_7x10, White);
-	ssd1306_UpdateScreen();
-	memset(str_gsm, 0 , sizeof(str_gsm));
+//	sprintf(str_gsm,"%s", "1.GSM: waiting...");
+//	ssd1306_SetCursor(00, 00);
+//	ssd1306_WriteString(str_gsm, Font_7x10, White);
+//	ssd1306_UpdateScreen();
+//	memset(str_gsm, 0 , sizeof(str_gsm));
+	print_text_on_OLED(0, 1, true, "1.GSM: waiting...");
 
 	// Init GSM module
 	init_GSM_uart_comunication();
@@ -1017,10 +1019,11 @@ int gsm_mode(char sign)
 		GSM_INIT = 1;
 		claen_oled_lines(true, false, false, false, false);
 
-		sprintf(str_gsm,"%s", "1.GSM: OK");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		ssd1306_UpdateScreen();
+//		sprintf(str_gsm,"%s", "1.GSM: OK");
+//		ssd1306_SetCursor(00, 00);
+//		ssd1306_WriteString(str_gsm, Font_7x10, White);
+//		ssd1306_UpdateScreen();
+		print_text_on_OLED(0, 1, true, "1.GSM: OK");
 	}
 	else
 	{
@@ -1029,10 +1032,11 @@ int gsm_mode(char sign)
 
 		claen_oled_lines(true, false, false, false, false);
 
-		sprintf(str_gsm,"%s", "1.GSM: ERROR");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
-		ssd1306_UpdateScreen();
+//		sprintf(str_gsm,"%s", "1.GSM: ERROR");
+//		ssd1306_SetCursor(00, 00);
+//		ssd1306_WriteString(str_gsm, Font_7x10, White);
+//		ssd1306_UpdateScreen();
+		print_text_on_OLED(0, 1, true, "1.GSM: ERROR");
 
 		HAL_Delay(2000);
 	}
@@ -1046,22 +1050,25 @@ int gsm_mode(char sign)
     	int print_oled_status = 0;
 
 		// Print GSM menu
-    	memset(str_gsm, 0 , sizeof(str_gsm));
-		sprintf(str_gsm,"%s", "1.CALL to me");
-		ssd1306_SetCursor(00, 16);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
+//    	memset(str_gsm, 0 , sizeof(str_gsm));
+//		sprintf(str_gsm,"%s", "1.CALL to me");
+//		ssd1306_SetCursor(00, 16);
+//		ssd1306_WriteString(str_gsm, Font_7x10, White);
+    	print_text_on_OLED(0, 2, false, "1.CALL to me");
 
-		memset(str_gsm, 0 , sizeof(str_gsm));
-		sprintf(str_gsm,"%s", "2.CALL on number");
-		ssd1306_SetCursor(00, 26);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
+//		memset(str_gsm, 0 , sizeof(str_gsm));
+//		sprintf(str_gsm,"%s", "2.CALL on number");
+//		ssd1306_SetCursor(00, 26);
+//		ssd1306_WriteString(str_gsm, Font_7x10, White);
+    	print_text_on_OLED(0, 3, false, "2.CALL on number");
 
-		memset(str_gsm, 0 , sizeof(str_gsm));
-		sprintf(str_gsm,"%s", "3.For send SMS");
-		ssd1306_SetCursor(00, 36);
-		ssd1306_WriteString(str_gsm, Font_7x10, White);
-
-		ssd1306_UpdateScreen();
+//		memset(str_gsm, 0 , sizeof(str_gsm));
+//		sprintf(str_gsm,"%s", "3.For send SMS");
+//		ssd1306_SetCursor(00, 36);
+//		ssd1306_WriteString(str_gsm, Font_7x10, White);
+//
+//		ssd1306_UpdateScreen();
+    	print_text_on_OLED(0, 4, true, "3.For send SMS");
 
 		bool incoming_call_status_oled = false;				// Status for blinky
 		char incoming_number[15] = {0};						// Buffer for incoming number
@@ -1085,28 +1092,34 @@ int gsm_mode(char sign)
 					{
 						claen_oled_lines(false, true, true, true, true);
 
-						memset(str_gsm, 0 , sizeof(str_gsm));
-						sprintf(str_gsm,"%s", "'A':pick up phone");
-						ssd1306_SetCursor(00, 36);
-						ssd1306_WriteString(str_gsm, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//						sprintf(str_gsm,"%s", "'A':pick up phone");
+//						ssd1306_SetCursor(00, 36);
+//						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						print_text_on_OLED(0, 4, false, "'A':pick up phone");
 
-						memset(str_gsm, 0 , sizeof(str_gsm));
-						sprintf(str_gsm,"%s", "'*':end call");
-						ssd1306_SetCursor(00, 46);
-						ssd1306_WriteString(str_gsm, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//						sprintf(str_gsm,"%s", "'*':end call");
+//						ssd1306_SetCursor(00, 46);
+//						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						print_text_on_OLED(0, 5, false, "'*':end call");
 
-						memset(str_gsm, 0 , sizeof(str_gsm));
-						sprintf(str_gsm,"%s", "Incoming CALL...");
-						ssd1306_SetCursor(00, 16);
-						ssd1306_WriteString(str_gsm, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//						sprintf(str_gsm,"%s", "Incoming CALL...");
+//						ssd1306_SetCursor(00, 16);
+//						ssd1306_WriteString(str_gsm, Font_7x10, White);
+						print_text_on_OLED(0, 1, false, "Incoming CALL...");
 
-						memset(str_gsm, 0 , sizeof(str_gsm));
-						sprintf(str_gsm,"%s", incoming_number);
-						ssd1306_SetCursor(00, 26);
-						ssd1306_WriteString(incoming_number, Font_7x10, White);
+//						memset(str_gsm, 0 , sizeof(str_gsm));
+//						sprintf(str_gsm,"%s", incoming_number);
+//						ssd1306_SetCursor(00, 26);
+//						ssd1306_WriteString(incoming_number, Font_7x10, White);
+						print_text_on_OLED(0, 2, true, incoming_number);
+
 						memset(incoming_number, 0 , sizeof(incoming_number));
 
-						ssd1306_UpdateScreen();
+//						ssd1306_UpdateScreen();
+
 					}
 
 					// Waiting for action on incoming call or sms
@@ -1130,12 +1143,13 @@ int gsm_mode(char sign)
 								res = i%2;
 								if(res)
 								{
-									memset(str_gsm, 0 , sizeof(str_gsm));
-									sprintf(str_gsm,"%s", "CALL END");
-									ssd1306_SetCursor(00, 16);
-									ssd1306_WriteString(str_gsm, Font_7x10, White);
-
-									ssd1306_UpdateScreen();
+//									memset(str_gsm, 0 , sizeof(str_gsm));
+//									sprintf(str_gsm,"%s", "CALL END");
+//									ssd1306_SetCursor(00, 16);
+//									ssd1306_WriteString(str_gsm, Font_7x10, White);
+//
+//									ssd1306_UpdateScreen();
+									print_text_on_OLED(0, 2, true, "CALL END");
 									HAL_Delay(200);
 								}
 								else
@@ -1154,17 +1168,19 @@ int gsm_mode(char sign)
 						{
 							claen_oled_lines(false, true, true, true, true);		// Clean OLED
 
-							sprintf(str_gsm,"%s", "SPEAK...");
-							ssd1306_SetCursor(00, 16);
-							ssd1306_WriteString(str_gsm, Font_7x10, White);
-							memset(str_gsm, 0 , sizeof(str_gsm));
+//							sprintf(str_gsm,"%s", "SPEAK...");
+//							ssd1306_SetCursor(00, 16);
+//							ssd1306_WriteString(str_gsm, Font_7x10, White);
+//							memset(str_gsm, 0 , sizeof(str_gsm));
+							print_text_on_OLED(0, 2, false, "SPEAK...");
 
-							sprintf(str_gsm,"%s", "'*':end call");
-							ssd1306_SetCursor(00, 46);
-							ssd1306_WriteString(str_gsm, Font_7x10, White);
-							memset(str_gsm, 0 , sizeof(str_gsm));
-
-							ssd1306_UpdateScreen();
+//							sprintf(str_gsm,"%s", "'*':end call");
+//							ssd1306_SetCursor(00, 46);
+//							ssd1306_WriteString(str_gsm, Font_7x10, White);
+//							memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//							ssd1306_UpdateScreen();
+							print_text_on_OLED(0, 5, true, "'*':end call");
 
 							do{
 								HAL_Delay(200);
@@ -1188,12 +1204,13 @@ int gsm_mode(char sign)
 									res = i%2;
 									if(res)
 									{
-										memset(str_gsm, 0 , sizeof(str_gsm));
-										sprintf(str_gsm,"%s", "CALL END");
-										ssd1306_SetCursor(00, 16);
-										ssd1306_WriteString(str_gsm, Font_7x10, White);
-
-										ssd1306_UpdateScreen();
+//										memset(str_gsm, 0 , sizeof(str_gsm));
+//										sprintf(str_gsm,"%s", "CALL END");
+//										ssd1306_SetCursor(00, 16);
+//										ssd1306_WriteString(str_gsm, Font_7x10, White);
+//
+//										ssd1306_UpdateScreen();
+										print_text_on_OLED(0, 1, true, "CALL END");
 										HAL_Delay(200);
 									}
 									else
@@ -1217,12 +1234,14 @@ int gsm_mode(char sign)
 										res = i%2;
 										if(res)
 										{
-											memset(str_gsm, 0 , sizeof(str_gsm));
-											sprintf(str_gsm,"%s", "CALL END");
-											ssd1306_SetCursor(00, 16);
-											ssd1306_WriteString(str_gsm, Font_7x10, White);
+//											memset(str_gsm, 0 , sizeof(str_gsm));
+//											sprintf(str_gsm,"%s", "CALL END");
+//											ssd1306_SetCursor(00, 16);
+//											ssd1306_WriteString(str_gsm, Font_7x10, White);
+//
+//											ssd1306_UpdateScreen();
+											print_text_on_OLED(0, 1, true, "CALL END");
 
-											ssd1306_UpdateScreen();
 											HAL_Delay(200);
 										}
 										else
@@ -1249,22 +1268,25 @@ int gsm_mode(char sign)
 					claen_oled_lines(false, true, true, true, true);
 
 					// Print GSM menu
-					sprintf(str_gsm,"%s", "1.CALL to me");
-					ssd1306_SetCursor(00, 16);
-					ssd1306_WriteString(str_gsm, Font_7x10, White);
-					memset(str_gsm, 0 , sizeof(str_gsm));
+//					sprintf(str_gsm,"%s", "1.CALL to me");
+//					ssd1306_SetCursor(00, 16);
+//					ssd1306_WriteString(str_gsm, Font_7x10, White);
+//					memset(str_gsm, 0 , sizeof(str_gsm));
+					print_text_on_OLED(0, 2, false, "1.CALL to me");
 
-					sprintf(str_gsm,"%s", "2.CALL on number");
-					ssd1306_SetCursor(00, 26);
-					ssd1306_WriteString(str_gsm, Font_7x10, White);
-					memset(str_gsm, 0 , sizeof(str_gsm));
+//					sprintf(str_gsm,"%s", "2.CALL on number");
+//					ssd1306_SetCursor(00, 26);
+//					ssd1306_WriteString(str_gsm, Font_7x10, White);
+//					memset(str_gsm, 0 , sizeof(str_gsm));
+					print_text_on_OLED(0, 3, false, "2.CALL on number");
 
-					sprintf(str_gsm,"%s", "3.For send SMS");
-					ssd1306_SetCursor(00, 36);
-					ssd1306_WriteString(str_gsm, Font_7x10, White);
-					memset(str_gsm, 0 , sizeof(str_gsm));
-
-					ssd1306_UpdateScreen();
+//					sprintf(str_gsm,"%s", "3.For send SMS");
+//					ssd1306_SetCursor(00, 36);
+//					ssd1306_WriteString(str_gsm, Font_7x10, White);
+//					memset(str_gsm, 0 , sizeof(str_gsm));
+//
+//					ssd1306_UpdateScreen();
+					print_text_on_OLED(0, 4, true, "3.For send SMS");
 
 					incoming_call_status_oled = false;
 				}
@@ -1334,33 +1356,38 @@ int fingerprint_mode(char sign)
 	// Fingerprint code place where
 	// Print modes on OLED
 	char str_fingerprint[30]={0};
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "3.FINGERPRINT");
-	ssd1306_SetCursor(00, 00);
-	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	sprintf(str_fingerprint,"%s", "3.FINGERPRINT");
+//	ssd1306_SetCursor(00, 00);
+//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	print_text_on_OLED(0, 1, false, "3.FINGERPRINT");
 
 	// Print meu fingerprint
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "1. Enroll finger");
-	ssd1306_SetCursor(00, 16);
-	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	sprintf(str_fingerprint,"%s", "1. Enroll finger");
+//	ssd1306_SetCursor(00, 16);
+//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	print_text_on_OLED(0, 2, false, "1. Enroll finger");
 
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "2. Delete all IDs");
-	ssd1306_SetCursor(00, 26);
-	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	sprintf(str_fingerprint,"%s", "2. Delete all IDs");
+//	ssd1306_SetCursor(00, 26);
+//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	print_text_on_OLED(0, 3, false, "2. Delete all IDs");
 
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "3. Identify");
-	ssd1306_SetCursor(00, 36);
-	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	sprintf(str_fingerprint,"%s", "3. Identify");
+//	ssd1306_SetCursor(00, 36);
+//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	print_text_on_OLED(0, 4, false, "3. Identify");
 
-	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	sprintf(str_fingerprint,"%s", "'*' to EXIT");
-	ssd1306_SetCursor(00, 46);
-	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	sprintf(str_fingerprint,"%s", "'*' to EXIT");
+//	ssd1306_SetCursor(00, 46);
+//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
 
-	ssd1306_UpdateScreen();
+//	ssd1306_UpdateScreen();
+	print_text_on_OLED(0, 5, true, "'*' to EXIT");
 
 	// Init fingerprint mogule
 	touch_open(0);
@@ -1385,11 +1412,12 @@ int fingerprint_mode(char sign)
 	        ssd1306_UpdateScreen();
 
 	        // Print mode in head
-	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	       	sprintf(str_fingerprint,"%s", "Set ID");
-	       	ssd1306_SetCursor(00, 00);
-	       	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        ssd1306_UpdateScreen();
+//	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	       	sprintf(str_fingerprint,"%s", "Set ID");
+//	       	ssd1306_SetCursor(00, 00);
+//	       	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	        ssd1306_UpdateScreen();
+	        print_text_on_OLED(0, 1, true, "Set ID");
 
 	        HAL_Delay(1000);
 	        // Set ID
@@ -1409,10 +1437,11 @@ int fingerprint_mode(char sign)
 	        	}
 	        }
 
-	       	sprintf(str_fingerprint,"%s", str_fingerprint);
-	       	ssd1306_SetCursor(00, 16);
-	       	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	       	ssd1306_UpdateScreen();
+//	       	sprintf(str_fingerprint,"%s", str_fingerprint);
+//	       	ssd1306_SetCursor(00, 16);
+//	       	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	       	ssd1306_UpdateScreen();
+	        print_text_on_OLED(0, 2, true, str_fingerprint);
 
 	       	HAL_Delay(500);
 
@@ -1430,17 +1459,19 @@ int fingerprint_mode(char sign)
 	        // Print mode in head
 
 	        // Ptint selected menu
-	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	        sprintf(str_fingerprint,"%s", "2. Delete all IDs");
-	        ssd1306_SetCursor(00, 00);
-	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	        sprintf(str_fingerprint,"%s", "2. Delete all IDs");
+//	        ssd1306_SetCursor(00, 00);
+//	        ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+	        print_text_on_OLED(0, 1, false, "2. Delete all IDs");
 
-	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	      	sprintf(str_fingerprint,"%s", "Deleting ...");
-	      	ssd1306_SetCursor(00, 16);
-	      	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-
-	      	ssd1306_UpdateScreen();
+//	        memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	      	sprintf(str_fingerprint,"%s", "Deleting ...");
+//	      	ssd1306_SetCursor(00, 16);
+//	      	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//
+//	      	ssd1306_UpdateScreen();
+	        print_text_on_OLED(0, 2, true, "Deleting ...");
 
 	      	HAL_Delay(2000);
 
@@ -1457,19 +1488,21 @@ int fingerprint_mode(char sign)
 	          // Print mode in head
 
 	          // Ptint selected menu
-	          memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	          sprintf(str_fingerprint,"%s", "3. Identify");
-	          ssd1306_SetCursor(00, 00);
-	          ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	          ssd1306_UpdateScreen();
+//	          memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	          sprintf(str_fingerprint,"%s", "3. Identify");
+//	          ssd1306_SetCursor(00, 00);
+//	          ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	          ssd1306_UpdateScreen();
+	          print_text_on_OLED(0, 1, true, "3. Identify");
 
 	          do                                                            // Whaite for choise
 	          {
-	        	  	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	        	 	sprintf(str_fingerprint,"%s", "Put your finger..");
-	        	 	ssd1306_SetCursor(00, 16);
-	        	 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        	 	ssd1306_UpdateScreen();
+//	        	  	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	        	 	sprintf(str_fingerprint,"%s", "Put your finger..");
+//	        	 	ssd1306_SetCursor(00, 16);
+//	        	 	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	        	 	ssd1306_UpdateScreen();
+	        	  	print_text_on_OLED(0, 2, true, "Put your finger..");
 
 	        	 	//HAL_Delay(500);
 	        	 	char ID = 0;
@@ -1481,11 +1514,12 @@ int fingerprint_mode(char sign)
 	        	 		static bool triger = false;
 	        	 		if(triger == false)
 	        	 		{
-	        	 			memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-	        	 			sprintf(str_fingerprint,"%s", "Access denied   ");
-	        	 			ssd1306_SetCursor(00, 26);
-	        	 			ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        	 			ssd1306_UpdateScreen();
+//	        	 			memset(str_fingerprint, 0 , sizeof(str_fingerprint));
+//	        	 			sprintf(str_fingerprint,"%s", "Access denied   ");
+//	        	 			ssd1306_SetCursor(00, 26);
+//	        	 			ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	        	 			ssd1306_UpdateScreen();
+	        	 			print_text_on_OLED(0, 3, true, "Access denied   ");
 	        	 			HAL_Delay(400);
 
 	        	 			triger = true;
@@ -1500,7 +1534,7 @@ int fingerprint_mode(char sign)
 	        	 	// Print on OLED
 	        	 	if(ID >=1)														// If ID founded
 	        	 	{
-	        	 		claen_oled_lines(false, false, true, false, false);			// Clear previous OLED line
+	        	 		claen_oled_lines(false, true, true, false, false);			// Clear previous OLED line
 
 	        	 		memset(str_fingerprint, 0 , sizeof(str_fingerprint));
 	        	 		sprintf(str_fingerprint,"%s", "Your ID: ");					// Add ID to the end of it string
@@ -1515,9 +1549,10 @@ int fingerprint_mode(char sign)
 	        	 		str_fingerprint[i] = ID;
 
 	        	 		//Print ID on OLED.
-	        	 		ssd1306_SetCursor(00, 26);
-	        	 		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-	        	 		ssd1306_UpdateScreen();
+//	        	 		ssd1306_SetCursor(00, 26);
+//	        	 		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
+//	        	 		ssd1306_UpdateScreen();
+	        	 		print_text_on_OLED(0, 3, true, str_fingerprint);							//,,,,,,,,,,,, <<<<<<<<<<<< where Can be problem
 
 	        	 		HAL_Delay(2000);
 	        	 	}
@@ -1566,32 +1601,36 @@ int sensors_mode(char sign)
 		// Sensors code place where
 		// Print mode in head
 		char str_sensors[50]={0};
-		memset(str_sensors, 0 , sizeof(str_sensors));
-		sprintf(str_sensors,"%s", "4.SENSORS");
-		ssd1306_SetCursor(00, 00);
-		ssd1306_WriteString(str_sensors, Font_7x10, White);
-		memset(str_sensors, 0 , sizeof(str_sensors));
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+//		sprintf(str_sensors,"%s", "4.SENSORS");
+//		ssd1306_SetCursor(00, 00);
+//		ssd1306_WriteString(str_sensors, Font_7x10, White);
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+		print_text_on_OLED(0, 1, false, "4.SENSORS");
 
 		// Print meu fingerprint
-		memset(str_sensors, 0 , sizeof(str_sensors));
-		sprintf(str_sensors,"%s", "1. Run all sensors");
-		ssd1306_SetCursor(00, 16);
-		ssd1306_WriteString(str_sensors, Font_7x10, White);
-		memset(str_sensors, 0 , sizeof(str_sensors));
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+//		sprintf(str_sensors,"%s", "1. Run all sensors");
+//		ssd1306_SetCursor(00, 16);
+//		ssd1306_WriteString(str_sensors, Font_7x10, White);
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+		print_text_on_OLED(0, 2, false, "1. Run all sensors");
 
-		memset(str_sensors, 0 , sizeof(str_sensors));
-		sprintf(str_sensors,"%s", "2. function 2");
-		ssd1306_SetCursor(00, 26);
-		ssd1306_WriteString(str_sensors, Font_7x10, White);
-		memset(str_sensors, 0 , sizeof(str_sensors));
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+//		sprintf(str_sensors,"%s", "2. function 2");
+//		ssd1306_SetCursor(00, 26);
+//		ssd1306_WriteString(str_sensors, Font_7x10, White);
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+		print_text_on_OLED(0, 3, false, "2. function 2");
 
-		memset(str_sensors, 0 , sizeof(str_sensors));
-		sprintf(str_sensors,"%s", "3. function 3");
-		ssd1306_SetCursor(00, 36);
-		ssd1306_WriteString(str_sensors, Font_7x10, White);
-		memset(str_sensors, 0 , sizeof(str_sensors));
 
-		ssd1306_UpdateScreen();
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+//		sprintf(str_sensors,"%s", "3. function 3");
+//		ssd1306_SetCursor(00, 36);
+//		ssd1306_WriteString(str_sensors, Font_7x10, White);
+//		memset(str_sensors, 0 , sizeof(str_sensors));
+//		ssd1306_UpdateScreen();
+		print_text_on_OLED(0, 4, true, "3. function 3");
 
 
 		do                                                            // Whaite for choise
@@ -1606,13 +1645,14 @@ int sensors_mode(char sign)
             	ssd1306_UpdateScreen();
 
             	// Ptint selected menu
-            	memset(str_sensors, 0 , sizeof(str_sensors));
-            	sprintf(str_sensors,"%s", "1. Run all sensors");
-            	ssd1306_SetCursor(00, 00);
-            	ssd1306_WriteString(str_sensors, Font_7x10, White);
-            	memset(str_sensors, 0 , sizeof(str_sensors));
-
-            	ssd1306_UpdateScreen();
+//            	memset(str_sensors, 0 , sizeof(str_sensors));
+//            	sprintf(str_sensors,"%s", "1. Run all sensors");
+//            	ssd1306_SetCursor(00, 00);
+//            	ssd1306_WriteString(str_sensors, Font_7x10, White);
+//            	memset(str_sensors, 0 , sizeof(str_sensors));
+//
+//            	ssd1306_UpdateScreen();
+            	print_text_on_OLED(0, 1, true, "1. Run all sensors");
 
             	do                                                            // Whaite for choise
             	{
@@ -1649,13 +1689,14 @@ int sensors_mode(char sign)
                	ssd1306_UpdateScreen();
 
                 // Ptint selected menu
-                memset(str_sensors, 0 , sizeof(str_sensors));
-                sprintf(str_sensors,"%s", "1. function 2");
-                ssd1306_SetCursor(00, 00);
-                ssd1306_WriteString(str_sensors, Font_7x10, White);
-                memset(str_sensors, 0 , sizeof(str_sensors));
-
-                ssd1306_UpdateScreen();
+//                memset(str_sensors, 0 , sizeof(str_sensors));
+//                sprintf(str_sensors,"%s", "1. function 2");
+//                ssd1306_SetCursor(00, 00);
+//                ssd1306_WriteString(str_sensors, Font_7x10, White);
+//                memset(str_sensors, 0 , sizeof(str_sensors));
+//
+//                ssd1306_UpdateScreen();
+               	print_text_on_OLED(0, 1, true, "1. function 2");
 
                 do                                                            // Whaite for choise
                 {
@@ -1689,13 +1730,14 @@ int sensors_mode(char sign)
                  // Print mode in head
 
                  // Ptint selected menu
-                 memset(str_sensors, 0 , sizeof(str_sensors));
-                 sprintf(str_sensors,"%s", "1. function 3");
-                 ssd1306_SetCursor(00, 00);
-                 ssd1306_WriteString(str_sensors, Font_7x10, White);
-                 memset(str_sensors, 0 , sizeof(str_sensors));
-
-                 ssd1306_UpdateScreen();
+//                 memset(str_sensors, 0 , sizeof(str_sensors));
+//                 sprintf(str_sensors,"%s", "1. function 3");
+//                 ssd1306_SetCursor(00, 00);
+//                 ssd1306_WriteString(str_sensors, Font_7x10, White);
+//                 memset(str_sensors, 0 , sizeof(str_sensors));
+//
+//                 ssd1306_UpdateScreen();
+                 print_text_on_OLED(0, 1, true, "1. function 3");
 
                  do                                                            // Whaite for choise
                  {
@@ -1744,18 +1786,19 @@ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_c
 	if (where_call == 1)   // If call to me
 	{
 		// 1. Clean OLED
-		int h = 16;
-		char str[30] = {0};
-		while(h != 46)
-		{
-			sprintf(str,"%s", "                    ");
-			ssd1306_SetCursor(00, h);
-			ssd1306_WriteString(str, Font_7x10, White);
-			memset(str, 0 , sizeof(str));
-
-			h = h +10;
-		}
-		ssd1306_UpdateScreen();
+//		int h = 16;
+//		char str[30] = {0};
+//		while(h != 46)
+//		{
+//			sprintf(str,"%s", "                    ");
+//			ssd1306_SetCursor(00, h);
+//			ssd1306_WriteString(str, Font_7x10, White);
+//			memset(str, 0 , sizeof(str));
+//
+//			h = h +10;
+//		}
+//		ssd1306_UpdateScreen();
+		claen_oled_lines(false, true, true, true, true);
 		HAL_Delay(500);
 	}
 

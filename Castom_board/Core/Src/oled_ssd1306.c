@@ -58,33 +58,38 @@ void print_main_menu(void)
 	ssd1306_Fill(Black);
 	ssd1306_UpdateScreen();
 
-	char str[50]={0};
-	// Print message
-	sprintf(str,"%s", " SELECT MODE...");
-	ssd1306_SetCursor(00, 00);
-	ssd1306_WriteString(str, Font_7x10, White);
+//	char str[50]={0};
+//	// Print message
+//	sprintf(str,"%s", " SELECT MODE...");
+//	ssd1306_SetCursor(00, 00);
+//	ssd1306_WriteString(str, Font_7x10, White);
+	print_text_on_OLED(0, 1, false, " SELECT MODE...");
 
-	sprintf(str,"%s", "1.GSM MODE");
-	ssd1306_SetCursor(00, 16);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
+//	sprintf(str,"%s", "1.GSM MODE");
+//	ssd1306_SetCursor(00, 16);
+//	ssd1306_WriteString(str, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+	print_text_on_OLED(0, 2, false, "1.GSM MODE");
 
-	sprintf(str,"%s", "2.GPS MODE");
-	ssd1306_SetCursor(00, 26);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
+//	sprintf(str,"%s", "2.GPS MODE");
+//	ssd1306_SetCursor(00, 26);
+//	ssd1306_WriteString(str, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+	print_text_on_OLED(0, 3, false, "2.GPS MODE");
 
-	sprintf(str,"%s", "3.FINGERPRINT MODE");
-	ssd1306_SetCursor(00, 36);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
+//	sprintf(str,"%s", "3.FINGERPRINT MODE");
+//	ssd1306_SetCursor(00, 36);
+//	ssd1306_WriteString(str, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+	print_text_on_OLED(0, 4, false, "3.FINGERPRINT MODE");
 
-	sprintf(str,"%s", "4.SENSORS MODE");
-	ssd1306_SetCursor(00, 46);
-	ssd1306_WriteString(str, Font_7x10, White);
-	memset(str, 0 , sizeof(str));
-
-	ssd1306_UpdateScreen();
+//	sprintf(str,"%s", "4.SENSORS MODE");
+//	ssd1306_SetCursor(00, 46);
+//	ssd1306_WriteString(str, Font_7x10, White);
+//	memset(str, 0 , sizeof(str));
+	print_text_on_OLED(0, 5, true, "4.SENSORS MODE");
+//
+//	ssd1306_UpdateScreen();
 }
 // -----------------------------------------------------------------------------------
 void print_GPS_data(void)
@@ -316,11 +321,11 @@ void print_text_on_OLED(uint8_t column, uint8_t row, bool update_oled, char text
 		break;
 
 		case 4:
-			ssd1306_SetCursor(column, 16);
+			ssd1306_SetCursor(column, 36);
 		break;
 
 		case 5:
-			ssd1306_SetCursor(column, 16);
+			ssd1306_SetCursor(column, 46);
 		break;
 	}
 	ssd1306_WriteString(text, Font_7x10, White);
