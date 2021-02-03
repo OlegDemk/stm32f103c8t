@@ -493,18 +493,3 @@ void parsing_GPS(uint8_t *GPS_buff, int size_buff)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//

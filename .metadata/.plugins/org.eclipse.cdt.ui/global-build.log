@@ -1,21 +1,51 @@
-14:49:35 **** Incremental Build of configuration Debug for project Castom_board ****
+16:15:53 **** Incremental Build of configuration Debug for project Castom_board ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/Fingerprint_sensor_GT511C3.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Fingerprint_sensor_GT511C3.d" -MT"Core/Src/Fingerprint_sensor_GT511C3.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Fingerprint_sensor_GT511C3.o"
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identification_enroll_user':
+../Core/Src/Fingerprint_sensor_GT511C3.c:339:2: warning: implicit declaration of function 'touch_check_enrolled'; did you mean 'touch_enroll_3'? [-Wimplicit-function-declaration]
+  touch_check_enrolled(id_set);
+  ^~~~~~~~~~~~~~~~~~~~
+  touch_enroll_3
+../Core/Src/Fingerprint_sensor_GT511C3.c:322:7: warning: unused variable 'str_fingerprint' [-Wunused-variable]
+  char str_fingerprint[30]={0};
+       ^~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_delete_all_fingerprints':
+../Core/Src/Fingerprint_sensor_GT511C3.c:149:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identify':
+../Core/Src/Fingerprint_sensor_GT511C3.c:300:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_rcv':
+../Core/Src/Fingerprint_sensor_GT511C3.c:52:4: warning: 'rtn' is used uninitialized in this function [-Wuninitialized]
+  if(rtn != HAL_OK)
+    ^
+arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Castom_board.elf
+ 
+arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
+arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
+arm-none-eabi-size   Castom_board.elf 
+   text	   data	    bss	    dec	    hex	filename
+  58772	    584	   3952	  63308	   f74c	Castom_board.elf
+Finished building: default.size.stdout
+Finished building: Castom_board.bin
+ 
+ 
+Finished building: Castom_board.list
+ 
+16:15:59 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  58788	    584	   3952	  63324	   f75c	Castom_board.elf
+  58772	    584	   3952	  63308	   f74c	Castom_board.elf
 Finished building: default.size.stdout
  
-14:49:42 **** Incremental Build of configuration Debug for project Castom_board ****
+16:16:52 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  58788	    584	   3952	  63324	   f75c	Castom_board.elf
-Finished building: default.size.stdout
- 
-14:50:39 **** Incremental Build of configuration Debug for project Castom_board ****
-make -j8 all 
-arm-none-eabi-size   Castom_board.elf 
-   text	   data	    bss	    dec	    hex	filename
-  58788	    584	   3952	  63324	   f75c	Castom_board.elf
+  58772	    584	   3952	  63308	   f74c	Castom_board.elf
 Finished building: default.size.stdout
  

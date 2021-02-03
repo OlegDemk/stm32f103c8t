@@ -353,12 +353,6 @@ void identification_enroll_user(int id_set)
 void my_wait_for_finger() {
 	while (touch_is_press_finger() == 0) {
 		HAL_Delay(100);
-
-//		char str_fingerprint[30]={0};
-//		sprintf(str_fingerprint,"%s", "Put finger...");
-//		ssd1306_SetCursor(00, 36);
-//		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-//		ssd1306_UpdateScreen();
 		print_text_on_OLED(0, 4, true, "Put finger...");
 	}
 	claen_oled_lines(false, false, false, true, false);
@@ -367,24 +361,12 @@ void my_wait_for_finger() {
 void my_wait_for_finger_release() {
 	while (touch_is_press_finger() == 1) {
 		HAL_Delay(100);
-
-//		char str_fingerprint[30]={0};
-//		sprintf(str_fingerprint,"%s", "Release finger...");
-//		ssd1306_SetCursor(00, 36);
-//		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-//		ssd1306_UpdateScreen();
 		print_text_on_OLED(0, 4, true, "Release finger...");
 	}
 	claen_oled_lines(false, false, false, true, false);
 }
 void my_identification_enroll_user(int id_set)
 {
-//	char str_fingerprint[30]={0};
-//	memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-//	sprintf(str_fingerprint,"%s", "Enrolling ...");
-//	ssd1306_SetCursor(00, 26);
-//	ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-//	ssd1306_UpdateScreen();
 	print_text_on_OLED(0, 3, true, "Enrolling ...");
 
 	touch_enroll_start(id_set);
@@ -403,26 +385,20 @@ void my_identification_enroll_user(int id_set)
 
 	touch_check_enrolled(id_set);
 
-	claen_oled_lines(false, false, false, true, false);
+	claen_oled_lines(false, false, true, true, false);
 
-	if(touch_check_enrolled(id_set) == HAL_OK )
+	if(touch_check_enrolled(id_set) == 1 )
 	{
-		//id set OK
-//		memset(str_fingerprint, 0 , sizeof(str_fingerprint));
-//		sprintf(str_fingerprint,"%s", "Enrolled OK");
-//		ssd1306_SetCursor(00, 26);
-//		ssd1306_WriteString(str_fingerprint, Font_7x10, White);
-//		ssd1306_UpdateScreen();
 		print_text_on_OLED(0, 3, true, "Enrolled OK");
-
 		HAL_Delay(2000);
-
 		claen_oled_lines(false, false, true, true, false);
 	}
 	else
 	{
 		// PROBLEM tru second time, or EXIT from where
 		print_text_on_OLED(0, 3, true, "Enrolled ERROR");
+		HAL_Delay(2000);
+		claen_oled_lines(false, false, true, true, false);
 	}
 }
 

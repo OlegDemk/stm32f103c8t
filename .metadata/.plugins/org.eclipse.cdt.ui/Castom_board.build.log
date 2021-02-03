@@ -1,10 +1,10 @@
-14:50:39 **** Incremental Build of configuration Debug for project Castom_board ****
+16:16:52 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  58788	    584	   3952	  63324	   f75c	Castom_board.elf
+  58772	    584	   3952	  63308	   f74c	Castom_board.elf
 Finished building: default.size.stdout
  
 
-14:50:40 Build Finished. 0 errors, 0 warnings. (took 579ms)
+16:16:52 Build Finished. 0 errors, 0 warnings. (took 577ms)
 

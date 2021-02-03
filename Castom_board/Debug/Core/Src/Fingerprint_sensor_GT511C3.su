@@ -18,6 +18,6 @@ Fingerprint_sensor_GT511C3.c:308:6:wait_for_finger	8	static
 Fingerprint_sensor_GT511C3.c:314:6:wait_for_finger_release	8	static
 Fingerprint_sensor_GT511C3.c:320:6:identification_enroll_user	48	static
 Fingerprint_sensor_GT511C3.c:353:6:my_wait_for_finger	16	static
-Fingerprint_sensor_GT511C3.c:367:6:my_wait_for_finger_release	16	static
-Fingerprint_sensor_GT511C3.c:380:6:my_identification_enroll_user	24	static
-Fingerprint_sensor_GT511C3.c:435:5:touch_check_enrolled	24	static
+Fingerprint_sensor_GT511C3.c:361:6:my_wait_for_finger_release	16	static
+Fingerprint_sensor_GT511C3.c:368:6:my_identification_enroll_user	24	static
+Fingerprint_sensor_GT511C3.c:411:5:touch_check_enrolled	24	static

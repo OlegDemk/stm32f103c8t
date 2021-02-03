@@ -1,0 +1,470 @@
+/*
+ * Fingerprint_sensor_GT511C3.c
+ *
+ *  Created on: Dec 14, 2020
+ *      Author: odemki
+ */
+
+
+
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "Fingerprint_sensor_GT511C3.h"
+
+#include "ssd1306.h"
+#include "fonts.h"
+#include "oled_ssd1306.h"
+
+extern UART_HandleTypeDef huart2;
+
+uint8_t fingerprint_count_bytes = 0;
+uint8_t data_from_fingerprint_module = 0;
+
+typedef struct __attribute__((packed)) dev_info{
+	uint32_t header;
+	uint32_t FirmwareVersion;
+	uint32_t IsoAreaMaxSize;
+	uint8_t DeviceSerialNumber[16];
+	uint16_t checksum;
+}dev_info;
+
+// ----------------------------------------------------------------------------
+// Send data in fingerprint module
+int touch_send(uint8_t* packet, int len)
+{
+	//HAL_UART_Transmit(&huart1,packet,len,1000);
+	int rtn;
+	rtn = HAL_UART_Transmit(&huart2, packet, (uint16_t)len, 10000);
+	if(rtn != HAL_OK)
+	{
+		// Error connection
+		return 9;
+	}
+	return HAL_OK;
+}
+// ----------------------------------------------------------------------------
+// Receive data in fingerprint module
+int touch_rcv(uint8_t* packet, int len,int timeout)
+{
+	int rtn;
+	HAL_UART_Receive(&huart2, packet, len, timeout);
+	if(rtn != HAL_OK)
+	{
+		// Error connection
+		return 9;
+	}
+	return HAL_OK;
+}
+// ----------------------------------------------------------------------------
+uint16_t get_checksum(uint8_t *package, int len)
+{
+    int i = 0;
+    uint16_t checksum = 0;
+    for (; i < len - 2; i++)
+    {
+        checksum += *(package + i);
+    }
+    return checksum;
+}
+// ----------------------------------------------------------------------------
+void create_command_package(uint32_t param, uint16_t command,uint8_t* package)
+{
+    uint16_t checksum;
+    package[0] = 0x55;
+    package[1] = 0xAA;
+    package[2] = 0x01;
+    package[3] = 0x00;
+    package[4] = param & 0xFF;
+    package[5] = (param >> 8) & 0xFF;
+    package[6] = (param >> 16) & 0xFF;
+    package[7] = (param >> 24) & 0xFF;
+    package[8] = command & 0xFF;
+    package[9] = (command >> 8) & 0xFF;
+    checksum = get_checksum(package, COMMAND_PACKET_LEN);
+    package[10] = (checksum)&0xFF;
+    package[11] = (checksum >> 8) & 0xFF;
+}
+// ----------------------------------------------------------------------------
+// Check answer from fingerprint module
+int rcv_ack(uint8_t* packet, int len,int timeout)
+{
+	uint16_t calc_checksum;
+	uint16_t recv_checksum;
+	touch_rcv(packet,len,timeout);
+	recv_checksum = packet[len - 2]  | packet[len - 1] << 8;
+	calc_checksum = get_checksum(packet,len);
+	if(recv_checksum != calc_checksum){
+		return 9;
+	}else if(packet[8] != ACK){
+		return 9;
+	}
+	return HAL_OK;
+}
+
+// ----------------------------------------------------------------------------
+/*
+ * Turn off LED 1
+ * Turn ON LED 1
+ */
+void touch_bakcklight(int value)
+{
+	create_command_package(value, CMOSLED_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+			//Error Handling
+			return;
+		}
+		if(value != 0){
+			//printf("Touch: Backlight ON");
+		}else{
+			//printf("Touch: Backlight OFF");
+		}
+}
+// ----------------------------------------------------------------------------
+// LED must be turn on for finger detection detection
+int touch_is_press_finger(){
+	create_command_package(1, ISPRESSFINGER_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+		//Error Handling
+		return -1;
+	}
+	if(response_packet[4] == 0 && response_packet[5] == 0 && response_packet[6] == 0 && response_packet[7] == 0){
+		//printf("Touch: Finger Press");
+		return 1;
+	}
+	//printf("Touch: No Finger Press");
+	return 0;
+}
+// ----------------------------------------------------------------------------
+int touch_delete_all_fingerprints(){
+	create_command_package(0, DELETEALL, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+		//Error Handling
+		return 9;
+	}
+}
+// ----------------------------------------------------------------------------
+void touch_enroll_start(int id){
+	//if poss > 200 no save mode
+	if(id >= 200){
+		id = -1;
+	}
+	create_command_package(id, ENROLLSTART_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+		//Error Handling
+		return;
+	}
+}
+// ----------------------------------------------------------------------------
+int touch_capture_finger(){
+	//Non zero argument to capture best image posible
+	create_command_package(1, CAPTUREFINGERPRINT_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK)
+	{
+		//Error Handling
+		return 9;
+	}
+	return 1;
+}
+// ----------------------------------------------------------------------------
+void touch_enroll_1(){
+	//Non zero argument to capture best image posible
+	create_command_package(1, ENROLL1_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+		//Error Handling
+		return;
+	}
+}
+// ----------------------------------------------------------------------------
+void touch_enroll_2(){
+	//Non zero argument to capture best image posible
+	create_command_package(1, ENROLL2_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+		//Error Handling
+		return;
+	}
+}
+// ----------------------------------------------------------------------------
+//if no save mode extra data would be sent
+void touch_enroll_3(int no_save_mode){
+	uint8_t* extra_data;
+	//Non zero argument to capture best image posible
+	create_command_package(1, ENROLL3_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK){
+		//Error Handling
+		return;
+	}
+	if(!no_save_mode){
+		return;
+	}
+	//TODO: Delete Magic Number
+	extra_data = (uint8_t*)malloc(498);
+	//TODO: Calc real accurate timeout
+	touch_rcv(extra_data,498,10000);
+	//TODO: Info handling
+	if(extra_data[1]){
+		//printf("s");
+	}
+	return;
+}
+// ----------------------------------------------------------------------------
+void touch_open(int verbose){
+	dev_info* extra_info =  (dev_info*)malloc(sizeof(dev_info));
+	if(!verbose){
+		create_command_package(0,1,command_packet);
+		touch_send(command_packet,COMMAND_PACKET_LEN);
+		if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK)
+		{
+			//Protocolo de errores
+			free(extra_info);
+			return;
+		}
+	}else{
+		create_command_package(0,1,command_packet);
+		touch_send(command_packet,COMMAND_PACKET_LEN);
+		if(rcv_ack(response_packet,REPONSE_PACKET_LEN,1000) != HAL_OK)
+		{
+			//Protocolo de errores
+			free(extra_info);
+			return;
+		}
+		touch_rcv((uint8_t*)extra_info,sizeof(dev_info),2000);
+	}
+}
+// ----------------------------------------------------------------------------
+int touch_enrolled_count(){
+	int ack_reponse_code;
+	//Non zero argument to capture best image posible
+	create_command_package(0, ENROLLMENTCOUNT_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
+	switch(ack_reponse_code)
+	{
+		case HAL_OK:
+			return 1;
+		case 9:
+			return 0;
+		default:
+			return -1;
+	}
+}
+// ----------------------------------------------------------------------------
+/*
+ * return ID, if found.
+ * return 0, if no matches.
+ */
+int identify(void)
+{
+	// 1. Finger is presed?
+	int touch_is_press_finger_status = touch_is_press_finger();
+	if(touch_is_press_finger_status == 1)        // Work OK
+	{
+		// 2. Capture finger
+		int touch_capture_finger_status = touch_capture_finger();
+		if(touch_capture_finger_status == 1)
+		{
+			// 3
+			int ack_reponse_code;
+			create_command_package(0, IDENTIFY, command_packet);
+			touch_send(command_packet,COMMAND_PACKET_LEN);
+			ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
+
+			int ID = 0;
+			switch(ack_reponse_code)
+			{
+					case HAL_OK:
+						ID = response_packet[4];
+						// BUG:
+						// sometimes fingerprint module can return '9' if touch unknown finger.
+//						if(ID ==  9)
+//						{
+//							int l = 9999;
+//						}
+						return ID;
+					case 9:
+						return 0;
+					default:
+						return -1;
+			}
+		}
+	}
+}
+// ----------------------------------------------------------------------------
+
+
+////////////// MAIN FUNCTIONS //////////////////////////
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+void wait_for_finger() {
+	while (touch_is_press_finger() == 0) {
+		HAL_Delay(100);
+	}
+}
+// ----------------------------------------------------------------------------
+void wait_for_finger_release() {
+	while (touch_is_press_finger() == 1) {
+		HAL_Delay(100);
+	}
+}
+// ----------------------------------------------------------------------------
+void identification_enroll_user(int id_set)
+{
+	char str_fingerprint[30]={0};
+	// ADD MESSEGES AND FERIFY
+
+	touch_enroll_start(id_set);
+	wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_1();
+	wait_for_finger_release();			// Забрати палець
+	wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_2();
+	wait_for_finger_release();			// Забрати палець
+	wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_3(0);
+	wait_for_finger_release();			// Забрати палець
+
+	touch_check_enrolled(id_set);
+	if(touch_check_enrolled(id_set) == HAL_OK )
+	{
+		//id set OK
+	}
+	else
+	{
+		// PROBLEM tru second time, or EXIT from where
+	}
+}
+
+// ----------------------------------------------------------------------------
+// MY Entoles functions
+// ----------------------------------------------------------------------------
+void my_wait_for_finger() {
+	while (touch_is_press_finger() == 0) {
+		HAL_Delay(100);
+		print_text_on_OLED(0, 4, true, "Put finger...");
+	}
+	claen_oled_lines(false, false, false, true, false);
+}
+// ----------------------------------------------------------------------------
+void my_wait_for_finger_release() {
+	while (touch_is_press_finger() == 1) {
+		HAL_Delay(100);
+		print_text_on_OLED(0, 4, true, "Release finger...");
+	}
+	claen_oled_lines(false, false, false, true, false);
+}
+void my_identification_enroll_user(int id_set)
+{
+	print_text_on_OLED(0, 3, true, "Enrolling ...");
+
+	touch_enroll_start(id_set);
+	my_wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_1();
+	my_wait_for_finger_release();			// Забрати палець
+	my_wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_2();
+	my_wait_for_finger_release();			// Забрати палець
+	my_wait_for_finger();
+	touch_capture_finger();
+	touch_enroll_3(0);
+	my_wait_for_finger_release();			// Забрати палець
+
+	touch_check_enrolled(id_set);
+
+	claen_oled_lines(false, false, false, true, false);
+
+	if(touch_check_enrolled(id_set) == 1 )
+	{
+		print_text_on_OLED(0, 3, true, "Enrolled OK");
+		HAL_Delay(2000);
+		claen_oled_lines(false, false, true, true, false);
+	}
+	else
+	{
+		// PROBLEM tru second time, or EXIT from where
+		print_text_on_OLED(0, 3, true, "Enrolled ERROR");
+	}
+}
+
+
+// ----------------------------------------------------------------------------
+/* Check if ID used or no.
+ * return HAL_OK if used.
+ * return HAL_OK if not used.
+ */
+int touch_check_enrolled(int id){
+	int ack_reponse_code;
+	//Non zero argument to capture best image posible
+	create_command_package(id, CHECKENROLLMENT_CMD, command_packet);
+	touch_send(command_packet,COMMAND_PACKET_LEN);
+	ack_reponse_code = rcv_ack(response_packet,REPONSE_PACKET_LEN,1000);
+	switch(ack_reponse_code){
+		case 0:
+			return 1;
+		case 9:       // Error
+			return 0;
+		default:
+			return -1;
+	}
+}
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
