@@ -1274,6 +1274,7 @@ int gsm_mode(char sign)
 //					memset(str_gsm, 0 , sizeof(str_gsm));
 					print_text_on_OLED(0, 2, false, "1.CALL to me");
 
+
 //					sprintf(str_gsm,"%s", "2.CALL on number");
 //					ssd1306_SetCursor(00, 26);
 //					ssd1306_WriteString(str_gsm, Font_7x10, White);
