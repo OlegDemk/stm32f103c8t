@@ -1,26 +1,105 @@
-16:15:53 **** Incremental Build of configuration Debug for project Castom_board ****
+00:45:07 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/Fingerprint_sensor_GT511C3.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Fingerprint_sensor_GT511C3.d" -MT"Core/Src/Fingerprint_sensor_GT511C3.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Fingerprint_sensor_GT511C3.o"
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identification_enroll_user':
-../Core/Src/Fingerprint_sensor_GT511C3.c:339:2: warning: implicit declaration of function 'touch_check_enrolled'; did you mean 'touch_enroll_3'? [-Wimplicit-function-declaration]
-  touch_check_enrolled(id_set);
-  ^~~~~~~~~~~~~~~~~~~~
-  touch_enroll_3
-../Core/Src/Fingerprint_sensor_GT511C3.c:322:7: warning: unused variable 'str_fingerprint' [-Wunused-variable]
-  char str_fingerprint[30]={0};
-       ^~~~~~~~~~~~~~~
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_delete_all_fingerprints':
-../Core/Src/Fingerprint_sensor_GT511C3.c:149:1: warning: control reaches end of non-void function [-Wreturn-type]
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:53:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
+ extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
+        ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:195:5: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
+     I2C_1_scaner();
+     ^~~~~~~~~~~~
+../Core/Src/main.c:279:2: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
+  touch_bakcklight(0);           // Turn off Fingerprint modeul LED
+  ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1119:7: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+       if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
+       ^~
+../Core/Src/main.c:1120:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+       {
+       ^
+../Core/Src/main.c:1212:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1047:10: warning: unused variable 'print_oled_status' [-Wunused-variable]
+      int print_oled_status = 0;
+          ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1045:11: warning: unused variable 'first_time_after_call' [-Wunused-variable]
+      bool first_time_after_call = false;
+           ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1278:2: warning: implicit declaration of function 'touch_open'; did you mean 'funopen'? [-Wimplicit-function-declaration]
+  touch_open(0);
+  ^~~~~~~~~~
+  funopen
+../Core/Src/main.c:1321:10: warning: implicit declaration of function 'my_identification_enroll_user' [-Wimplicit-function-declaration]
+          my_identification_enroll_user(ID_set);
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1335:10: warning: implicit declaration of function 'touch_delete_all_fingerprints' [-Wimplicit-function-declaration]
+          touch_delete_all_fingerprints();
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1354:18: warning: implicit declaration of function 'identify' [-Wimplicit-function-declaration]
+             ID = identify();
+                  ^~~~~~~~
+../Core/Src/main.c:1359:14: warning: implicit declaration of function 'servo_motor' [-Wimplicit-function-declaration]
+              servo_motor(true);
+              ^~~~~~~~~~~
+../Core/Src/main.c:1399:19: warning: unused variable 'find_flag' [-Wunused-variable]
+              bool find_flag = true;
+                   ^~~~~~~~~
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1455:8: warning: unused variable 'str_sensors' [-Wunused-variable]
+   char str_sensors[50]={0};
+        ^~~~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1589:6: warning: conflicting types for 'show_sratus_call'
+ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1212:6: note: previous implicit declaration of 'show_sratus_call' was here
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'set_ID_number':
+../Core/Src/main.c:1652:7: warning: unused variable 'entered_number_status' [-Wunused-variable]
+  bool entered_number_status = false;
+       ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1651:7: warning: unused variable 'sing_number' [-Wunused-variable]
+  char sing_number = 0;
+       ^~~~~~~~~~~
+../Core/Src/main.c: In function 'enter_a_mobile_number':
+../Core/Src/main.c:1673:7: warning: unused variable 'str' [-Wunused-variable]
+  char str[30] = {0};
+       ^~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1736:6: warning: conflicting types for 'servo_motor'
+ void servo_motor(bool status)
+      ^~~~~~~~~~~
+../Core/Src/main.c:1359:14: note: previous implicit declaration of 'servo_motor' was here
+              servo_motor(true);
+              ^~~~~~~~~~~
+../Core/Src/main.c: In function 'gps_mode':
+../Core/Src/main.c:1012:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identify':
-../Core/Src/Fingerprint_sensor_GT511C3.c:300:1: warning: control reaches end of non-void function [-Wreturn-type]
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1261:1: warning: control reaches end of non-void function [-Wreturn-type]
  }
  ^
-../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_rcv':
-../Core/Src/Fingerprint_sensor_GT511C3.c:52:4: warning: 'rtn' is used uninitialized in this function [-Wuninitialized]
-  if(rtn != HAL_OK)
-    ^
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1445:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1585:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+In file included from ../Core/Src/main.c:40:0:
+At top level:
+../Core/Inc/Fingerprint_sensor_GT511C3.h:38:16: warning: 'response_packet' defined but not used [-Wunused-variable]
+ static uint8_t response_packet[12];
+                ^~~~~~~~~~~~~~~
+../Core/Inc/Fingerprint_sensor_GT511C3.h:37:16: warning: 'command_packet' defined but not used [-Wunused-variable]
+ static uint8_t command_packet[12];
+                ^~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Castom_board.elf
  
@@ -28,24 +107,10 @@ arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
 arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  58772	    584	   3952	  63308	   f74c	Castom_board.elf
+  58732	    584	   3968	  63284	   f734	Castom_board.elf
 Finished building: default.size.stdout
 Finished building: Castom_board.bin
  
  
 Finished building: Castom_board.list
- 
-16:15:59 **** Incremental Build of configuration Debug for project Castom_board ****
-make -j8 all 
-arm-none-eabi-size   Castom_board.elf 
-   text	   data	    bss	    dec	    hex	filename
-  58772	    584	   3952	  63308	   f74c	Castom_board.elf
-Finished building: default.size.stdout
- 
-16:16:52 **** Incremental Build of configuration Debug for project Castom_board ****
-make -j8 all 
-arm-none-eabi-size   Castom_board.elf 
-   text	   data	    bss	    dec	    hex	filename
-  58772	    584	   3952	  63308	   f74c	Castom_board.elf
-Finished building: default.size.stdout
  

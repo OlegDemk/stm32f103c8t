@@ -104,9 +104,12 @@ bool INCOMMING_RING_OR_SMS_STATUS = false;   // It status toggle in extern inter
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
+
 SPI_HandleTypeDef hspi2;
+
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
@@ -124,20 +127,21 @@ DMA_HandleTypeDef hdma_usart3_rx;
 #endif
 // ----------------------------------------------------------------------------
 
-uint8_t interrupt_flag = 0;
+//uint8_t interrupt_flag = 0;
 
 /* USER CODE END PV */
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_TIM2_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 
@@ -176,14 +180,16 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_TIM2_Init();
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_SPI2_Init();
   MX_TIM1_Init();
   MX_USART2_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+
+//  HAL_Delay(5000);
 
 	#if I2C_SCANNER
   		I2C_1_scaner();
@@ -203,8 +209,16 @@ int main(void)
   		HAL_UART_Receive_DMA(&huart3, GPS_buff, 512);
 	#endif
 
-  	HAL_TIM_Base_Start_IT(&htim2);
+  		//
+  	//HAL_TIM_Base_Start_IT(&htim2);
 
+
+  	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+//  	HAL_Delay(1);
+//  	servo_motor(false);
+  	//HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+
+  	///////////////////////////////////////////////////////////////////
   	// Turn on interrupt, if in RX buffer are one byte
   	// Register CR1-> RXNEIE
   	__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
@@ -216,6 +230,9 @@ int main(void)
 
   	// Test led
   	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+
+
+  	//HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
 
 
   #if SOUND
@@ -248,6 +265,10 @@ int main(void)
 
 while (1)
 {
+	//HAL_Delay(2000);
+	//servo_motor(true);
+	//TIM2->CCR1 = 25;
+	//HAL_Delay(2000);
 	//test_function(); 				// TEST FUNCTUION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 	//test_flash_W25Q();
@@ -506,16 +527,17 @@ static void MX_TIM2_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 1440;
+  htim2.Init.Prescaler = 7199;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 50000;
+  htim2.Init.Period = 200;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -525,15 +547,28 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 25;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
+  HAL_TIM_MspPostInit(&htim2);
 
 }
 
@@ -730,8 +765,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
         if(htim->Instance == TIM2) 				//check if the interrupt comes from TIM2
         {
-        	//read_T_and_H_SI7021();
-        	interrupt_flag = 1;
+//        	//read_T_and_H_SI7021();
+//        	interrupt_flag = 1;
+
         }
 }
 // ----------------------------------------------------------------------------
@@ -1317,6 +1353,21 @@ int fingerprint_mode(char sign)
 	        	 	char ID = 0;
 	        	 	ID = identify();
 
+	        	 	// servo part
+	        	 	if(ID == '1')
+	        	 	{
+	        	 		servo_motor(true);
+	        	 		claen_oled_lines(false, false, false, false, true);
+	        	 		print_text_on_OLED(50, 5, true, "OPEN");
+	        	 		//HAL_Delay(500);
+	        	 	}
+	        	 	else
+	        	 	{
+	        	 		servo_motor(false);
+	        	 		print_text_on_OLED(50, 5, true, "CLOCE");
+	        	 	}
+	        	 	//
+
 	        	 	if(ID == 0)														// If no any ID
 	        	 	{
 	        	 		// Make blinky
@@ -1682,7 +1733,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 }
 // ----------------------------------------------------------------------------
-
+void servo_motor(bool status)
+{
+	if(status == false)		// Close servo
+	{
+		TIM2->CCR1 = 25;
+	}
+	if(status == true)		// Open servo
+	{
+		TIM2->CCR1 = 15;
+	}
+}
 
 
 
