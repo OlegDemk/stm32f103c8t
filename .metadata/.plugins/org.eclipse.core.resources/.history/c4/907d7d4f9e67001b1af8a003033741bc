@@ -74,7 +74,6 @@ int sensors_mode(char sign);
 void clearing_buffer(char *array, int size);
 
 char set_ID_number(void);
-void servo_motor(bool status);
 //void gps_mode(char sign);
 
 uint8_t GPS_buff[512];      						// main buffer for stream from GPS

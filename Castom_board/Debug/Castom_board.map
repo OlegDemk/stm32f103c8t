@@ -5833,7 +5833,7 @@ LOAD /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_
                 0x00000000200002c8                INCOMMING_RING_OR_SMS_STATUS
  .bss.flag      0x00000000200002c9        0x1 Core/Src/main.o
                 0x00000000200002c9                flag
- .bss.triger.8541
+ .bss.triger.8540
                 0x00000000200002ca        0x1 Core/Src/main.o
  *fill*         0x00000000200002cb        0x1 
  .bss.SSD1306_Buffer
@@ -6068,7 +6068,7 @@ LOAD /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_
                 0x0000000000000d74       0x1d /home/odemki/Programs/programs/STM32IDE/1/en.en-st-stm32cubeide_1-5-0_8698_20201117_1050_amd64_sh/makeself_dir_5QpOGP/y/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.linux64_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7-m/crtn.o
 OUTPUT(Castom_board.elf elf32-littlearm)
 
-.debug_info     0x0000000000000000    0x1a088
+.debug_info     0x0000000000000000    0x1a050
  .debug_info    0x0000000000000000     0x16ed Core/Src/Fingerprint_sensor_GT511C3.o
  .debug_info    0x00000000000016ed     0x147e Core/Src/GPS_NEO_6M.o
  .debug_info    0x0000000000002b6b     0x17d8 Core/Src/GSM_IOT_GA6.o
@@ -6076,24 +6076,24 @@ OUTPUT(Castom_board.elf elf32-littlearm)
  .debug_info    0x0000000000005393      0xd21 Core/Src/Si7021_driver.o
  .debug_info    0x00000000000060b4      0x282 Core/Src/fonts.o
  .debug_info    0x0000000000006336     0x11eb Core/Src/i2c_scaner.o
- .debug_info    0x0000000000007521     0x2818 Core/Src/main.o
- .debug_info    0x0000000000009d39     0x1597 Core/Src/oled_ssd1306.o
- .debug_info    0x000000000000b2d0      0x8cb Core/Src/ssd1306.o
- .debug_info    0x000000000000bb9b     0x154c Core/Src/stm32f1xx_hal_msp.o
- .debug_info    0x000000000000d0e7     0x10bc Core/Src/stm32f1xx_it.o
- .debug_info    0x000000000000e1a3      0x985 Core/Src/sysmem.o
- .debug_info    0x000000000000eb28      0x43e Core/Src/system_stm32f1xx.o
- .debug_info    0x000000000000ef66       0x22 Core/Startup/startup_stm32f103c8tx.o
- .debug_info    0x000000000000ef88      0x714 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
- .debug_info    0x000000000000f69c      0xb51 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
- .debug_info    0x00000000000101ed      0x7b1 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
- .debug_info    0x000000000001099e      0x69b Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o
- .debug_info    0x0000000000011039     0x2555 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o
- .debug_info    0x000000000001358e      0x80f Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
- .debug_info    0x0000000000013d9d     0x1572 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o
- .debug_info    0x000000000001530f     0x27ef Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o
- .debug_info    0x0000000000017afe     0x136f Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o
- .debug_info    0x0000000000018e6d     0x121b Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
+ .debug_info    0x0000000000007521     0x27e0 Core/Src/main.o
+ .debug_info    0x0000000000009d01     0x1597 Core/Src/oled_ssd1306.o
+ .debug_info    0x000000000000b298      0x8cb Core/Src/ssd1306.o
+ .debug_info    0x000000000000bb63     0x154c Core/Src/stm32f1xx_hal_msp.o
+ .debug_info    0x000000000000d0af     0x10bc Core/Src/stm32f1xx_it.o
+ .debug_info    0x000000000000e16b      0x985 Core/Src/sysmem.o
+ .debug_info    0x000000000000eaf0      0x43e Core/Src/system_stm32f1xx.o
+ .debug_info    0x000000000000ef2e       0x22 Core/Startup/startup_stm32f103c8tx.o
+ .debug_info    0x000000000000ef50      0x714 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
+ .debug_info    0x000000000000f664      0xb51 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
+ .debug_info    0x00000000000101b5      0x7b1 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
+ .debug_info    0x0000000000010966      0x69b Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o
+ .debug_info    0x0000000000011001     0x2555 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o
+ .debug_info    0x0000000000013556      0x80f Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
+ .debug_info    0x0000000000013d65     0x1572 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o
+ .debug_info    0x00000000000152d7     0x27ef Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o
+ .debug_info    0x0000000000017ac6     0x136f Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o
+ .debug_info    0x0000000000018e35     0x121b Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
 
 .debug_abbrev   0x0000000000000000     0x3476
  .debug_abbrev  0x0000000000000000      0x332 Core/Src/Fingerprint_sensor_GT511C3.o
