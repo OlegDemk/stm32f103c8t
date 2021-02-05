@@ -1,0 +1,220 @@
+/*
+ * Flash_W25Q.c
+ *
+ *  Created on: Sep 26, 2020
+ *      Author: odemki
+ */
+#include "stdio.h"
+#include "stm32f1xx_hal.h"
+
+#define YES 1
+#define NO 0
+#define USE_DRIVER_w25qxx
+#define USE_DRIVER_w25qxx NO
+
+#if (USE_DRIVER_w25qxx == YES)
+	#include "w25qxx.h"			// Driver
+#endif
+
+extern UART_HandleTypeDef huart1;
+
+#if (USE_DRIVER_w25qxx != YES)
+	extern UART_HandleTypeDef hspi2;
+
+	typedef struct
+	{
+	  uint16_t  PageSize;
+	  uint32_t  PageCount;
+	  uint32_t  SectorSize;
+	  uint32_t  SectorCount;
+	  uint32_t  BlockSize;
+	  uint32_t  BlockCount;
+	  uint32_t  NumKB;
+	  uint8_t   SR1;
+	  uint8_t   SR2;
+	  uint8_t   SR3;
+	}w25_info_t;
+	w25_info_t  w25_info;
+
+	// Define for reset
+	#define w24_ENABLE_RESET 			0x66
+	#define w24_RESET 					0x99
+	#define w25_READ					0x03
+	#define	w25_GET_JEDEC_ID			0x9F
+	// Define for CS
+	#define cs_set()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+	#define cs_reset()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+
+	uint8_t rx_buf[1025];
+	uint8_t tx_buf[10];
+#endif
+
+
+// ----------------------------------------------------------------------------
+void SPI1_Send(uint8_t *dt, uint16_t cnt)
+{
+	HAL_SPI_Transmit(&hspi2, dt, cnt, 5000);
+}
+// ----------------------------------------------------------------------------
+void SPI1_Recv(uint8_t *dt, uint16_t cnt)
+{
+	HAL_SPI_Receive(&hspi2, dt, cnt, 5000);
+}
+// ----------------------------------------------------------------------------
+void W25_Reset(void)
+{
+	cs_set();
+	tx_buf[0] = w24_ENABLE_RESET;
+	tx_buf[1] = w24_RESET;
+	SPI1_Send(tx_buf, 2);
+	cs_reset();
+}
+// ----------------------------------------------------------------------------
+void w25_Read_Data(uint32_t addr, uint8_t* data, uint32_t sz)
+{
+	cs_set();
+	tx_buf[0] = w25_READ;
+	tx_buf[1] =	(addr >>16) & 0xFF;
+	tx_buf[2] = (addr >> 8) & 0xFF;
+	tx_buf[3] = addr & 0xFF;
+	SPI1_Send(tx_buf, 4);
+	SPI1_Recv(data, sz);
+	cs_reset();
+}
+// ----------------------------------------------------------------------------
+uint32_t w25_Read_ID(void)
+{
+	uint8_t dt[4];
+	tx_buf[0] = w25_GET_JEDEC_ID;
+	cs_set();
+	SPI1_Send(tx_buf, 1);
+	SPI1_Recv(dt, 3);
+	cs_reset();
+	return ((dt[0] << 16) | (dt[1] << 8) | dt[2]);
+}
+// ----------------------------------------------------------------------------
+void w25_Ini(void)
+{
+	HAL_Delay(100);
+	W25_Reset();
+	HAL_Delay(100);
+
+	unsigned int id = w25_Read_ID();
+	unsigned int id_m = id & 0x0000FFFF;
+	if(id_m == 0x4018)
+	{
+		// 	w25q128
+		w25_info.BlockCount = 256;
+	}
+
+	int test = 8888;
+
+
+}
+// ----------------------------------------------------------------------------
+
+
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+//void flash_W25Q(void)
+//{
+//	W25_Reset();
+//	w25_Ini();
+//}
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+// ----------------------------------------------------------------------------
+// Work
+void test_flash_W25Q(void)
+{
+//	uint8_t init=0;
+//	init = W25qxx_Init();
+//
+//	uint32_t id=0;
+//	id = W25qxx_ReadID();
+//
+//	uint8_t test_variable = 1;
+//	uint8_t uint8_t_test_buffer = 0;
+//
+//	uint16_t i = 0;
+//
+//	//W25qxx_EraseChip();
+//	W25qxx_EraseSector();
+//
+//	W25qxx_WriteByte(test_variable, 0);					// Write one byte
+//	HAL_Delay(20);
+//	W25qxx_ReadByte(&uint8_t_test_buffer, 0);           // Read one byte
+
+
+
+
+
+//
+//	uint8_t size=0;
+//	char str[100]={0};
+//	uint8_t size_mas=sizeof(str);
+//	sprintf(str,"Data: %d \r\n ", uint8_t_test_buffer );
+//	size=sizeof(str);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
+
+///////////////////////////////////////////////////////////////////////////////
+//	for(i=0; i<10; i++)
+//	{
+//		W25qxx_WriteByte(test_variable, i);					// Write one byte
+//		HAL_Delay(1);
+//	}
+//
+//	for(i=0; i<10; i++)
+//	{
+//		W25qxx_ReadByte(&uint8_t_test_buffer, i);           // Read one byte
+//
+//		uint8_t size=0;
+//		char str[100]={0};
+//		uint8_t size_mas=sizeof(str);
+//		sprintf(str,"Data: i=%d, %d \r\n ", i, uint8_t_test_buffer );
+//		size=sizeof(str);
+//		HAL_UART_Transmit(&huart1 , (uint8_t *)str, size, 0xFFFF);
+//	}
+
+
+
+	int g=0;
+
+}
+// ----------------------------------------------------------------------------
+//uint8_t size=0;
+//	char str3[100]={0};
+//	uint8_t size_mas=sizeof(str3);
+//	uint8_t i=0;
+//	sprintf(str3,"I2C_1 SEARCH DEVISES... \r\n");      										// convert   in  str
+//	size=sizeof(str3);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);

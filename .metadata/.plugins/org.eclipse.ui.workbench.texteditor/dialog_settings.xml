@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="\0"/>
+		<item key="selection" value="buzzer_fricvency_setings"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="\0"/>
-			<item value="/0"/>
-			<item value="fingerprint_mode"/>
-			<item value="identify"/>
-			<item value="identification_enroll_user"/>
-			<item value="touch_enroll_start"/>
-			<item value="touch_delete_all_fingerprints"/>
-			<item value="identification_check"/>
-			<item value="IDENTIFY"/>
-			<item value="touch_capture_finger"/>
-			<item value="CAPTUREFINGERPRINT_CMD"/>
-			<item value="CAPTUREFINGER"/>
-			<item value="ISPRESSFINGER_CMD"/>
-			<item value="0x26"/>
+			<item value="buzzer_fricvency_setings"/>
+			<item value="htim2"/>
+			<item value="huart2"/>
+			<item value="interrupt_flag"/>
+			<item value="HAL_TIM_PeriodElapsedCallback"/>
+			<item value="htim1"/>
+			<item value="tim"/>
+			<item value="rcv_ack"/>
 			<item value="touch_check_enrolled"/>
+			<item value="CALL END"/>
+			<item value="write_data_in_buffer"/>
+			<item value="hag"/>
+			<item value="print_GPS_data"/>
+			<item value="printf"/>
+			<item value="finger_print_test_function"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="0"/>
-		<item key="DIALOG_Y_ORIGIN" value="438"/>
+		<item key="DIALOG_X_ORIGIN" value="981"/>
+		<item key="DIALOG_Y_ORIGIN" value="295"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
