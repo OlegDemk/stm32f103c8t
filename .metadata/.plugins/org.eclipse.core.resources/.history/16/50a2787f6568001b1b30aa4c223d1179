@@ -105,8 +105,6 @@ void w25_Read_Page(uint8_t* data, uint32_t page_addr, uint32_t offset, uint32_t 
 		cs_set();
 		SPI1_Send(tx_buf, 5);
 	}
-	SPI1_Recv(data, sz);
-	cs_reset();
 }
 // ----------------------------------------------------------------------------
 void w25_Read_Data(uint32_t addr, uint8_t* data, uint32_t sz)
@@ -175,15 +173,6 @@ void w25_Ini(void)
 	w25_info.PageCount=(w25_info.SectorCount*w25_info.SectorSize)/w25_info.PageSize;
 	w25_info.BlockSize=w25_info.SectorSize*16;
 	w25_info.NumKB=(w25_info.SectorCount*w25_info.SectorSize)/1024;
-
-	// Test data data from Flash
-	for(uint8_t k = 0; k<4; k++)
-	{
-		w25_Read_Page(rx_buf, k, 0, 256);
-	}
-
-	int gggg = 999;
-
 }
 // ----------------------------------------------------------------------------
 

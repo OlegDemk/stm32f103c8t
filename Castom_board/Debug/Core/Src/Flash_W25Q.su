@@ -1,7 +1,8 @@
-Flash_W25Q.c:54:6:SPI1_Send	16	static
-Flash_W25Q.c:59:6:SPI1_Recv	16	static
-Flash_W25Q.c:64:6:W25_Reset	8	static
-Flash_W25Q.c:73:6:w25_Read_Data	24	static
-Flash_W25Q.c:85:10:w25_Read_ID	16	static
-Flash_W25Q.c:96:6:w25_Ini	24	static
-Flash_W25Q.c:169:6:test_flash_W25Q	16	static
+Flash_W25Q.c:58:6:SPI1_Send	16	static
+Flash_W25Q.c:63:6:SPI1_Recv	16	static
+Flash_W25Q.c:68:6:W25_Reset	8	static
+Flash_W25Q.c:77:6:w25_Read_Page	24	static
+Flash_W25Q.c:112:6:w25_Read_Data	24	static
+Flash_W25Q.c:124:10:w25_Read_ID	16	static
+Flash_W25Q.c:135:6:w25_Ini	24	static
+Flash_W25Q.c:231:6:test_flash_W25Q	16	static

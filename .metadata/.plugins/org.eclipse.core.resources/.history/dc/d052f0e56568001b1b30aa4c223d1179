@@ -176,13 +176,10 @@ void w25_Ini(void)
 	w25_info.BlockSize=w25_info.SectorSize*16;
 	w25_info.NumKB=(w25_info.SectorCount*w25_info.SectorSize)/1024;
 
-	// Test data data from Flash
 	for(uint8_t k = 0; k<4; k++)
 	{
 		w25_Read_Page(rx_buf, k, 0, 256);
 	}
-
-	int gggg = 999;
 
 }
 // ----------------------------------------------------------------------------

@@ -41,7 +41,6 @@ extern UART_HandleTypeDef huart1;
 	#define w24_ENABLE_RESET 			0x66
 	#define w24_RESET 					0x99
 	#define w25_READ					0x03
-	#define	w25_FAST_READ				0x0B
 	#define	w25_GET_JEDEC_ID			0x9F
 	// Define for CS
 	#define cs_set()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
@@ -85,28 +84,7 @@ void w25_Read_Page(uint8_t* data, uint32_t page_addr, uint32_t offset, uint32_t 
 		sz = w25_info.PageSize - offset;
 	}
 	page_addr = page_addr * w25_info.PageSize + offset;
-	tx_buf[0] = w25_FAST_READ;
-	if(w25_info.high_cap)
-	{
-		tx_buf[1] = (page_addr >> 24) & 0xFF;
-		tx_buf[2] = (page_addr >> 16) & 0xFF;
-		tx_buf[3] =	(page_addr >> 8) & 0xFF;
-		tx_buf[4] = page_addr & 0xFF;
-		tx_buf[5] = 0;
-		cs_set();
-		SPI1_Send(tx_buf, 6);
-	}
-	else
-	{
-		tx_buf[1] = (page_addr >> 16) & 0xFF;
-		tx_buf[2] = (page_addr >> 8) & 0xFF;
-		tx_buf[3] = page_addr & 0xFF;
-		tx_buf[4] = 0;
-		cs_set();
-		SPI1_Send(tx_buf, 5);
-	}
-	SPI1_Recv(data, sz);
-	cs_reset();
+
 }
 // ----------------------------------------------------------------------------
 void w25_Read_Data(uint32_t addr, uint8_t* data, uint32_t sz)
@@ -146,19 +124,74 @@ void w25_Ini(void)
 	switch(id & 0x0000FFFF)
 	{
 		case 0x401A:	// 	w25q512
-			w25_info.high_cap = 1;
 			w25_info.BlockCount = 1024;
 		break;
 
 		case 0x4019:	// 	w25q256
-			w25_info.high_cap = 1;
 			w25_info.BlockCount = 512;
 		break;
 
-		case 0x4018:	// 	w25q128
-			w25_info.BlockCount = 256;
-		break;
+			case 0x4018:	// 	w25q128
+				w25_info.BlockCount = 256;
+			break;
+				w25_info.BlockCount = 128;
+			break;
 
+			case 0x4016:	//	w25q32
+				w25_info.BlockCount = 64;
+			break;
+
+			case 0x4015:	//	w25q16
+				w25_info.BlockCount = 32;
+			break;
+
+			case 0x4014:	//	w25q80
+				w25_info.BlockCount = 16;
+			break;
+
+			case 0x4013:	//	w25q40
+				w25_info.BlockCount = 8;
+			break;
+
+			case 0x4012:	//	w25q20
+				w25_info.BlockCount = 4;
+			break;
+
+			case 0x4011:	//	w25q10
+				w25_info.BlockCount = 2;
+			break;
+
+			case 0x3017:	//	w25x64
+				w25_info.BlockCount = 128;
+			break;
+
+			case 0x3016:	//	w25x32
+				w25_info.BlockCount = 64;
+			break;
+
+			case 0x3015:	//	w25q16
+				w25_info.BlockCount = 32;
+			break;
+
+			case 0x3014:	//	w25x80
+				w25_info.BlockCount = 16;
+			break;
+
+			case 0x3013:	//	w25x40
+				w25_info.BlockCount = 8;
+			break;
+
+			case 0x3012:	//	w25x20
+				w25_info.BlockCount = 4;
+			break;
+
+			case 0x3011:	//	w25x10
+				w25_info.BlockCount = 2;
+			break;
+
+			default:
+				w25_info.Lock = 0;
+				return 0;
 		}
 //	if(id_m != 0x4018)
 //	{
@@ -175,15 +208,6 @@ void w25_Ini(void)
 	w25_info.PageCount=(w25_info.SectorCount*w25_info.SectorSize)/w25_info.PageSize;
 	w25_info.BlockSize=w25_info.SectorSize*16;
 	w25_info.NumKB=(w25_info.SectorCount*w25_info.SectorSize)/1024;
-
-	// Test data data from Flash
-	for(uint8_t k = 0; k<4; k++)
-	{
-		w25_Read_Page(rx_buf, k, 0, 256);
-	}
-
-	int gggg = 999;
-
 }
 // ----------------------------------------------------------------------------
 
