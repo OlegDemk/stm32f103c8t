@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -188,6 +189,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   MX_TIM2_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 
 //  HAL_Delay(5000);
@@ -266,9 +268,9 @@ int main(void)
 
 while (1)
 {
-	//test_flash_W25Q();
+	test_flash_W25Q();
 	//flash_W25Q();
-	w25_Ini();
+	//w25_Ini();
 
 	//HAL_Delay(2000);
 	//servo_motor(true);

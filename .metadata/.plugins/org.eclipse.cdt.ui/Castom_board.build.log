@@ -1,54 +1,10 @@
-12:29:46 **** Incremental Build of configuration Debug for project Castom_board ****
+16:18:43 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/Flash_W25Q.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Flash_W25Q.d" -MT"Core/Src/Flash_W25Q.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Flash_W25Q.o"
-../Core/Src/Flash_W25Q.c:13:0: warning: "USE_DRIVER_w25qxx" redefined
- #define USE_DRIVER_w25qxx NO
- 
-../Core/Src/Flash_W25Q.c:12:0: note: this is the location of the previous definition
- #define USE_DRIVER_w25qxx
- 
-../Core/Src/Flash_W25Q.c: In function 'SPI1_Send':
-../Core/Src/Flash_W25Q.c:60:19: warning: passing argument 1 of 'HAL_SPI_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
-  HAL_SPI_Transmit(&hspi2, dt, cnt, 5000);
-                   ^
-In file included from ../Core/Inc/stm32f1xx_hal_conf.h:329:0,
-                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
-                 from ../Core/Src/Flash_W25Q.c:8:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:671:19: note: expected 'SPI_HandleTypeDef * {aka struct __SPI_HandleTypeDef *}' but argument is of type 'UART_HandleTypeDef * {aka struct __UART_HandleTypeDef *}'
- HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-                   ^~~~~~~~~~~~~~~~
-../Core/Src/Flash_W25Q.c: In function 'SPI1_Recv':
-../Core/Src/Flash_W25Q.c:65:18: warning: passing argument 1 of 'HAL_SPI_Receive' from incompatible pointer type [-Wincompatible-pointer-types]
-  HAL_SPI_Receive(&hspi2, dt, cnt, 5000);
-                  ^
-In file included from ../Core/Inc/stm32f1xx_hal_conf.h:329:0,
-                 from ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:30,
-                 from ../Core/Src/Flash_W25Q.c:8:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:672:19: note: expected 'SPI_HandleTypeDef * {aka struct __SPI_HandleTypeDef *}' but argument is of type 'UART_HandleTypeDef * {aka struct __UART_HandleTypeDef *}'
- HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
-                   ^~~~~~~~~~~~~~~
-../Core/Src/Flash_W25Q.c: In function 'w25_Ini':
-../Core/Src/Flash_W25Q.c:185:6: warning: unused variable 'gggg' [-Wunused-variable]
-  int gggg = 999;
-      ^~~~
-../Core/Src/Flash_W25Q.c: In function 'test_flash_W25Q':
-../Core/Src/Flash_W25Q.c:284:6: warning: unused variable 'g' [-Wunused-variable]
-  int g=0;
-      ^
-arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Castom_board.elf
- 
-arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
-arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  61980	    584	   5040	  67604	  10814	Castom_board.elf
+  63700	    604	   5148	  69452	  10f4c	Castom_board.elf
 Finished building: default.size.stdout
-Finished building: Castom_board.bin
- 
- 
-Finished building: Castom_board.list
  
 
-12:29:48 Build Finished. 0 errors, 5 warnings. (took 1s.663ms)
+16:18:44 Build Finished. 0 errors, 0 warnings. (took 595ms)
 

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="buzzer_fricvency_setings"/>
+		<item key="selection" value="Page"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="buzzer_fricvency_setings"/>
-			<item value="htim2"/>
-			<item value="huart2"/>
-			<item value="interrupt_flag"/>
-			<item value="HAL_TIM_PeriodElapsedCallback"/>
-			<item value="htim1"/>
-			<item value="tim"/>
-			<item value="rcv_ack"/>
-			<item value="touch_check_enrolled"/>
-			<item value="CALL END"/>
-			<item value="write_data_in_buffer"/>
-			<item value="hag"/>
-			<item value="print_GPS_data"/>
-			<item value="printf"/>
-			<item value="finger_print_test_function"/>
+			<item value="page"/>
+			<item value="NumByteToWrite_up_to_PageSize"/>
+			<item value="W25qxx_WriteByte"/>
+			<item value="NumByteToRead"/>
+			<item value="W25qxx_ReadBytes"/>
+			<item value="W25qxx_ReadByte"/>
+			<item value="W25qxx_WaitForWriteEnd"/>
+			<item value="W25qxx_EraseChip"/>
+			<item value="INIT_DEBUG"/>
+			<item value="W25_Reset"/>
+			<item value="W25qxx_WriteEnable"/>
+			<item value="w25_info_t"/>
+			<item value="w25_info"/>
+			<item value="BlockCount"/>
+			<item value="w25qxx"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="981"/>
-		<item key="DIALOG_Y_ORIGIN" value="295"/>
+		<item key="DIALOG_X_ORIGIN" value="149"/>
+		<item key="DIALOG_Y_ORIGIN" value="202"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
