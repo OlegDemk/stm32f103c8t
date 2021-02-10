@@ -269,6 +269,10 @@ int main(void)
 while (1)
 {
 	test_flash_W25Q();
+	while(1)
+	{
+		HAL_Delay(100);
+	}
 	//flash_W25Q();
 	//w25_Ini();
 

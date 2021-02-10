@@ -1,3 +1,7 @@
-Flash_W25Q.c:221:6:test_flash_W25Q	24	static
-Flash_W25Q.c:250:6:test_write_read_bytes	32	static
-Flash_W25Q.c:268:6:test_write_read_page	1040	static
+Flash_W25Q.c:228:6:test_flash_W25Q	24	static
+Flash_W25Q.c:258:6:test_write_read_bytes	2088	static
+Flash_W25Q.c:376:6:save_data_in_flash	328	static
+Flash_W25Q.c:409:6:save_arrey_in_flash_memory	24	static
+Flash_W25Q.c:419:6:write_struct_in_flash	16	static
+Flash_W25Q.c:436:6:test_write_read_page	4624	static
+Flash_W25Q.c:529:6:semulate_write_data_in_flash_w25q126	4	static

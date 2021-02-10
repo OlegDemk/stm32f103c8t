@@ -1,10 +1,110 @@
-16:18:43 **** Incremental Build of configuration Debug for project Castom_board ****
+15:53:59 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
+arm-none-eabi-gcc "../Core/Src/Flash_W25Q.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Flash_W25Q.d" -MT"Core/Src/Flash_W25Q.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Flash_W25Q.o"
+../Core/Src/Flash_W25Q.c:13:0: warning: "USE_DRIVER_w25qxx" redefined
+ #define USE_DRIVER_w25qxx YES
+ 
+../Core/Src/Flash_W25Q.c:12:0: note: this is the location of the previous definition
+ #define USE_DRIVER_w25qxx
+ 
+../Core/Src/Flash_W25Q.c: In function 'test_flash_W25Q':
+../Core/Src/Flash_W25Q.c:234:7: warning: implicit declaration of function 'W25qxx_ReadID'; did you mean 'W25qxx_ReadPage'? [-Wimplicit-function-declaration]
+  id = W25qxx_ReadID();
+       ^~~~~~~~~~~~~
+       W25qxx_ReadPage
+../Core/Src/Flash_W25Q.c:243:2: warning: implicit declaration of function 'save_data_in_flash' [-Wimplicit-function-declaration]
+  save_data_in_flash();
+  ^~~~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:254:6: warning: unused variable 'lll' [-Wunused-variable]
+  int lll = 999;
+      ^~~
+../Core/Src/Flash_W25Q.c:233:11: warning: variable 'id' set but not used [-Wunused-but-set-variable]
+  uint32_t id=0;
+           ^~
+../Core/Src/Flash_W25Q.c:230:10: warning: variable 'init' set but not used [-Wunused-but-set-variable]
+  uint8_t init=0;
+          ^~~~
+../Core/Src/Flash_W25Q.c: In function 'test_write_read_bytes':
+../Core/Src/Flash_W25Q.c:268:19: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+  sensors_data_t_p = &sensors_data_t;    // Saving address on pointer
+                   ^
+../Core/Src/Flash_W25Q.c:277:3: warning: implicit declaration of function 'strcpy' [-Wimplicit-function-declaration]
+   strcpy( sensors_data_t.sensor_name_1, "Sensor_1:");    // Filling data
+   ^~~~~~
+../Core/Src/Flash_W25Q.c:277:3: warning: incompatible implicit declaration of built-in function 'strcpy'
+../Core/Src/Flash_W25Q.c:277:3: note: include '<string.h>' or provide a declaration of 'strcpy'
+../Core/Src/Flash_W25Q.c:314:6: warning: unused variable 'p' [-Wunused-variable]
+  int p=999;
+      ^
+../Core/Src/Flash_W25Q.c:273:6: warning: unused variable 'r' [-Wunused-variable]
+  int r = 0;
+      ^
+../Core/Src/Flash_W25Q.c:272:6: warning: unused variable 'k' [-Wunused-variable]
+  int k = 0;
+      ^
+../Core/Src/Flash_W25Q.c:267:25: warning: variable 'sensors_data_t_p' set but not used [-Wunused-but-set-variable]
+  struct sensors_data_t *sensors_data_t_p;  // Create pointer on structure
+                         ^~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: At top level:
+../Core/Src/Flash_W25Q.c:376:6: warning: conflicting types for 'save_data_in_flash'
+ void save_data_in_flash(void)
+      ^~~~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:243:2: note: previous implicit declaration of 'save_data_in_flash' was here
+  save_data_in_flash();
+  ^~~~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'save_data_in_flash':
+../Core/Src/Flash_W25Q.c:400:3: warning: implicit declaration of function 'save_arrey_in_flash_memory'; did you mean 'save_data_in_flash'? [-Wimplicit-function-declaration]
+   save_arrey_in_flash_memory(test_array, size_array);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   save_data_in_flash
+../Core/Src/Flash_W25Q.c:406:18: warning: pointer targets in passing argument 1 of 'W25qxx_ReadPage' differ in signedness [-Wpointer-sign]
+  W25qxx_ReadPage(buff_for_read_from_flash, 0, 0, 0);
+                  ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:105:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize);
+      ^~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: At top level:
+../Core/Src/Flash_W25Q.c:409:6: warning: conflicting types for 'save_arrey_in_flash_memory'
+ void save_arrey_in_flash_memory(char *test_array, uint8_t size_array)
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:400:3: note: previous implicit declaration of 'save_arrey_in_flash_memory' was here
+   save_arrey_in_flash_memory(test_array, size_array);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'test_write_read_page':
+../Core/Src/Flash_W25Q.c:473:2: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+  memset (buff_for_write_on_flash, 1, sizeof(buff_for_write_on_flash));
+  ^~~~~~
+../Core/Src/Flash_W25Q.c:473:2: warning: incompatible implicit declaration of built-in function 'memset'
+../Core/Src/Flash_W25Q.c:473:2: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/Flash_W25Q.c:484:20: warning: pointer targets in passing argument 1 of 'W25qxx_WritePage' differ in signedness [-Wpointer-sign]
+   W25qxx_WritePage(buff_for_write_on_flash, i, 0, 0);
+                    ^~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:99:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_WritePage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_PageSize);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:492:19: warning: pointer targets in passing argument 1 of 'W25qxx_ReadPage' differ in signedness [-Wpointer-sign]
+   W25qxx_ReadPage(buff_for_read_from_flash, i, 0, 0);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:105:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize);
+      ^~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Castom_board.elf
+ 
+arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
+arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  63700	    604	   5148	  69452	  10f4c	Castom_board.elf
+  32840	    148	   5076	  38064	   94b0	Castom_board.elf
 Finished building: default.size.stdout
+Finished building: Castom_board.bin
+ 
+ 
+Finished building: Castom_board.list
  
 
-16:18:44 Build Finished. 0 errors, 0 warnings. (took 595ms)
+15:54:00 Build Finished. 0 errors, 21 warnings. (took 1s.382ms)
 

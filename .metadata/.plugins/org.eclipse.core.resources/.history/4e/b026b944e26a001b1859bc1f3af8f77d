@@ -1,0 +1,483 @@
+/*
+ * Flash_W25Q.c
+ *
+ *  Created on: Sep 26, 2020
+ *      Author: odemki
+ */
+#include "stdio.h"
+#include "stm32f1xx_hal.h"
+
+#define YES 1
+#define NO 0
+#define USE_DRIVER_w25qxx
+#define USE_DRIVER_w25qxx YES
+
+#if (USE_DRIVER_w25qxx == YES)
+	#include "w25qxx.h"			// Driver
+#endif
+
+extern UART_HandleTypeDef huart1;
+
+#if (USE_DRIVER_w25qxx != YES)
+	extern UART_HandleTypeDef hspi2;
+
+	typedef struct
+	{
+	  uint16_t  PageSize;
+	  uint32_t  PageCount;
+	  uint32_t  SectorSize;
+	  uint32_t  SectorCount;
+	  uint32_t  BlockSize;
+	  uint32_t  BlockCount;
+	  uint32_t  NumKB;
+	  uint8_t   SR1;
+	  uint8_t   SR2;
+	  uint8_t   SR3;
+	  uint8_t	high_cap;
+	}w25_info_t;
+	w25_info_t  w25_info;
+
+	// Define for reset
+	#define w24_ENABLE_RESET 			0x66
+	#define w24_RESET 					0x99
+	#define w25_READ					0x03
+	#define	w25_FAST_READ				0x0B
+	#define	w25_GET_JEDEC_ID			0x9F
+	// Define for CS
+	#define cs_set()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+	#define cs_reset()	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
+
+	uint8_t rx_buf[1025];
+	uint8_t tx_buf[10];
+	//uint8_t buf[10];
+	unsigned int add = 0;
+
+
+
+	// ----------------------------------------------------------------------------
+	void SPI1_Send(uint8_t *dt, uint16_t cnt)
+	{
+		HAL_SPI_Transmit(&hspi2, dt, cnt, 5000);
+	}
+	// ----------------------------------------------------------------------------
+	void SPI1_Recv(uint8_t *dt, uint16_t cnt)
+	{
+		HAL_SPI_Receive(&hspi2, dt, cnt, 5000);
+	}
+	// ----------------------------------------------------------------------------
+	void W25_Reset(void)
+	{
+		cs_set();
+		tx_buf[0] = w24_ENABLE_RESET;
+		tx_buf[1] = w24_RESET;
+		SPI1_Send(tx_buf, 2);
+		cs_reset();
+	}
+	// ----------------------------------------------------------------------------
+	void w25_Read_Page(uint8_t* data, uint32_t page_addr, uint32_t offset, uint32_t sz)
+	{
+		if(sz > w25_info.PageSize)
+		{
+			sz = w25_info.PageSize;
+		}
+		if((offset+sz)>w25_info.PageSize)
+		{
+			sz = w25_info.PageSize - offset;
+		}
+		page_addr = page_addr * w25_info.PageSize + offset;
+		tx_buf[0] = w25_FAST_READ;
+		if(w25_info.high_cap)
+		{
+			tx_buf[1] = (page_addr >> 24) & 0xFF;
+			tx_buf[2] = (page_addr >> 16) & 0xFF;
+			tx_buf[3] =	(page_addr >> 8) & 0xFF;
+			tx_buf[4] = page_addr & 0xFF;
+			tx_buf[5] = 0;
+			cs_set();
+			SPI1_Send(tx_buf, 6);
+		}
+		else
+		{
+			tx_buf[1] = (page_addr >> 16) & 0xFF;
+			tx_buf[2] = (page_addr >> 8) & 0xFF;
+			tx_buf[3] = page_addr & 0xFF;
+			tx_buf[4] = 0;
+			cs_set();
+			SPI1_Send(tx_buf, 5);
+		}
+		SPI1_Recv(data, sz);
+		cs_reset();
+	}
+	// ----------------------------------------------------------------------------
+	void w25_Read_Data(uint32_t addr, uint8_t* data, uint32_t sz)
+	{
+		cs_set();
+		tx_buf[0] = w25_READ;
+		tx_buf[1] =	(addr >>16) & 0xFF;
+		tx_buf[2] = (addr >> 8) & 0xFF;
+		tx_buf[3] = addr & 0xFF;
+		SPI1_Send(tx_buf, 4);
+		SPI1_Recv(data, sz);
+		cs_reset();
+	}
+	// ----------------------------------------------------------------------------
+	uint32_t w25_Read_ID(void)
+	{
+		uint8_t dt[4];
+		tx_buf[0] = w25_GET_JEDEC_ID;
+		cs_set();
+		SPI1_Send(tx_buf, 1);
+		SPI1_Recv(dt, 3);
+		cs_reset();
+		return ((dt[0] << 16) | (dt[1] << 8) | dt[2]);
+	}
+	// ----------------------------------------------------------------------------
+	void w25_Ini(void)
+	{
+		HAL_Delay(100);
+		W25_Reset();
+		HAL_Delay(100);
+
+		unsigned int id = w25_Read_ID();
+
+		// Using ID, detect flash
+		w25_info.high_cap = 0;
+		//unsigned int id_m = id & 0x0000FFFF;
+		switch(id & 0x0000FFFF)
+		{
+			case 0x401A:	// 	w25q512
+				w25_info.high_cap = 1;
+				w25_info.BlockCount = 1024;
+			break;
+
+			case 0x4019:	// 	w25q256
+				w25_info.high_cap = 1;
+				w25_info.BlockCount = 512;
+			break;
+
+			case 0x4018:	// 	w25q128
+				w25_info.BlockCount = 256;
+			break;
+
+			}
+	//	if(id_m != 0x4018)
+	//	{
+	//		// Error.  w25q128 don't detect
+	//	}
+	//	else
+	//	{
+	//		w25_info.BlockCount = 256;		// 	w25q128
+	//	}
+
+		w25_info.PageSize=256;
+		w25_info.SectorSize=0x1000;
+		w25_info.SectorCount=w25_info.BlockCount*16;
+		w25_info.PageCount=(w25_info.SectorCount*w25_info.SectorSize)/w25_info.PageSize;
+		w25_info.BlockSize=w25_info.SectorSize*16;
+		w25_info.NumKB=(w25_info.SectorCount*w25_info.SectorSize)/1024;
+
+		// Test data data from Flash
+		for(uint8_t k = 0; k<4; k++)
+		{
+			w25_Read_Page(rx_buf, k, 0, 256);
+		}
+
+		int gggg = 999;
+
+	}
+	// ----------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------
+
+	void flash_W25Q(void)
+	{
+		W25_Reset();
+		w25_Ini();
+	}
+#endif
+
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+
+// ----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+// ----------------------------------------------------------------------------
+// Work
+void test_flash_W25Q(void)
+{
+	uint8_t init=0;
+	init = W25qxx_Init();
+
+	uint32_t id=0;
+	id = W25qxx_ReadID();
+
+	//W25qxx_EraseChip();
+
+	//	1.Test write/read several bytes
+	 test_write_read_bytes();
+	// 2. Test write/read pages (255 bytes)
+	 //test_write_read_page();
+
+
+
+	// 3
+	// 2. Write/read Sector
+	//  !!!!!!!!!!!!!!!    W25qxx_WriteSector(    TEST IT
+
+	//semulate_write_data_in_flash_w25q126();
+
+
+
+	int lll = 999;
+
+}
+// ----------------------------------------------------------------------------
+void test_write_read_bytes()
+{
+	// Create structure
+	struct sensors_data{
+		int number_of_measure;
+		char sensor_name_1[11];
+		char sensor_1_data[4];
+	};
+	struct sensors_data sensors_data_t;				// Creating sensors_data_t structure variable
+	struct sensors_data_t *sensors_data_t_p;		// Create pointer on struct
+	sensors_data_t_p = &sensors_data_t;
+
+	W25qxx_EraseChip();					// Erase all flash chip
+
+	int k = 0;
+	int r = 0;
+
+	for(int k = 1; k <= 10; k++)
+	{
+		strcpy( sensors_data_t.sensor_name_1, "Sensor_1:");
+		for(int i =0 ; i<=sizeof(sensors_data_t); i++)
+		{
+			sensors_data_t.number_of_measure = 1;
+			strcpy( sensors_data_t.sensor_1_data, "99");
+			// Writing in flash sensors_data_t structure byte by bytes
+			//W25qxx_WriteByte(sensors_data_t_p, r++);
+		}
+	}
+
+	// Reading data from Flash
+	HAL_Delay(1);
+	uint8_t read_buff[1000] = {0};
+	for(int i = 0; i <= 200; i++)
+	{
+		W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
+	}
+
+	int p=999;
+
+	///////////////////////////////////////
+//	W25qxx_EraseChip();
+//	// Filling data in array
+//	char tx_data[10] = "TEST ";
+//	int number = 0;
+//	int k = 0;
+//	int r = 0;
+//	for(int k = 1; k <= 10; k++)
+//	{
+//		// add number at the end fo string
+//		snprintf(tx_data, sizeof(tx_data), "TEST %d", k );
+//		for(int i =0 ; i<=sizeof(tx_data); i++)
+//		{
+//			W25qxx_WriteByte(tx_data[i], r++);
+//		}
+//	}
+//
+//	// Reading data from Flash
+//	HAL_Delay(1);
+//	uint8_t read_buff[1000] = {0};
+//	for(int i = 0; i <= 200; i++)
+//	{
+//		W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
+//	}
+
+
+		///////////////////////////////////////
+	// Filling data in array
+//	for(int i = 0; i <= 10; i++)
+//	{
+//		W25qxx_WriteByte(i, i);					// Write one byte
+//	}
+//
+//	// Reading data from Flash
+//	HAL_Delay(1);
+//	uint8_t read_buff[10] = {0};
+//	for(int i = 0; i <= 10; i++)
+//	{
+//		W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
+//	}
+
+	///////////////////////////////////////
+	// !!! Demonstration why we need delete sector before write data.
+//	W25qxx_EraseChip();
+//
+//	uint8_t tx_data = 3;
+//	W25qxx_WriteByte(tx_data, 0);					// Write one byte
+//
+//	uint8_t rx_data = 0;
+//	W25qxx_ReadByte(&rx_data, 0);           		// Read one byte
+//
+//	tx_data = 4;
+//	W25qxx_WriteByte(tx_data, 0);					// Write one byte
+//
+//	rx_data = 0;
+//	W25qxx_ReadByte(&rx_data, 0);           		// Read one byte
+//
+//	int f =999;
+}
+// ----------------------------------------------------------------------------
+void test_write_read_page()
+{
+
+//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//	// Write and read 3 pages. Work OK
+//	// Write data
+//
+//	W25qxx_EraseChip();
+//	//W25qxx_WritePage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_PageSize)
+//	char buff_for_write_on_flash[255] = {0};
+//	W25qxx_WritePage(buff_for_write_on_flash, 0, 0, 0);			// Write data on first page (265)
+//
+//	memset (buff_for_write_on_flash, '2', sizeof(buff_for_write_on_flash));
+//	W25qxx_WritePage(buff_for_write_on_flash, 1, 0, 0);			// Write data on second page (265)
+//
+//	memset (buff_for_write_on_flash, '3', sizeof(buff_for_write_on_flash));
+//	W25qxx_WritePage(buff_for_write_on_flash, 2, 0, 0);			// Write data on third page (265)
+//
+//	// Read data from flash
+//	uint8_t buff_for_read_from_flash[256] = {0};
+//	W25qxx_ReadPage(buff_for_read_from_flash, 0, 0, 0);			// Read data on first page (265)
+//
+//	memset(buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
+//	W25qxx_ReadPage(buff_for_read_from_flash, 1, 0, 0);			// Read data on second page (265)
+//
+//	memset(buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
+//	W25qxx_ReadPage(buff_for_read_from_flash, 2, 0, 0);			// Read data on third page (265)
+//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Write all sector. One sector = 16 pages. One sector = 256*16 4096 bytes
+	// W25qxx_EraseChip();
+	// Erase sector 0
+	W25qxx_EraseSector(0);
+	// Init buffer for write
+	char buff_for_write_on_flash[255] = {0};
+	memset (buff_for_write_on_flash, 1, sizeof(buff_for_write_on_flash));
+
+	////////////  Write all pages in sector data in flash.
+	// One sector has 16 pages
+	for(uint8_t i = 0; i<=15; i++)
+	{
+		// 1. Write number
+//		memset (buff_for_write_on_flash, i, sizeof(buff_for_write_on_flash));
+//		W25qxx_WritePage(buff_for_write_on_flash, i, 0, 0);
+		// 2. Write string
+		sprintf(buff_for_write_on_flash, "%s", "TEST");
+		W25qxx_WritePage(buff_for_write_on_flash, i, 0, 0);
+
+	}
+	//////////// Read all pages using read page function
+	char buff_for_read_from_flash[256] = {0};
+	for(int i = 0; i<=15; i++)
+	{
+		memset (buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
+		W25qxx_ReadPage(buff_for_read_from_flash, i, 0, 0);
+	}
+
+	//////////// Read all pages using read all SECTOR function
+	uint8_t buffer_for_read_sector[4096] = {0};
+	W25qxx_ReadSector(buffer_for_read_sector, 0, 0, 0);
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+	//W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize)
+//	uint8_t buff_for_read_from_flash[256] = {0};
+//	for(int i = 0; i<=4096; i=i+256)
+//	{
+//		memset(buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
+//		W25qxx_ReadPage(buff_for_read_from_flash, i, 0, 0);
+//	}
+
+
+	// Erase sector 0
+//	W25qxx_EraseSector(0);
+//	memset(buff_for_read_from_flash, 0 , sizeof(buff_for_read_from_flash));
+//	// Read data after erase
+//	W25qxx_ReadPage(buff_for_read_from_flash, 0, 0, 0);
+//
+//	// Write text
+//	char buff_for_write_on_flash_text[255] = "TEST 1";
+//	char buff_for_read_from_flash_text[255] = {0};
+//	W25qxx_WritePage(buff_for_write_on_flash_text, 0, 0, 0);
+//	W25qxx_ReadPage(buff_for_read_from_flash_text, 0, 0 , 0);
+//
+//	int u= 999;
+
+}
+// ----------------------------------------------------------------------------
+void semulate_write_data_in_flash_w25q126(void)
+{
+//	uint8_t buff[10] = {0};
+//
+//	W25qxx_EraseSector(0);
+//
+//	for(uint32_t i = 0; i<= 100; i++)
+//	{
+//		sprintf(buff, "%s", "TEST ");
+//		W25qxx_WritePage(buff, i, 0, 0);
+//	}
+//
+//	uint8_t buffer_for_read_sector[4096] = {0};
+//	W25qxx_ReadSector(buffer_for_read_sector, 0, 0, 0);
+
+
+
+
+
+
+	// 1. Write all page byte to byte
+	// 2. Write all sector
+	// 3. Write all block
+
+
+	// 4. Read data in the end
+}
+
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+
+
+
+//uint8_t size=0;
+//	char str3[100]={0};
+//	uint8_t size_mas=sizeof(str3);
+//	uint8_t i=0;
+//	sprintf(str3,"I2C_1 SEARCH DEVISES... \r\n");      										// convert   in  str
+//	size=sizeof(str3);
+//	HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);
