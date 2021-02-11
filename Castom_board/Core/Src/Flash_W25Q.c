@@ -197,6 +197,9 @@ extern UART_HandleTypeDef huart1;
 
 // ----------------------------------------------------------------------------
 // Create structure
+
+unsigned int save_data_in_flash(uint8_t tempetature, uint8_t humidity, unsigned int number_of_measure, unsigned int flash_offset);
+
 // Structure size must be: 256(page)/8 = 32 bytes.
 struct sensors_data{					// Size			// Data
 	int number_of_measure;				// 4 bytes		(1)
@@ -240,19 +243,39 @@ void test_flash_W25Q(void)
 	// 2. Test write/read pages (255 bytes)
 	 //test_write_read_page();
 
-	save_data_in_flash();
 
 
-	// 3
-	// 2. Write/read Sector
-	//  !!!!!!!!!!!!!!!    W25qxx_WriteSector(    TEST IT
+	//test_function_1();
 
-	//semulate_write_data_in_flash_w25q126();
+	// Problems
+	//	1. We loose flash_offset after reset MC
+
+	W25qxx_EraseSector(0);					// First to all erase sector 0
 
 
+
+	uint8_t tempetature = 21;
+	uint8_t humidity = 80;
+
+	save_data(tempetature, humidity);
+
+	tempetature = 30;
+	humidity = 90;
+
+	save_data(tempetature, humidity);
+
+	tempetature = 100;
+	humidity = 60;
+
+	save_data(tempetature, humidity);
+
+
+	// Read sector from flash in the end
+	char buff_for_read_from_flash[10000] = {0};			// Buffer for read data from flash
+	memset(buff_for_read_from_flash, 0 , sizeof(buff_for_read_from_flash));
+	W25qxx_ReadSector(buff_for_read_from_flash, 0, 0, 0);
 
 	int lll = 999;
-
 }
 // ----------------------------------------------------------------------------
 void test_write_read_bytes()
@@ -373,48 +396,74 @@ void test_write_read_bytes()
 //	int f =999;
 }
 // ----------------------------------------------------------------------------
-void save_data_in_flash(void)
+void save_data(uint8_t tempetature, uint8_t humidity)
 {
-	W25qxx_EraseSector(0);
+	static unsigned int number_of_measure = 1;
+	static unsigned int flash_offset = 0;				// flash memory offset (One byre writer: flash_offset++)
 
+	flash_offset = save_data_in_flash(tempetature, humidity, number_of_measure, flash_offset);
+
+	// For save only in one sector
+	if(flash_offset >= 4096)    				// 4096: size of one sector
+	{
+		flash_offset = 0;
+		W25qxx_EraseSector(0);					// First to all erase sector 0
+	}
+	number_of_measure ++;						// How many message was saved
+	tempetature ++;								// Simulation temperature
+	humidity ++;								// Semulation humidity
+
+}
+// ----------------------------------------------------------------------------
+unsigned int save_data_in_flash(uint8_t tempetature, uint8_t humidity, unsigned int number_of_measure, unsigned int flash_offset)
+{
 	char test_array [32] = {0};
-
-	unsigned int number_of_measure = 0;
-	uint8_t tempetature = 21;
-	uint8_t humidity = 70;
-
-	sprintf(test_array,"%d" "%s %s%d%s %s%d%s",number_of_measure ,"sensor_1", "T:",tempetature, "C", "H:",humidity, "%");
-
-	uint8_t q = 0;
-
+	uint8_t q = 0;										// Counter of saved messages
+	uint8_t pages = 0;									// Counter of pages
 	uint8_t size_array = sizeof(test_array)-1;
 
-	// Write on flash
-	while(q<=8)			// Simulating filling one page
-	{
-		number_of_measure ++;	// Simulate number of measure
-		tempetature++;			// Simulate temperature
-		humidity++;				// Simulate humidity
-		sprintf(test_array,"%d" "%s %s%d%s %s%d%s",number_of_measure ,"sensor_1", "T:",tempetature, "C", "H:",humidity, "%");	// Write data on array
-
-		save_arrey_in_flash_memory(test_array, size_array);
-		q++;
-	}
-
-	// Read from flash
-	char buff_for_read_from_flash[256] = {0};
-	W25qxx_ReadPage(buff_for_read_from_flash, 0, 0, 0);
-}
-
-void save_arrey_in_flash_memory(char *test_array, uint8_t size_array)
-{
-	static unsigned int flash_offset = 0;
+	sprintf(test_array,"%s %d %s%d%s %s%d%s", "sensor_1", number_of_measure, "T:",tempetature, "C", "H:",humidity, "%");	// Write data on array
 
 	for(int i = 0; i <=  size_array; i++)						// Write all bytes from array
 	{
 		W25qxx_WriteByte(test_array[i], flash_offset++);		// Write all bytes from array
 	}
+
+	return flash_offset;
 }
+
+//void save_arrey_in_flash_memory(char *test_array, uint8_t size_array, unsigned int * flash_offset)
+//{
+////	unsigned int buff = 0;
+//	buff = (unsigned int*) flash_offset ++;
+//
+//	for(int i = 0; i <=  size_array; i++)						// Write all bytes from array
+//	{
+//		W25qxx_WriteByte(test_array[i], buff);		// Write all bytes from array
+//		unsigned int buff = (unsigned int*) flash_offset;
+//	}
+//}
+
+void test_function_1 (void)
+{
+	uint8_t test = 99;
+	test_function_2(&test);
+
+	test = test +1;
+}
+void test_function_2 (uint8_t * test_val)
+{
+	uint8_t temp =0;
+	temp = *test_val;
+
+	temp++;
+
+	int ggggg = 999;
+}
+
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 void write_struct_in_flash(struct sensors_data t, unsigned int size)
 {
