@@ -198,7 +198,9 @@ extern UART_HandleTypeDef huart1;
 // ----------------------------------------------------------------------------
 // Create structure
 
-unsigned int save_data_in_flash(uint8_t tempetature, uint8_t humidity, unsigned int number_of_measure, unsigned int flash_offset);
+//unsigned int save_data_in_flash(uint8_t tempetature, uint8_t humidity, unsigned int number_of_measure, unsigned int flash_offset);
+	unsigned int save_data_in_flash(char * temperature_si7021, char *humidity_si7021, unsigned int number_of_measure, unsigned int flash_offset);
+	unsigned int find_end_of_recording_flash_memory(void);
 
 // Structure size must be: 256(page)/8 = 32 bytes.
 struct sensors_data{					// Size			// Data
@@ -236,48 +238,23 @@ void test_flash_W25Q(void)
 	uint32_t id=0;
 	id = W25qxx_ReadID();
 
-	//W25qxx_EraseChip();
-
-	//	1.Test write/read several bytes
-	// test_write_read_bytes();
-	// 2. Test write/read pages (255 bytes)
-	 //test_write_read_page();
+	W25qxx_EraseChip();
 
 
+	//char temperature_si7021[6];		//"T:%s%d\0"
+	//char humidity_si7021[6]; 		//"H:%d.%01d %% \r\n",
 
-	//test_function_1();
+	save_data( temperature_si7021, humidity_si7021);
+	char page_buffer[256] = {0};
+	W25qxx_ReadPage(page_buffer, 0, 0, 0);
 
-	// Problems
-	//	1. We loose flash_offset after reset MC
-
-	W25qxx_EraseSector(0);					// First to all erase sector 0
-
-
-
-	uint8_t tempetature = 21;
-	uint8_t humidity = 80;
-
-	save_data(tempetature, humidity);
-
-	tempetature = 30;
-	humidity = 90;
-
-	save_data(tempetature, humidity);
-
-	tempetature = 100;
-	humidity = 60;
-
-	save_data(tempetature, humidity);
+	int gh=99;
 
 
-	// Read sector from flash in the end
-	char buff_for_read_from_flash[10000] = {0};			// Buffer for read data from flash
-	memset(buff_for_read_from_flash, 0 , sizeof(buff_for_read_from_flash));
-	W25qxx_ReadSector(buff_for_read_from_flash, 0, 0, 0);
-
-	int lll = 999;
 }
 // ----------------------------------------------------------------------------
+
+
 void test_write_read_bytes()
 {
 	// Create structure
@@ -396,33 +373,34 @@ void test_write_read_bytes()
 //	int f =999;
 }
 // ----------------------------------------------------------------------------
-void save_data(uint8_t tempetature, uint8_t humidity)
+void save_data(char * temperature_si7021,char * humidity_si7021)
 {
+	// one page has 256*16 = 4096 bytes.
+	// One block has 16 sectors. 4096*16 = 65536 bytes.
+	// In W25q126 has 256 blocks. 65536*256 = 16 777 216 bytes
+
 	static unsigned int number_of_measure = 1;
 	static unsigned int flash_offset = 0;				// flash memory offset (One byre writer: flash_offset++)
 
-	flash_offset = save_data_in_flash(tempetature, humidity, number_of_measure, flash_offset);
+	flash_offset = save_data_in_flash(temperature_si7021, humidity_si7021, number_of_measure, flash_offset);
 
-	// For save only in one sector
-	if(flash_offset >= 4096)    				// 4096: size of one sector
+	// For save laa flash.
+	if(flash_offset >= 16777216)    					// 16 777 216: the last byte on flash memory.
 	{
 		flash_offset = 0;
-		W25qxx_EraseSector(0);					// First to all erase sector 0
+		W25qxx_EraseSector(0);							// First to all erase sector 0
 	}
-	number_of_measure ++;						// How many message was saved
-	tempetature ++;								// Simulation temperature
-	humidity ++;								// Semulation humidity
-
+	number_of_measure ++;								// How many message was saved
 }
 // ----------------------------------------------------------------------------
-unsigned int save_data_in_flash(uint8_t tempetature, uint8_t humidity, unsigned int number_of_measure, unsigned int flash_offset)
+unsigned int save_data_in_flash(char * temperature_si7021, char *humidity_si7021, unsigned int number_of_measure, unsigned int flash_offset)
 {
 	char test_array [32] = {0};
 	uint8_t q = 0;										// Counter of saved messages
 	uint8_t pages = 0;									// Counter of pages
 	uint8_t size_array = sizeof(test_array)-1;
 
-	sprintf(test_array,"%s %d %s%d%s %s%d%s", "sensor_1", number_of_measure, "T:",tempetature, "C", "H:",humidity, "%");	// Write data on array
+	sprintf(test_array,"%d %s%s %s%s",number_of_measure, temperature_si7021, "C", humidity_si7021, "%");	// Write data on array
 
 	for(int i = 0; i <=  size_array; i++)						// Write all bytes from array
 	{
@@ -431,6 +409,41 @@ unsigned int save_data_in_flash(uint8_t tempetature, uint8_t humidity, unsigned 
 
 	return flash_offset;
 }
+// ----------------------------------------------------------------------------
+unsigned int find_end_of_recording_flash_memory(void)
+{
+	/*
+	1. При включении, просканировать память и найти страницу на которой последний запись. Если дошли до нулевой страницы, тогда считать flash_offset = 0.
+	2. C адресса конца найденной пустой страници побайтно проверять байты с 0xFF (erase).
+	3. Если равны, значит в данном байте Нет данных. И делать декремент адрес в пока не попадется первый байт с данными.
+	4. Если найден байт данным, мы от адреса этого байта отнимает 32 (Размер моего сообщения которое мы записываем char test_array [32]) и записываем это сообщение в наш буфер.
+	5. Парсимо после слова "sensor 1" номер записи, и обновляем его. Для того чтобы счетчик измерений продолжался с того же числа.
+	*/
+
+	// 1. find last used block of memory
+	for(uint32_t block = 16; block >= 0; block--)
+	{
+		//uint8_t status = W25qxx_IsEmptyPage(pages, 0);
+		uint8_t status = W25qxx_IsEmptyBlock(block, 0);
+		if(status == 0)				// 0 mean - page is with data
+		{
+			int test = 999;
+			// the last used block is found
+			// 2. Find the last used sector on this block  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+		}
+
+		if(block == 0)				// The flash memory sector is clear
+		{
+			int test = 999;
+			//flash_offset = 0;		// Start write from 0 address
+		}
+	}
+
+	return 1;   		//  the_last_flash_offset;
+}
+
 
 //void save_arrey_in_flash_memory(char *test_array, uint8_t size_array, unsigned int * flash_offset)
 //{

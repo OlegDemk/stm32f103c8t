@@ -18,7 +18,7 @@ extern TIM_HandleTypeDef htim1;
 extern int GPGGA_data_is_ready;   				// Flag. If time data is ready then print it on OLED.
 
 void print_GPS_data(void);
-void print_all_sensors_data(void);
+void print_all_sensors_data(bool si7021, bool AM2302, bool sensor_9066);
 void print_GSM_data(void);
 void print_fingerprint_data(void);
 
@@ -45,7 +45,7 @@ void OLED_prinr_all_data(int  select_print_data)
 			print_fingerprint_data();
 			break;
 		case 4:
-			print_all_sensors_data();
+			print_all_sensors_data(true, true, true);
 			break;
 	}
 
@@ -173,27 +173,34 @@ void print_GPS_data(void)
 	print_text_on_OLED(90, 4, false, gps_speed);
 }
 // -----------------------------------------------------------------------------------
-void print_all_sensors_data(void)
+void print_all_sensors_data(bool si7021, bool AM2302, bool  sensor_9066)
 {
 	char str_1[40]={0};
 
-	// 1. Print data from si7021 sensor
-	strcpy(str_1, "1.si7021 ");
-	strcat(str_1, temperature_si7021);
-	strcat(str_1, humidity_si7021);
-	print_text_on_OLED(0, 2, false, str_1);
-	memset(str_1, 0 , sizeof(str_1));
+	if(si7021 == true)			// 1. Print data from si7021 sensor
+	{
+		strcpy(str_1, "1.si7021 ");
+		strcat(str_1, temperature_si7021);
+		strcat(str_1, humidity_si7021);
+		print_text_on_OLED(0, 2, true, str_1);
+		memset(str_1, 0 , sizeof(str_1));
+	}
 
-	// 2. Print data from AM2302
-	strcpy(str_1, "2.AM2302 ");
-	strcat(str_1, temperature_am3202);
-	strcat(str_1, humidity_am3202);
-	print_text_on_OLED(0, 3, false, str_1);
-	memset(str_1, 0 , sizeof(str_1));
+	if(AM2302 == true)			// 2. Print data from AM2302
+	{
+		strcpy(str_1, "2.AM2302 ");
+		strcat(str_1, temperature_am3202);
+		strcat(str_1, humidity_am3202);
+		print_text_on_OLED(0, 3, true, str_1);
+		memset(str_1, 0 , sizeof(str_1));
+	}
 
-	// 3. Print data from 9066
-	strcpy(str_1, "2.9066 ");
-	print_text_on_OLED(0, 4, false, str_1);
+	if(sensor_9066 == true)		// 3. Print data from 9066
+	{
+		strcpy(str_1, "2.9066 ");
+		print_text_on_OLED(0, 4, true, str_1);
+	}
+
 }
 // -----------------------------------------------------------------------------------
 void print_GSM_data(void)

@@ -694,7 +694,7 @@ uint8_t W25qxx_IsEmptyBlock(uint32_t Block_Address, uint32_t OffsetInByte)
 		{
 			if(pBuffer[i] != 0xFF)
 			{
-				w25qxx.Lock = 0;
+				w25qxx.Lock = 0;		// Filled
 				return 0;
 			}
 		}
@@ -703,7 +703,7 @@ uint8_t W25qxx_IsEmptyBlock(uint32_t Block_Address, uint32_t OffsetInByte)
 		WorkAddress = WorkAddress + 256;
 	}
 
-	w25qxx.Lock = 0;
+	w25qxx.Lock = 0;					// Empty
 	return 1;
 }
 
@@ -770,7 +770,9 @@ void W25qxx_WritePage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetIn
 	W25qxx_Spi((Page_Address & 0xFF00) >> 8);
 	W25qxx_Spi(Page_Address & 0xFF);
 
-	HAL_SPI_Transmit(W25QXX_SPI_PTR, pBuffer, NumByteToWrite_up_to_PageSize, 100);
+	// uint8_t	W25qxx_Spi(uint8_t	Data)
+	// HAL_SPI_TransmitReceive(W25QXX_SPI_PTR, &Data, &ret, 1, 100);
+	HAL_SPI_Transmit(W25QXX_SPI_PTR, pBuffer, NumByteToWrite_up_to_PageSize, 100);			//  HardFault <<<<<<<<<<<<<<<
 
 	W25QFLASH_CS_UNSELECT;
 
@@ -832,7 +834,7 @@ void W25qxx_WriteBlock(uint8_t* pBuffer, uint32_t Block_Address, uint32_t Offset
 
 	do
 	{		
-		W25qxx_WritePage(pBuffer,StartPage,LocalOffset,BytesToWrite);
+		W25qxx_WritePage(pBuffer,StartPage,LocalOffset,BytesToWrite); 					// HardFault ERROR
 		StartPage++;
 		BytesToWrite -= w25qxx.PageSize - LocalOffset;
 		//pBuffer += w25qxx.PageSize;

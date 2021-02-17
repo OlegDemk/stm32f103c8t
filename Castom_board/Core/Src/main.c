@@ -50,6 +50,7 @@
 
 #include "GSM_IOT_GA6.h"
 
+#include "w25qxx.h"
 
 extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
 extern uint8_t receive_gps_signal;
@@ -268,11 +269,11 @@ int main(void)
 
 while (1)
 {
-	test_flash_W25Q();
-	while(1)
-	{
-		HAL_Delay(100);
-	}
+//	test_flash_W25Q();
+//	while(1)
+//	{
+//		HAL_Delay(100);
+//	}
 	//flash_W25Q();
 	//w25_Ini();
 
@@ -1473,16 +1474,21 @@ int sensors_mode(char sign)
 		char str_sensors[50]={0};
 		print_text_on_OLED(0, 1, false, "4.SENSORS");
 
+		uint32_t init = W25qxx_Init();
+		uint32_t id = W25qxx_ReadID();
+
 		// Print meu fingerprint
 		print_text_on_OLED(0, 2, false, "1. Run all sensors");
-		print_text_on_OLED(0, 3, false, "2. function 2");
-		print_text_on_OLED(0, 4, true, "3. function 3");
+		print_text_on_OLED(0, 3, false, "2. Del & Log data");
+		print_text_on_OLED(0, 4, false, "3. Add log data");
+		print_text_on_OLED(0, 5, true, "4. Show log data");
 
 		do                                                            // Whaite for choise
 			{
 			// Place for sensors code
-
+			HAL_Delay(300);
 			sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
             if(sign == '1')
             {
             	// Clear all OLED
@@ -1527,16 +1533,52 @@ int sensors_mode(char sign)
                	ssd1306_UpdateScreen();
 
                 // Print selected menu
-               	print_text_on_OLED(0, 1, true, "1. function 2");
+               	print_text_on_OLED(0, 1, true, "2. Del & Log data");
+
+//               	uint8_t init_w25q=0;
+//               	init_w25q = W25qxx_Init();
+
+                print_text_on_OLED(0, 2, true, "Erasing flash ...");
+               	//W25qxx_ReadID();
+               	W25qxx_EraseChip();
+//               	for(uint32_t  block = 0; block <= 255; block++)
+//               	{
+//               		uint8_t status_block = W25qxx_IsEmptyBlock(block , 0);
+//               		if(status_block == 0)
+//               		{
+//               			W25qxx_EraseBlock(block);
+//               		}
+//               	}
+               	claen_oled_lines(false, true, true, true, true);
+               	print_text_on_OLED(0, 2, true, "Rrased OK");
+               	HAL_Delay(1000);
+               	claen_oled_lines(false, true, true, true, true);
+
+               	int count_of_saved_data = 0;
 
                 do                                                            // Whaite for choise
                 {
-                       // Place for code function 2
+                	read_T_and_H_SI7021();										// Read data in global variabbles
+                	save_data(temperature_si7021, humidity_si7021);				// Save data in flash
+                	print_all_sensors_data(true, false, false);					// Print only si7021 data on OLED
 
-                       sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+                	char buf_count_of_saved_data[7] = {0};
+                	itoa(count_of_saved_data, buf_count_of_saved_data, 10);		// Convert number on string
 
-                       if(sign == '*')    // If select EXIT  // Exit in main menu
-                       {
+                	print_text_on_OLED(0, 3, false, "Logging...");
+                	print_text_on_OLED(75, 3, true, buf_count_of_saved_data);	// Print counter on OLED
+
+                	count_of_saved_data++;
+
+                	// Read for test
+//                	char page_read_buffer[265] = {0};
+//                	W25qxx_ReadPage(page_read_buffer, 0, 0, 0);
+
+                	HAL_Delay(500);
+                	sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+                    if(sign == '*')    // If select EXIT  // Exit in main menu
+                    {
                             // Clear all OLED
                             ssd1306_Fill(Black);
                             ssd1306_UpdateScreen();
@@ -1547,7 +1589,7 @@ int sensors_mode(char sign)
                             SENSORS_MODE = false;
 
                             return 1;          // Flag_fro exit from there
-                       }
+                     }
                  }while (sign != '*');     // Select EXIT
 
                 // Place for code function 2
@@ -1560,7 +1602,7 @@ int sensors_mode(char sign)
                  ssd1306_UpdateScreen();
 
                  // Ptint selected menu
-                 print_text_on_OLED(0, 1, true, "1. function 3");
+                 print_text_on_OLED(0, 1, true, "3. Add log data");
 
                  do                                                            // Waiting for choice
                  {
@@ -1599,7 +1641,99 @@ int sensors_mode(char sign)
 
 				return 1;          // Flag_fro exit from there
 			}
-		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '*') );     // Select one from 3 modes
+
+			if(sign == '4')
+			{
+				// Clear all OLED
+			    ssd1306_Fill(Black);
+			    ssd1306_UpdateScreen();
+
+			    // Ptint selected menu
+			    print_text_on_OLED(0, 1, true, "4. Show log data");
+
+			    // Print first rows on OLED
+			    int ofset = 0;
+			    char page_read_buffer[4096] = {0};
+			    uint32_t Page_Address = 0;
+			    W25qxx_ReadSector(page_read_buffer, Page_Address , 0, 0);
+			   	for(uint8_t i = 2; i<=5; i++)
+			   	{
+			   		char oled_buff[19] = {0};
+			   		for(uint8_t k = 0; k <= sizeof(oled_buff); k++)
+			   		{
+			   			oled_buff[k] = page_read_buffer[k+ ofset];
+			   		}
+			   		print_text_on_OLED(0, i, true, oled_buff);
+			   		ofset = ofset +32;
+			   	}
+			   	uint32_t k = 0;
+			   	uint32_t rows_caunter = 0;										// Counter for detect sector overread
+
+			    do                                                            // Whaite for choise
+			    {
+			    	HAL_Delay(300);
+			        sign = read_one_sign_from_keyboard();                      // Read sign from keyboard
+
+
+			        if(sign == '1')												// Navigation up -4 items
+			        {
+			        	HAL_Delay(500);
+			        	claen_oled_lines(false, true, true, true, true);		// Clear OLED
+
+			        	ofset = ofset - 256;									// For prevent address < 0
+			        	if(ofset < 0)
+			        	{
+			        		ofset = 0;
+			        	}
+
+			        	for(uint8_t i = 2; i<=5; i++)							// Print 4 rows on OLED
+			        	{
+			        		char oled_buff[19] = {0};
+			        		for(k = 0; k <= sizeof(oled_buff); k++)
+			        		{
+			        			oled_buff[k] = page_read_buffer[k + ofset];
+			        		}
+			        		print_text_on_OLED(0, i, true, oled_buff);
+			        		ofset = ofset + 32; 								// 32: sizeof (test_array)
+			        	}
+			        }
+			        if(sign == '2')												// Navigation down +4 items
+			        {
+			        	HAL_Delay(500);
+			        	claen_oled_lines(false, true, true, true, true);		// Clear OLED
+
+			        	for(uint8_t i = 2; i<=5; i++)							// Print 4 rows on OLED
+			        	{
+							char oled_buff[19] = {0};
+							for(k = 0; k <= sizeof(oled_buff); k++)
+							{
+								oled_buff[k] = page_read_buffer[k + ofset];
+							}
+							print_text_on_OLED(0, i, true, oled_buff);
+							ofset = ofset + 32;
+			        	}
+			        }
+
+
+			        if(sign == '*')    // If select EXIT  // Exit in main menu
+			        {
+
+			        	// Clear all OLED
+			        	ssd1306_Fill(Black);
+			        	ssd1306_UpdateScreen();
+
+			        	GPS_MODE = false;
+			        	GSM_MODE = false;
+			        	FINGERPRINT_MODE = false;
+			        	SENSORS_MODE = false;
+
+			        	return 1;          // Flag_fro exit from there
+			        }
+				}while (sign != '*');     // Select EXIT
+			}
+
+
+		}while ((sign != '1') && (sign != '2') && (sign != '3') && (sign != '4') &&(sign != '*') );     // Select one from 3 modes
 }
 // ----------------------------------------------------------------------------
 /* After output call this function show call status

@@ -1,10 +1,135 @@
-17:51:41 **** Incremental Build of configuration Debug for project Castom_board ****
+14:43:25 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:55:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
+ extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
+        ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:199:5: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
+     I2C_1_scaner();
+     ^~~~~~~~~~~~
+../Core/Src/main.c:291:2: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
+  touch_bakcklight(0);           // Turn off Fingerprint modeul LED
+  ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1138:7: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+       if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
+       ^~
+../Core/Src/main.c:1139:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+       {
+       ^
+../Core/Src/main.c:1231:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1066:10: warning: unused variable 'print_oled_status' [-Wunused-variable]
+      int print_oled_status = 0;
+          ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1064:11: warning: unused variable 'first_time_after_call' [-Wunused-variable]
+      bool first_time_after_call = false;
+           ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1297:2: warning: implicit declaration of function 'touch_open'; did you mean 'funopen'? [-Wimplicit-function-declaration]
+  touch_open(0);
+  ^~~~~~~~~~
+  funopen
+../Core/Src/main.c:1340:10: warning: implicit declaration of function 'my_identification_enroll_user' [-Wimplicit-function-declaration]
+          my_identification_enroll_user(ID_set);
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1354:10: warning: implicit declaration of function 'touch_delete_all_fingerprints' [-Wimplicit-function-declaration]
+          touch_delete_all_fingerprints();
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1373:18: warning: implicit declaration of function 'identify' [-Wimplicit-function-declaration]
+             ID = identify();
+                  ^~~~~~~~
+../Core/Src/main.c:1418:19: warning: unused variable 'find_flag' [-Wunused-variable]
+              bool find_flag = true;
+                   ^~~~~~~~~
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1478:17: warning: implicit declaration of function 'W25qxx_ReadID'; did you mean 'W25qxx_ReadPage'? [-Wimplicit-function-declaration]
+   uint32_t id = W25qxx_ReadID();
+                 ^~~~~~~~~~~~~
+                 W25qxx_ReadPage
+../Core/Src/main.c:1562:18: warning: implicit declaration of function 'save_data' [-Wimplicit-function-declaration]
+                  save_data(temperature_si7021, humidity_si7021);    // Save data in flash
+                  ^~~~~~~~~
+../Core/Src/main.c:1563:18: warning: implicit declaration of function 'print_all_sensors_data' [-Wimplicit-function-declaration]
+                  print_all_sensors_data(true, false, false);     // Print only si7021 data on OLED
+                  ^~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1658:26: warning: pointer targets in passing argument 1 of 'W25qxx_ReadSector' differ in signedness [-Wpointer-sign]
+        W25qxx_ReadSector(page_read_buffer, Page_Address , 0, 0);
+                          ^~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:39:0:
+../Core/Inc/w25qxx.h:106:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_ReadSector(uint8_t *pBuffer, uint32_t Sector_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_SectorSize);
+      ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1670:17: warning: unused variable 'rows_caunter' [-Wunused-variable]
+        uint32_t rows_caunter = 0;          // Counter for detect sector overread
+                 ^~~~~~~~~~~~
+../Core/Src/main.c:1478:12: warning: unused variable 'id' [-Wunused-variable]
+   uint32_t id = W25qxx_ReadID();
+            ^~
+../Core/Src/main.c:1477:12: warning: unused variable 'init' [-Wunused-variable]
+   uint32_t init = W25qxx_Init();
+            ^~~~
+../Core/Src/main.c:1474:8: warning: unused variable 'str_sensors' [-Wunused-variable]
+   char str_sensors[50]={0};
+        ^~~~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1741:6: warning: conflicting types for 'show_sratus_call'
+ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1231:6: note: previous implicit declaration of 'show_sratus_call' was here
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'set_ID_number':
+../Core/Src/main.c:1804:7: warning: unused variable 'entered_number_status' [-Wunused-variable]
+  bool entered_number_status = false;
+       ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1803:7: warning: unused variable 'sing_number' [-Wunused-variable]
+  char sing_number = 0;
+       ^~~~~~~~~~~
+../Core/Src/main.c: In function 'enter_a_mobile_number':
+../Core/Src/main.c:1825:7: warning: unused variable 'str' [-Wunused-variable]
+  char str[30] = {0};
+       ^~~
+../Core/Src/main.c: In function 'gps_mode':
+../Core/Src/main.c:1031:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1280:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1464:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1737:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+In file included from ../Core/Src/main.c:41:0:
+At top level:
+../Core/Inc/Fingerprint_sensor_GT511C3.h:38:16: warning: 'response_packet' defined but not used [-Wunused-variable]
+ static uint8_t response_packet[12];
+                ^~~~~~~~~~~~~~~
+../Core/Inc/Fingerprint_sensor_GT511C3.h:37:16: warning: 'command_packet' defined but not used [-Wunused-variable]
+ static uint8_t command_packet[12];
+                ^~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Castom_board.elf
+ 
+arm-none-eabi-objdump -h -S  Castom_board.elf  > "Castom_board.list"
+arm-none-eabi-objcopy  -O binary  Castom_board.elf  "Castom_board.bin"
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  33256	    152	   5072	  38480	   9650	Castom_board.elf
+  64700	    608	   5152	  70460	  1133c	Castom_board.elf
 Finished building: default.size.stdout
  
+Finished building: Castom_board.bin
+ 
+Finished building: Castom_board.list
+ 
 
-17:51:41 Build Finished. 0 errors, 0 warnings. (took 633ms)
+14:43:26 Build Finished. 0 errors, 30 warnings. (took 1s.186ms)
 
