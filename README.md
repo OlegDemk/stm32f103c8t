@@ -13,8 +13,11 @@
 11. Motion detector sensor                        
 12. Motion sensor (APDS-9960)                     I2C
 13. Step down DC/DC module
-14. Keyboard
-15. Power on/off switch
+14. Serwo motor (SC90)                            PWM
+15. Buzzer                                        PWM
+16. Green LED                                     PWM
+17. Keyboard
+18. Power on/off switch
 
 
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/20210217_151044.jpg)
