@@ -1,7 +1,8 @@
+# stm32f103c8t
+Hardwere:
 Scheme all project is in 'Hardware diagram'.
 'Hardware diagram' file can be opened in https://app.diagrams.net/
 
-# stm32f103c8t
   MODULES:
 1. STM32F103C8T
 2. GSM module (SIM800L)                           UART
@@ -29,3 +30,6 @@ Scheme all project is in 'Hardware diagram'.
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/20210217_151044.jpg)
 
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/20210217_151504.jpg)
+
+Software:
+For create project has been used STM32IDE.
