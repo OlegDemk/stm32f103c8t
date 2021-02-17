@@ -1,121 +1,114 @@
-14:43:25 **** Incremental Build of configuration Debug for project Castom_board ****
+16:37:09 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
-../Core/Src/main.c:55:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
- extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
-        ^~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'main':
-../Core/Src/main.c:199:5: warning: implicit declaration of function 'I2C_1_scaner' [-Wimplicit-function-declaration]
-     I2C_1_scaner();
-     ^~~~~~~~~~~~
-../Core/Src/main.c:291:2: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
-  touch_bakcklight(0);           // Turn off Fingerprint modeul LED
-  ^~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'gsm_mode':
-../Core/Src/main.c:1138:7: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
-       if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
-       ^~
-../Core/Src/main.c:1139:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
-       {
-       ^
-../Core/Src/main.c:1231:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
-      show_sratus_call (call_status, str_gsm, sign, 1);
+arm-none-eabi-gcc "../Core/Src/Flash_W25Q.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Flash_W25Q.d" -MT"Core/Src/Flash_W25Q.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Flash_W25Q.o"
+../Core/Src/Flash_W25Q.c:13:0: warning: "USE_DRIVER_w25qxx" redefined
+ #define USE_DRIVER_w25qxx YES
+ 
+../Core/Src/Flash_W25Q.c:12:0: note: this is the location of the previous definition
+ #define USE_DRIVER_w25qxx
+ 
+../Core/Src/Flash_W25Q.c: In function 'test_flash_W25Q':
+../Core/Src/Flash_W25Q.c:239:7: warning: implicit declaration of function 'W25qxx_ReadID'; did you mean 'W25qxx_ReadPage'? [-Wimplicit-function-declaration]
+  id = W25qxx_ReadID();
+       ^~~~~~~~~~~~~
+       W25qxx_ReadPage
+../Core/Src/Flash_W25Q.c:247:2: warning: implicit declaration of function 'save_data' [-Wimplicit-function-declaration]
+  save_data( temperature_si7021, humidity_si7021);
+  ^~~~~~~~~
+../Core/Src/Flash_W25Q.c:249:18: warning: pointer targets in passing argument 1 of 'W25qxx_ReadPage' differ in signedness [-Wpointer-sign]
+  W25qxx_ReadPage(page_buffer, 0, 0, 0);
+                  ^~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:105:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize);
+      ^~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:251:6: warning: unused variable 'gh' [-Wunused-variable]
+  int gh=99;
+      ^~
+../Core/Src/Flash_W25Q.c:238:11: warning: variable 'id' set but not used [-Wunused-but-set-variable]
+  uint32_t id=0;
+           ^~
+../Core/Src/Flash_W25Q.c:235:10: warning: variable 'init' set but not used [-Wunused-but-set-variable]
+  uint8_t init=0;
+          ^~~~
+../Core/Src/Flash_W25Q.c: In function 'test_write_read_bytes':
+../Core/Src/Flash_W25Q.c:268:19: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+  sensors_data_t_p = &sensors_data_t;    // Saving address on pointer
+                   ^
+../Core/Src/Flash_W25Q.c:277:3: warning: implicit declaration of function 'strcpy' [-Wimplicit-function-declaration]
+   strcpy( sensors_data_t.sensor_name_1, "Sensor_1:");    // Filling data
+   ^~~~~~
+../Core/Src/Flash_W25Q.c:277:3: warning: incompatible implicit declaration of built-in function 'strcpy'
+../Core/Src/Flash_W25Q.c:277:3: note: include '<string.h>' or provide a declaration of 'strcpy'
+../Core/Src/Flash_W25Q.c:314:6: warning: unused variable 'p' [-Wunused-variable]
+  int p=999;
+      ^
+../Core/Src/Flash_W25Q.c:273:6: warning: unused variable 'r' [-Wunused-variable]
+  int r = 0;
+      ^
+../Core/Src/Flash_W25Q.c:272:6: warning: unused variable 'k' [-Wunused-variable]
+  int k = 0;
+      ^
+../Core/Src/Flash_W25Q.c:267:25: warning: variable 'sensors_data_t_p' set but not used [-Wunused-but-set-variable]
+  struct sensors_data_t *sensors_data_t_p;  // Create pointer on structure
+                         ^~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: At top level:
+../Core/Src/Flash_W25Q.c:376:6: warning: conflicting types for 'save_data'
+ void save_data(char * temperature_si7021,char * humidity_si7021)
+      ^~~~~~~~~
+../Core/Src/Flash_W25Q.c:247:2: note: previous implicit declaration of 'save_data' was here
+  save_data( temperature_si7021, humidity_si7021);
+  ^~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'save_data_in_flash':
+../Core/Src/Flash_W25Q.c:400:10: warning: unused variable 'pages' [-Wunused-variable]
+  uint8_t pages = 0;         // Counter of pages
+          ^~~~~
+../Core/Src/Flash_W25Q.c:399:10: warning: unused variable 'q' [-Wunused-variable]
+  uint8_t q = 0;          // Counter of saved messages
+          ^
+../Core/Src/Flash_W25Q.c: In function 'find_end_of_recording_flash_memory':
+../Core/Src/Flash_W25Q.c:431:8: warning: unused variable 'test' [-Wunused-variable]
+    int test = 999;
+        ^~~~
+../Core/Src/Flash_W25Q.c:440:8: warning: unused variable 'test' [-Wunused-variable]
+    int test = 999;
+        ^~~~
+../Core/Src/Flash_W25Q.c: In function 'test_function_1':
+../Core/Src/Flash_W25Q.c:464:2: warning: implicit declaration of function 'test_function_2'; did you mean 'test_function_1'? [-Wimplicit-function-declaration]
+  test_function_2(&test);
+  ^~~~~~~~~~~~~~~
+  test_function_1
+../Core/Src/Flash_W25Q.c: At top level:
+../Core/Src/Flash_W25Q.c:468:6: warning: conflicting types for 'test_function_2'
+ void test_function_2 (uint8_t * test_val)
+      ^~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:464:2: note: previous implicit declaration of 'test_function_2' was here
+  test_function_2(&test);
+  ^~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'test_function_2':
+../Core/Src/Flash_W25Q.c:475:6: warning: unused variable 'ggggg' [-Wunused-variable]
+  int ggggg = 999;
+      ^~~~~
+../Core/Src/Flash_W25Q.c: In function 'test_write_read_page':
+../Core/Src/Flash_W25Q.c:536:2: warning: implicit declaration of function 'memset' [-Wimplicit-function-declaration]
+  memset (buff_for_write_on_flash, 1, sizeof(buff_for_write_on_flash));
+  ^~~~~~
+../Core/Src/Flash_W25Q.c:536:2: warning: incompatible implicit declaration of built-in function 'memset'
+../Core/Src/Flash_W25Q.c:536:2: note: include '<string.h>' or provide a declaration of 'memset'
+../Core/Src/Flash_W25Q.c:547:20: warning: pointer targets in passing argument 1 of 'W25qxx_WritePage' differ in signedness [-Wpointer-sign]
+   W25qxx_WritePage(buff_for_write_on_flash, i, 0, 0);
+                    ^~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:99:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_WritePage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_PageSize);
       ^~~~~~~~~~~~~~~~
-../Core/Src/main.c:1066:10: warning: unused variable 'print_oled_status' [-Wunused-variable]
-      int print_oled_status = 0;
-          ^~~~~~~~~~~~~~~~~
-../Core/Src/main.c:1064:11: warning: unused variable 'first_time_after_call' [-Wunused-variable]
-      bool first_time_after_call = false;
-           ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'fingerprint_mode':
-../Core/Src/main.c:1297:2: warning: implicit declaration of function 'touch_open'; did you mean 'funopen'? [-Wimplicit-function-declaration]
-  touch_open(0);
-  ^~~~~~~~~~
-  funopen
-../Core/Src/main.c:1340:10: warning: implicit declaration of function 'my_identification_enroll_user' [-Wimplicit-function-declaration]
-          my_identification_enroll_user(ID_set);
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c:1354:10: warning: implicit declaration of function 'touch_delete_all_fingerprints' [-Wimplicit-function-declaration]
-          touch_delete_all_fingerprints();
-          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c:1373:18: warning: implicit declaration of function 'identify' [-Wimplicit-function-declaration]
-             ID = identify();
-                  ^~~~~~~~
-../Core/Src/main.c:1418:19: warning: unused variable 'find_flag' [-Wunused-variable]
-              bool find_flag = true;
-                   ^~~~~~~~~
-../Core/Src/main.c: In function 'sensors_mode':
-../Core/Src/main.c:1478:17: warning: implicit declaration of function 'W25qxx_ReadID'; did you mean 'W25qxx_ReadPage'? [-Wimplicit-function-declaration]
-   uint32_t id = W25qxx_ReadID();
-                 ^~~~~~~~~~~~~
-                 W25qxx_ReadPage
-../Core/Src/main.c:1562:18: warning: implicit declaration of function 'save_data' [-Wimplicit-function-declaration]
-                  save_data(temperature_si7021, humidity_si7021);    // Save data in flash
-                  ^~~~~~~~~
-../Core/Src/main.c:1563:18: warning: implicit declaration of function 'print_all_sensors_data' [-Wimplicit-function-declaration]
-                  print_all_sensors_data(true, false, false);     // Print only si7021 data on OLED
-                  ^~~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c:1658:26: warning: pointer targets in passing argument 1 of 'W25qxx_ReadSector' differ in signedness [-Wpointer-sign]
-        W25qxx_ReadSector(page_read_buffer, Page_Address , 0, 0);
-                          ^~~~~~~~~~~~~~~~
-In file included from ../Core/Src/main.c:39:0:
-../Core/Inc/w25qxx.h:106:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
- void W25qxx_ReadSector(uint8_t *pBuffer, uint32_t Sector_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_SectorSize);
-      ^~~~~~~~~~~~~~~~~
-../Core/Src/main.c:1670:17: warning: unused variable 'rows_caunter' [-Wunused-variable]
-        uint32_t rows_caunter = 0;          // Counter for detect sector overread
-                 ^~~~~~~~~~~~
-../Core/Src/main.c:1478:12: warning: unused variable 'id' [-Wunused-variable]
-   uint32_t id = W25qxx_ReadID();
-            ^~
-../Core/Src/main.c:1477:12: warning: unused variable 'init' [-Wunused-variable]
-   uint32_t init = W25qxx_Init();
-            ^~~~
-../Core/Src/main.c:1474:8: warning: unused variable 'str_sensors' [-Wunused-variable]
-   char str_sensors[50]={0};
-        ^~~~~~~~~~~
-../Core/Src/main.c: At top level:
-../Core/Src/main.c:1741:6: warning: conflicting types for 'show_sratus_call'
- void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
-      ^~~~~~~~~~~~~~~~
-../Core/Src/main.c:1231:6: note: previous implicit declaration of 'show_sratus_call' was here
-      show_sratus_call (call_status, str_gsm, sign, 1);
-      ^~~~~~~~~~~~~~~~
-../Core/Src/main.c: In function 'set_ID_number':
-../Core/Src/main.c:1804:7: warning: unused variable 'entered_number_status' [-Wunused-variable]
-  bool entered_number_status = false;
-       ^~~~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c:1803:7: warning: unused variable 'sing_number' [-Wunused-variable]
-  char sing_number = 0;
-       ^~~~~~~~~~~
-../Core/Src/main.c: In function 'enter_a_mobile_number':
-../Core/Src/main.c:1825:7: warning: unused variable 'str' [-Wunused-variable]
-  char str[30] = {0};
-       ^~~
-../Core/Src/main.c: In function 'gps_mode':
-../Core/Src/main.c:1031:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-../Core/Src/main.c: In function 'gsm_mode':
-../Core/Src/main.c:1280:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-../Core/Src/main.c: In function 'fingerprint_mode':
-../Core/Src/main.c:1464:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-../Core/Src/main.c: In function 'sensors_mode':
-../Core/Src/main.c:1737:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-In file included from ../Core/Src/main.c:41:0:
-At top level:
-../Core/Inc/Fingerprint_sensor_GT511C3.h:38:16: warning: 'response_packet' defined but not used [-Wunused-variable]
- static uint8_t response_packet[12];
-                ^~~~~~~~~~~~~~~
-../Core/Inc/Fingerprint_sensor_GT511C3.h:37:16: warning: 'command_packet' defined but not used [-Wunused-variable]
- static uint8_t command_packet[12];
-                ^~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:555:19: warning: pointer targets in passing argument 1 of 'W25qxx_ReadPage' differ in signedness [-Wpointer-sign]
+   W25qxx_ReadPage(buff_for_read_from_flash, i, 0, 0);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:105:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize);
+      ^~~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: Castom_board.elf
  
