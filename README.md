@@ -1,3 +1,6 @@
+Scheme all project is in 'Hardware diagram'.
+'Hardware diagram' file can be opened in https://app.diagrams.net/
+
 # stm32f103c8t
   MODULES:
 1. STM32F103C8T
