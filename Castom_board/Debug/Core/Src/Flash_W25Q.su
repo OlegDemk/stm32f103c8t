@@ -1,10 +1,5 @@
 Flash_W25Q.c:233:6:test_flash_W25Q	280	static
-Flash_W25Q.c:258:6:test_write_read_bytes	2088	static
-Flash_W25Q.c:376:6:save_data	16	static
-Flash_W25Q.c:396:14:save_data_in_flash	80	static
-Flash_W25Q.c:413:14:find_end_of_recording_flash_memory	24	static
-Flash_W25Q.c:461:6:test_function_1	16	static
-Flash_W25Q.c:468:6:test_function_2	24	static
-Flash_W25Q.c:482:6:write_struct_in_flash	16	static
-Flash_W25Q.c:499:6:test_write_read_page	4624	static
-Flash_W25Q.c:592:6:semulate_write_data_in_flash_w25q126	4	static
+Flash_W25Q.c:257:6:save_data	16	static
+Flash_W25Q.c:277:14:save_data_in_flash	80	static
+Flash_W25Q.c:308:6:test_write_read_bytes	32	static
+Flash_W25Q.c:342:14:find_end_of_recording_flash_memory	24	static

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="W25qxx_ReadPage"/>
+		<item key="selection" value="page_read_buffer"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="W25qxx_ReadPage"/>
-			<item value="PageSize"/>
-			<item value="NumByteToRead_up_to_PageSize"/>
-			<item value="W25QXX_SPI_PTR"/>
-			<item value="W25qxx_WritePage"/>
-			<item value="W25qxx_Spi"/>
-			<item value="HAL_SPI_Transmit"/>
-			<item value="buff_for_read_from_flash"/>
+			<item value="page_read_buffer"/>
+			<item value="W25qxx_ReadID"/>
+			<item value="W25qxx_Init"/>
 			<item value="test_flash_W25Q"/>
-			<item value="// HardFault ERROR"/>
-			<item value="HardFault"/>
-			<item value="NumByteToWrite_up_to_BlockSize"/>
-			<item value="find_end_of_recording_flash_memory"/>
+			<item value="test_array"/>
 			<item value="save_data_in_flash"/>
-			<item value="flash_offset"/>
+			<item value="save_data"/>
+			<item value="si7021"/>
+			<item value="print_all_sensors_data"/>
+			<item value="temperature_si7021"/>
+			<item value="test_write_read_bytes"/>
+			<item value="W25qxx_WritePage"/>
+			<item value="W25qxx_ReadSector"/>
+			<item value="W25qxx_IsEmptyBlock"/>
+			<item value="W25qxx_ReadByte"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="218"/>
-		<item key="DIALOG_Y_ORIGIN" value="427"/>
+		<item key="DIALOG_X_ORIGIN" value="1145"/>
+		<item key="DIALOG_Y_ORIGIN" value="288"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>

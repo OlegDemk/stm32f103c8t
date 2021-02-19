@@ -253,6 +253,56 @@ void test_flash_W25Q(void)
 
 }
 // ----------------------------------------------------------------------------
+// Main function for save data from one sensor in W24Q128 flash memory
+void save_data(char * temperature_si7021,char * humidity_si7021)
+{
+	// one page has 256*16 = 4096 bytes.
+	// One block has 16 sectors. 4096*16 = 65536 bytes.
+	// In W25q126 has 256 blocks. 65536*256 = 16 777 216 bytes
+
+	static unsigned int number_of_measure = 1;			// Counter measure, it display in OLED
+	static unsigned int flash_offset = 0;				// flash memory offset (One byre writer: flash_offset++)
+
+	flash_offset = save_data_in_flash(temperature_si7021, humidity_si7021, number_of_measure, flash_offset);
+
+	// For save all flash.
+	if(flash_offset >= 16777216)    					// 16 777 216: the last byte on flash memory.
+	{
+		flash_offset = 0;
+		W25qxx_EraseSector(0);							// First to all erase sector 0
+	}
+	number_of_measure ++;								// How many message was saved
+}
+// ----------------------------------------------------------------------------
+unsigned int save_data_in_flash(char * temperature_si7021, char *humidity_si7021, unsigned int number_of_measure, unsigned int flash_offset)
+{
+	char array [32] = {0};							// It is buffer where save data
+	uint8_t size_array = sizeof(array)-1;
+
+	sprintf(array,"%d %s%s %s%s",number_of_measure, temperature_si7021, "C", humidity_si7021, "%");	// Write data on array
+
+	for(int i = 0; i <=  size_array; i++)						// Write all bytes from array
+	{
+		W25qxx_WriteByte(array[i], flash_offset);				// Write all bytes from array
+
+		/// Test ////////////////////////////////////
+//		uint8_t read_bute_buffer = 0;
+//		W25qxx_ReadByte(&read_bute_buffer, flash_offset);
+//		if(read_bute_buffer == 0xFF)
+//		{
+//			/// Error
+//			int lll = 999;
+//		}
+		/////////////////////////////////////////////
+		flash_offset++;
+	}
+	/// Test ////////////////////////////////////
+//	char test_page_read_buffer[265] = {0};
+//	W25qxx_ReadPage(test_page_read_buffer, 0, 0, 0);
+	///////////////////////////////////////////
+	return flash_offset;
+}
+// ----------------------------------------------------------------------------
 
 
 void test_write_read_bytes()
@@ -267,92 +317,8 @@ void test_write_read_bytes()
 	struct sensors_data_t *sensors_data_t_p;		// Create pointer on structure
 	sensors_data_t_p = &sensors_data_t;				// Saving address on pointer
 
-	W25qxx_EraseChip();					// Erase all flash chip
-
-	int k = 0;
-	int r = 0;
-
-//	for(int k = 1; k <= 10; k++)
-//	{
-		strcpy( sensors_data_t.sensor_name_1, "Sensor_1:");				// Filling data
-		sensors_data_t.number_of_measure = 1;							// Filling data
-		strcpy( sensors_data_t.sensor_1_data, "99");					// Filling data
-
-		int flash_address = 0;
-		uint8_t data[20]={0};
-		for(int i = 0; i<=sizeof(data); i++)
-		{
-			data[i] = i;
-		}
-
-		int size_struct = sizeof(sensors_data_t);
-		for(int i =0 ; i<= size_struct; i++)
-		{
-			// Writing in flash sensors_data_t structure byte by bytes
-
-			W25qxx_WriteByte(data[i], flash_address);
-
-			flash_address++;			// Increment flash adres
-
-			// Read flash memory
-			uint8_t read_buff[1000] = {0};
-			for(int i = 0; i <= 200; i++)
-			{
-					W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
-			}
-		}
-//	}
-
-	// Reading data from Flash
-	HAL_Delay(1);
-	uint8_t read_buff[1000] = {0};
-	for(int i = 0; i <= 200; i++)
-	{
-		W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
-	}
-
-	int p=999;
-
-	///////////////////////////////////////
-//	W25qxx_EraseChip();
-//	// Filling data in array
-//	char tx_data[10] = "TEST ";
-//	int number = 0;
-//	int k = 0;
-//	int r = 0;
-//	for(int k = 1; k <= 10; k++)
-//	{
-//		// add number at the end fo string
-//		snprintf(tx_data, sizeof(tx_data), "TEST %d", k );
-//		for(int i =0 ; i<=sizeof(tx_data); i++)
-//		{
-//			W25qxx_WriteByte(tx_data[i], r++);
-//		}
-//	}
-//
-//	// Reading data from Flash
-//	HAL_Delay(1);
-//	uint8_t read_buff[1000] = {0};
-//	for(int i = 0; i <= 200; i++)
-//	{
-//		W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
-//	}
 
 
-		///////////////////////////////////////
-	// Filling data in array
-//	for(int i = 0; i <= 10; i++)
-//	{
-//		W25qxx_WriteByte(i, i);					// Write one byte
-//	}
-//
-//	// Reading data from Flash
-//	HAL_Delay(1);
-//	uint8_t read_buff[10] = {0};
-//	for(int i = 0; i <= 10; i++)
-//	{
-//		W25qxx_ReadByte(&read_buff[i], i);           // Read one byte
-//	}
 
 	///////////////////////////////////////
 	// !!! Demonstration why we need delete sector before write data.
@@ -372,44 +338,7 @@ void test_write_read_bytes()
 //
 //	int f =999;
 }
-// ----------------------------------------------------------------------------
-void save_data(char * temperature_si7021,char * humidity_si7021)
-{
-	// one page has 256*16 = 4096 bytes.
-	// One block has 16 sectors. 4096*16 = 65536 bytes.
-	// In W25q126 has 256 blocks. 65536*256 = 16 777 216 bytes
 
-	static unsigned int number_of_measure = 1;
-	static unsigned int flash_offset = 0;				// flash memory offset (One byre writer: flash_offset++)
-
-	flash_offset = save_data_in_flash(temperature_si7021, humidity_si7021, number_of_measure, flash_offset);
-
-	// For save laa flash.
-	if(flash_offset >= 16777216)    					// 16 777 216: the last byte on flash memory.
-	{
-		flash_offset = 0;
-		W25qxx_EraseSector(0);							// First to all erase sector 0
-	}
-	number_of_measure ++;								// How many message was saved
-}
-// ----------------------------------------------------------------------------
-unsigned int save_data_in_flash(char * temperature_si7021, char *humidity_si7021, unsigned int number_of_measure, unsigned int flash_offset)
-{
-	char test_array [32] = {0};
-	uint8_t q = 0;										// Counter of saved messages
-	uint8_t pages = 0;									// Counter of pages
-	uint8_t size_array = sizeof(test_array)-1;
-
-	sprintf(test_array,"%d %s%s %s%s",number_of_measure, temperature_si7021, "C", humidity_si7021, "%");	// Write data on array
-
-	for(int i = 0; i <=  size_array; i++)						// Write all bytes from array
-	{
-		W25qxx_WriteByte(test_array[i], flash_offset++);		// Write all bytes from array
-	}
-
-	return flash_offset;
-}
-// ----------------------------------------------------------------------------
 unsigned int find_end_of_recording_flash_memory(void)
 {
 
@@ -458,176 +387,6 @@ unsigned int find_end_of_recording_flash_memory(void)
 //	}
 //}
 
-void test_function_1 (void)
-{
-	uint8_t test = 99;
-	test_function_2(&test);
-
-	test = test +1;
-}
-void test_function_2 (uint8_t * test_val)
-{
-	uint8_t temp =0;
-	temp = *test_val;
-
-	temp++;
-
-	int ggggg = 999;
-}
 
 
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
-void write_struct_in_flash(struct sensors_data t, unsigned int size)
-{
-	static unsigned long flash_offset = 0;				// Flash address
-	if(flash_offset >= 65535)							// Use only block 0
-	{
-		flash_offset = 0;
-		W25qxx_EraseBlock(0);
-	}
-
-	for(int i = 0; i<= size; i++)
-	{
-		// Send data in flash, byte by byte
-		flash_offset ++;
-		//W25qxx_WriteByte(uint8_t byte, uint32_t flash_offset)
-	}
-}
-// ----------------------------------------------------------------------------
-void test_write_read_page()
-{
-
-//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	// Write and read 3 pages. Work OK
-//	// Write data
-//
-//	W25qxx_EraseChip();
-//	//W25qxx_WritePage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToWrite_up_to_PageSize)
-//	char buff_for_write_on_flash[255] = {0};
-//	W25qxx_WritePage(buff_for_write_on_flash, 0, 0, 0);			// Write data on first page (265)
-//
-//	memset (buff_for_write_on_flash, '2', sizeof(buff_for_write_on_flash));
-//	W25qxx_WritePage(buff_for_write_on_flash, 1, 0, 0);			// Write data on second page (265)
-//
-//	memset (buff_for_write_on_flash, '3', sizeof(buff_for_write_on_flash));
-//	W25qxx_WritePage(buff_for_write_on_flash, 2, 0, 0);			// Write data on third page (265)
-//
-//	// Read data from flash
-//	uint8_t buff_for_read_from_flash[256] = {0};
-//	W25qxx_ReadPage(buff_for_read_from_flash, 0, 0, 0);			// Read data on first page (265)
-//
-//	memset(buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
-//	W25qxx_ReadPage(buff_for_read_from_flash, 1, 0, 0);			// Read data on second page (265)
-//
-//	memset(buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
-//	W25qxx_ReadPage(buff_for_read_from_flash, 2, 0, 0);			// Read data on third page (265)
-//	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	// Write all sector. One sector = 16 pages. One sector = 256*16 4096 bytes
-	// W25qxx_EraseChip();
-	// Erase sector 0
-	W25qxx_EraseSector(0);
-	// Init buffer for write
-	char buff_for_write_on_flash[255] = {0};
-	memset (buff_for_write_on_flash, 1, sizeof(buff_for_write_on_flash));
-
-	////////////  Write all pages in sector data in flash.
-	// One sector has 16 pages
-	for(uint8_t i = 0; i<=15; i++)
-	{
-		// 1. Write number
-//		memset (buff_for_write_on_flash, i, sizeof(buff_for_write_on_flash));
-//		W25qxx_WritePage(buff_for_write_on_flash, i, 0, 0);
-		// 2. Write string
-		sprintf(buff_for_write_on_flash, "%s", "TEST");
-		W25qxx_WritePage(buff_for_write_on_flash, i, 0, 0);
-
-	}
-	//////////// Read all pages using read page function
-	char buff_for_read_from_flash[256] = {0};
-	for(int i = 0; i<=15; i++)
-	{
-		memset (buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
-		W25qxx_ReadPage(buff_for_read_from_flash, i, 0, 0);
-	}
-
-	//////////// Read all pages using read all SECTOR function
-	uint8_t buffer_for_read_sector[4096] = {0};
-	W25qxx_ReadSector(buffer_for_read_sector, 0, 0, 0);
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-	//W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize)
-//	uint8_t buff_for_read_from_flash[256] = {0};
-//	for(int i = 0; i<=4096; i=i+256)
-//	{
-//		memset(buff_for_read_from_flash, 0, sizeof(buff_for_read_from_flash));
-//		W25qxx_ReadPage(buff_for_read_from_flash, i, 0, 0);
-//	}
-
-
-	// Erase sector 0
-//	W25qxx_EraseSector(0);
-//	memset(buff_for_read_from_flash, 0 , sizeof(buff_for_read_from_flash));
-//	// Read data after erase
-//	W25qxx_ReadPage(buff_for_read_from_flash, 0, 0, 0);
-//
-//	// Write text
-//	char buff_for_write_on_flash_text[255] = "TEST 1";
-//	char buff_for_read_from_flash_text[255] = {0};
-//	W25qxx_WritePage(buff_for_write_on_flash_text, 0, 0, 0);
-//	W25qxx_ReadPage(buff_for_read_from_flash_text, 0, 0 , 0);
-//
-//	int u= 999;
-
-}
-// ----------------------------------------------------------------------------
-void semulate_write_data_in_flash_w25q126(void)
-{
-//	uint8_t buff[10] = {0};
-//
-//	W25qxx_EraseSector(0);
-//
-//	for(uint32_t i = 0; i<= 100; i++)
-//	{
-//		sprintf(buff, "%s", "TEST ");
-//		W25qxx_WritePage(buff, i, 0, 0);
-//	}
-//
-//	uint8_t buffer_for_read_sector[4096] = {0};
-//	W25qxx_ReadSector(buffer_for_read_sector, 0, 0, 0);
-
-
-
-
-
-
-	// 1. Write all page byte to byte
-	// 2. Write all sector
-	// 3. Write all block
-
-
-	// 4. Read data in the end
-}
-
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-
-
-
-
-//uint8_t size=0;
-//	char str3[100]={0};
-//	uint8_t size_mas=sizeof(str3);
-//	uint8_t i=0;
-//	sprintf(str3,"I2C_1 SEARCH DEVISES... \r\n");      										// convert   in  str
-//	size=sizeof(str3);
-//	HAL_UART_Transmit(&huart1 , (uint8_t *)str3, size, 0xFFFF);

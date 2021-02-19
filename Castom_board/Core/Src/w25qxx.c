@@ -26,9 +26,14 @@ w25qxx_t w25qxx;
 uint8_t	W25qxx_Spi(uint8_t	Data)
 {
 	uint8_t	ret;
+	uint8_t write_satus = 0;
 
-	HAL_SPI_TransmitReceive(W25QXX_SPI_PTR, &Data, &ret, 1, 100); // spi2
-
+	write_satus = HAL_SPI_TransmitReceive(W25QXX_SPI_PTR, &Data, &ret, 1, 100); // spi2
+	if( write_satus != HAL_OK )
+	{
+		// ERROR write
+		int q=0;
+	}
 
 	/*while(!(W25QXX_SPI->SR & SPI_SR_TXE));
 	W25QXX_SPI->DR = Data;
