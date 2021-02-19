@@ -467,24 +467,22 @@ int wait_ansver_after_make_call_in_blok_mode(void)
 	{
 		if (strstr(GSM_RX_buffer, "BUSY"))                        // Звінок збитий  // Work OK
 		{
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
 			ansver_flag = 1;
 			return 1;
 		}
 
 		if (strstr(GSM_RX_buffer, "NO ANSWER"))					  // Не відповідає  // Work OK
 		{
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
 			ansver_flag = 1;
 			return 2;
 		}
 
 		if (strstr(GSM_RX_buffer, "NO CARRIER"))					  // Трубка піднята
 		{
-			memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
 			ansver_flag = 1;
 			return 3;
 		}
+		memset(GSM_RX_buffer, 0, sizeof(GSM_RX_buffer));
 	}
 }
 // ----------------------------------------------------------------------------

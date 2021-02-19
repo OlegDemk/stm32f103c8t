@@ -7,4 +7,4 @@ GSM_IOT_GA6.c:332:5:call_on_number	56	static
 GSM_IOT_GA6.c:389:5:end_of_call	24	static
 GSM_IOT_GA6.c:425:5:accepts_on_incomming_call	24	static
 GSM_IOT_GA6.c:460:5:wait_ansver_after_make_call_in_blok_mode	8	static
-GSM_IOT_GA6.c:501:5:wait_incoming_call	48	static
+GSM_IOT_GA6.c:499:5:wait_incoming_call	48	static

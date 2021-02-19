@@ -63,9 +63,7 @@ void read_T_and_H_SI7021(void)
 	#endif
 
 	// Save in global variable
-	sprintf(str,"T:%s%d\0", tmpSign, tmpInt1);
-	strcpy(temperature_si7021, str);
-	memset(str, 0 , sizeof(str));
+	sprintf(temperature_si7021,"T:%s%d\0", tmpSign, tmpInt1);
 
 	// Read humidity
 	STATUS = -1;
@@ -91,9 +89,8 @@ void read_T_and_H_SI7021(void)
 	#endif
 
 	// Save in global variable
-	sprintf(str,"H:%d\0", tmpInt1);
-	strcpy(humidity_si7021, str);
-	memset(str, 0 , sizeof(str));
+	sprintf(humidity_si7021,"H:%d\0", tmpInt1);
+
 }
 // --------------------------------------------------------------------------------
 

@@ -57,8 +57,7 @@ int nmea0183_checksum(char *msg)
 //--------------------------------------------------------------------------------------------------------
 void parsing_GPGLL_line(char *str_GPGLL)
 {
-	char nmeaSnt[49];										// Main buffer for GPGLL line
-	memset(nmeaSnt, 0, sizeof(nmeaSnt));
+	char nmeaSnt[49] = {0};										// Main buffer for GPGLL line
 
 	//Copy to  "*" from str_GPGLL in nmeaSnt
 	for(int i=0; (str_GPGLL[i] != '*') && (i < 50)  ; i++)
@@ -251,8 +250,7 @@ void parsing_GPGGA_line(char *str_GPGGA)
 		smNmbr[2]='\0';											// Add and of line '\0' sing
 
         // PROBLEM: Checksum !=
-		char hex[3];
-		memset(hex, 0 , sizeof(hex));
+		char hex[3] = {0};
 		uint8_t intSum = nmea0183_checksum(nmeaSnt);			// Checksum
 		sprintf(hex, "%x", intSum);
 
