@@ -24,8 +24,9 @@ Scheme all project is in 'Hardware diagram'.
 17. Keyboard
 18. Power on/off switch
 19. UART/USB module
-20. Vibro engine
-21. Batteries (2X18650)
+20. GSM antenna
+21. Vibro engine
+22. Batteries (2X18650)
 
 
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/20210217_153959.jpg)
