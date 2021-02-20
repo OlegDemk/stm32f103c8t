@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="page_read_buffer"/>
+		<item key="selection" value="I2C_SCANNER"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="I2C_SCANNER"/>
+			<item value="I2C_1_scaner"/>
+			<item value="r_single_Si7021"/>
+			<item value="memset"/>
 			<item value="page_read_buffer"/>
 			<item value="W25qxx_ReadID"/>
 			<item value="W25qxx_Init"/>
@@ -19,17 +23,13 @@
 			<item value="print_all_sensors_data"/>
 			<item value="temperature_si7021"/>
 			<item value="test_write_read_bytes"/>
-			<item value="W25qxx_WritePage"/>
-			<item value="W25qxx_ReadSector"/>
-			<item value="W25qxx_IsEmptyBlock"/>
-			<item value="W25qxx_ReadByte"/>
 		</list>
 		<list key="replacehistory">
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="1145"/>
-		<item key="DIALOG_Y_ORIGIN" value="288"/>
+		<item key="DIALOG_X_ORIGIN" value="1289"/>
+		<item key="DIALOG_Y_ORIGIN" value="194"/>
 		<item key="DIALOG_WIDTH" value="348"/>
 		<item key="DIALOG_HEIGHT" value="440"/>
 		<item key="DIALOG_FONT_NAME" value="1|Ubuntu|11.0|0|GTK|1|"/>
