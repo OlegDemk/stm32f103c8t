@@ -32,9 +32,9 @@ Scheme all project is in 'Hardware diagram'.
 25. Batteries (2X18650)
 
 
-![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/20210217_153959.jpg)
+![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/1.png)
 
-![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/20210217_154008.jpg)
+![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/2.png)
 
 Software:
 For create project has been used STM32IDE.
