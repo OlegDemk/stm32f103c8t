@@ -8,7 +8,7 @@ Scheme all project is in 'Hardware diagram'.
 1. STM32F103C8T
 2. GSM module (SIM800L)                           UART
 3. GPS module (GY-GPS6MV2)                        UART
-4. GSM antenna
+4. GPS antenna
 5. Finger print module (GT511C3)                  UART 
 6. OLED module  (SSD1306)                         I2C
 7. Flash memory module W25Q128                    SPI
