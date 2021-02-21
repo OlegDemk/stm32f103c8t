@@ -60,8 +60,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define CS_M25Q_Pin GPIO_PIN_12
-#define CS_M25Q_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 #define ON 1
 #define OFF 0

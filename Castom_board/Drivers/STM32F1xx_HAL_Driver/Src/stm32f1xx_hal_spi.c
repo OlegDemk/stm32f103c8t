@@ -896,7 +896,7 @@ HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint
       hspi->pTxBuffPtr += sizeof(uint8_t);
       hspi->TxXferCount--;
     }
-    while (hspi->TxXferCount > 0U)				// 213 HardFault 192
+    while (hspi->TxXferCount > 0U)
     {
       /* Wait until TXE flag is set to send data */
       if (__HAL_SPI_GET_FLAG(hspi, SPI_FLAG_TXE))

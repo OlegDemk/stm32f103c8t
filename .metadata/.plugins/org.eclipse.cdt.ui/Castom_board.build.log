@@ -1,10 +1,312 @@
-18:00:09 **** Incremental Build of configuration Debug for project Castom_board ****
+14:33:47 **** Incremental Build of configuration Debug for project Castom_board ****
 make -j8 all 
+arm-none-eabi-gcc "../Middlewares/Third_Party/FatFs/src/option/syscall.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Middlewares/Third_Party/FatFs/src/option/syscall.d" -MT"Middlewares/Third_Party/FatFs/src/option/syscall.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Middlewares/Third_Party/FatFs/src/option/syscall.o"
+arm-none-eabi-gcc "../Middlewares/Third_Party/FatFs/src/diskio.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Middlewares/Third_Party/FatFs/src/diskio.d" -MT"Middlewares/Third_Party/FatFs/src/diskio.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Middlewares/Third_Party/FatFs/src/diskio.o"
+arm-none-eabi-gcc "../Middlewares/Third_Party/FatFs/src/ff.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Middlewares/Third_Party/FatFs/src/ff.d" -MT"Middlewares/Third_Party/FatFs/src/ff.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Middlewares/Third_Party/FatFs/src/ff.o"
+arm-none-eabi-gcc "../Middlewares/Third_Party/FatFs/src/ff_gen_drv.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Middlewares/Third_Party/FatFs/src/ff_gen_drv.d" -MT"Middlewares/Third_Party/FatFs/src/ff_gen_drv.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Middlewares/Third_Party/FatFs/src/ff_gen_drv.o"
+arm-none-eabi-gcc "../FATFS/Target/user_diskio.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"FATFS/Target/user_diskio.d" -MT"FATFS/Target/user_diskio.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "FATFS/Target/user_diskio.o"
+arm-none-eabi-gcc "../FATFS/App/fatfs.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"FATFS/App/fatfs.d" -MT"FATFS/App/fatfs.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "FATFS/App/fatfs.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_i2c.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.d" -MT"Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o"
+arm-none-eabi-gcc "../Core/Src/Fingerprint_sensor_GT511C3.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Fingerprint_sensor_GT511C3.d" -MT"Core/Src/Fingerprint_sensor_GT511C3.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Fingerprint_sensor_GT511C3.o"
+arm-none-eabi-gcc "../Core/Src/Flash_W25Q.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Flash_W25Q.d" -MT"Core/Src/Flash_W25Q.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Flash_W25Q.o"
+arm-none-eabi-gcc "../Core/Src/GPS_NEO_6M.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/GPS_NEO_6M.d" -MT"Core/Src/GPS_NEO_6M.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/GPS_NEO_6M.o"
+arm-none-eabi-gcc "../Core/Src/GSM_IOT_GA6.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/GSM_IOT_GA6.d" -MT"Core/Src/GSM_IOT_GA6.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/GSM_IOT_GA6.o"
+../Core/Src/Flash_W25Q.c:13:0: warning: "USE_DRIVER_w25qxx" redefined
+arm-none-eabi-gcc "../Core/Src/Humidity_and_Temperature_AM2302_sensor.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Humidity_and_Temperature_AM2302_sensor.d" -MT"Core/Src/Humidity_and_Temperature_AM2302_sensor.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Humidity_and_Temperature_AM2302_sensor.o"
+ #define USE_DRIVER_w25qxx YES
+ 
+../Core/Src/Flash_W25Q.c:12:0: note: this is the location of the previous definition
+ #define USE_DRIVER_w25qxx
+ 
+../Core/Src/Flash_W25Q.c: In function 'test_flash_W25Q':
+../Core/Src/Flash_W25Q.c:239:7: warning: implicit declaration of function 'W25qxx_ReadID'; did you mean 'W25qxx_ReadPage'? [-Wimplicit-function-declaration]
+  id = W25qxx_ReadID();
+       ^~~~~~~~~~~~~
+       W25qxx_ReadPage
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identification_enroll_user':
+../Core/Src/Flash_W25Q.c:247:2: warning: implicit declaration of function 'save_data' [-Wimplicit-function-declaration]
+  save_data( temperature_si7021, humidity_si7021);
+  ^~~~~~~~~
+../Core/Src/Flash_W25Q.c:249:18: warning: pointer targets in passing argument 1 of 'W25qxx_ReadPage' differ in signedness [-Wpointer-sign]
+  W25qxx_ReadPage(page_buffer, 0, 0, 0);
+                  ^~~~~~~~~~~
+In file included from ../Core/Src/Flash_W25Q.c:16:0:
+../Core/Inc/w25qxx.h:105:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+arm-none-eabi-gcc "../Core/Src/Humidity_and_Temperature_SI7021_sensor.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Humidity_and_Temperature_SI7021_sensor.d" -MT"Core/Src/Humidity_and_Temperature_SI7021_sensor.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Humidity_and_Temperature_SI7021_sensor.o"
+ void W25qxx_ReadPage(uint8_t *pBuffer, uint32_t Page_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_PageSize);
+      ^~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c:251:6: warning: unused variable 'gh' [-Wunused-variable]
+  int gh=99;
+      ^~
+../Core/Src/Flash_W25Q.c:238:11: warning: variable 'id' set but not used [-Wunused-but-set-variable]
+  uint32_t id=0;
+           ^~
+../Core/Src/Flash_W25Q.c:235:10: warning: variable 'init' set but not used [-Wunused-but-set-variable]
+  uint8_t init=0;
+          ^~~~
+../Core/Src/Flash_W25Q.c: At top level:
+../Core/Src/Flash_W25Q.c:257:6: warning: conflicting types for 'save_data'
+ void save_data(char * temperature_si7021,char * humidity_si7021)
+      ^~~~~~~~~
+../Core/Src/Flash_W25Q.c:247:2: note: previous implicit declaration of 'save_data' was here
+  save_data( temperature_si7021, humidity_si7021);
+  ^~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'test_write_read_bytes':
+../Core/Src/Flash_W25Q.c:318:19: warning: assignment from incompatible pointer type [-Wincompatible-pointer-types]
+  sensors_data_t_p = &sensors_data_t;    // Saving address on pointer
+                   ^
+../Core/Src/Flash_W25Q.c:317:25: warning: variable 'sensors_data_t_p' set but not used [-Wunused-but-set-variable]
+  struct sensors_data_t *sensors_data_t_p;  // Create pointer on structure
+                         ^~~~~~~~~~~~~~~~
+../Core/Src/Flash_W25Q.c: In function 'find_end_of_recording_flash_memory':
+../Core/Src/Flash_W25Q.c:360:8: warning: unused variable 'test' [-Wunused-variable]
+    int test = 999;
+        ^~~~
+../Core/Src/Flash_W25Q.c:369:8: warning: unused variable 'test' [-Wunused-variable]
+    int test = 999;
+arm-none-eabi-gcc "../Core/Src/Si7021_driver.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/Si7021_driver.d" -MT"Core/Src/Si7021_driver.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/Si7021_driver.o"
+        ^~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c:339:2: warning: implicit declaration of function 'touch_check_enrolled'; did you mean 'touch_enroll_3'? [-Wimplicit-function-declaration]
+  touch_check_enrolled(id_set);
+  ^~~~~~~~~~~~~~~~~~~~
+  touch_enroll_3
+../Core/Src/Fingerprint_sensor_GT511C3.c:322:7: warning: unused variable 'str_fingerprint' [-Wunused-variable]
+  char str_fingerprint[30]={0};
+       ^~~~~~~~~~~~~~~
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_delete_all_fingerprints':
+../Core/Src/Fingerprint_sensor_GT511C3.c:149:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'identify':
+../Core/Src/Fingerprint_sensor_GT511C3.c:300:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/Fingerprint_sensor_GT511C3.c: In function 'touch_rcv':
+../Core/Src/Fingerprint_sensor_GT511C3.c:52:4: warning: 'rtn' is used uninitialized in this function [-Wuninitialized]
+  if(rtn != HAL_OK)
+    ^
+../Core/Src/GPS_NEO_6M.c: In function 'parsing_GPGLL_line':
+../Core/Src/GPS_NEO_6M.c:135:25: warning: implicit declaration of function 'gcvt' [-Wimplicit-function-declaration]
+                         gcvt(integer_part_lat, 11, gps_latitude );
+                         ^~~~
+../Core/Src/GPS_NEO_6M.c: In function 'parsing_GPGGA_line':
+../Core/Src/GPS_NEO_6M.c:245:8: warning: variable 'not_used' set but not used [-Wunused-but-set-variable]
+   char not_used[12] = {0};
+        ^~~~~~~~
+../Core/Src/GSM_IOT_GA6.c: In function 'call_on_mu_number':
+../Core/Src/GSM_IOT_GA6.c:329:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/GSM_IOT_GA6.c: In function 'call_on_number':
+../Core/Src/GSM_IOT_GA6.c:387:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/GSM_IOT_GA6.c: In function 'end_of_call':
+../Core/Src/GSM_IOT_GA6.c:423:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/GSM_IOT_GA6.c: In function 'accepts_on_incomming_call':
+../Core/Src/GSM_IOT_GA6.c:457:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/GSM_IOT_GA6.c: In function 'wait_ansver_after_make_call_in_blok_mode':
+../Core/Src/GSM_IOT_GA6.c:487:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/GSM_IOT_GA6.c: In function 'wait_incoming_call':
+../Core/Src/GSM_IOT_GA6.c:583:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+arm-none-eabi-gcc "../Core/Src/fonts.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/fonts.d" -MT"Core/Src/fonts.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/fonts.o"
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c: In function 'read_firmware':
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:23:13: warning: unused variable 'size' [-Wunused-variable]
+     uint8_t size=0;
+             ^~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:22:9: warning: variable 'firmware_version' set but not used [-Wunused-but-set-variable]
+  int8_t firmware_version = 0;
+         ^~~~~~~~~~~~~~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c: In function 'read_T_and_H_SI7021':
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:66:36: warning: embedded '\0' in format [-Wformat-contains-nul]
+  sprintf(temperature_si7021,"T:%s%d\0", tmpSign, tmpInt1);
+                                    ^~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:92:31: warning: embedded '\0' in format [-Wformat-contains-nul]
+  sprintf(humidity_si7021,"H:%d\0", tmpInt1);
+                               ^~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:56:6: warning: variable 'tmpInt2' set but not used [-Wunused-but-set-variable]
+  int tmpInt2 = trunc(tmpFrac * 10000);
+      ^~~~~~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:39:7: warning: unused variable 'str' [-Wunused-variable]
+  char str[10]={0};
+       ^~~
+../Core/Src/Humidity_and_Temperature_SI7021_sensor.c:38:10: warning: unused variable 'size' [-Wunused-variable]
+  uint8_t size=0;
+          ^~~~
+arm-none-eabi-gcc "../Core/Src/i2c_scaner.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/i2c_scaner.d" -MT"Core/Src/i2c_scaner.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/i2c_scaner.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/oled_ssd1306.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/oled_ssd1306.d" -MT"Core/Src/oled_ssd1306.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/oled_ssd1306.o"
+arm-none-eabi-gcc "../Core/Src/ssd1306.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/ssd1306.d" -MT"Core/Src/ssd1306.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/ssd1306.o"
+arm-none-eabi-gcc "../Core/Src/stm32f1xx_hal_msp.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f1xx_hal_msp.d" -MT"Core/Src/stm32f1xx_hal_msp.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_hal_msp.o"
+arm-none-eabi-gcc "../Core/Src/stm32f1xx_it.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f1xx_it.d" -MT"Core/Src/stm32f1xx_it.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/stm32f1xx_it.o"
+arm-none-eabi-gcc "../Core/Src/system_stm32f1xx.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/system_stm32f1xx.d" -MT"Core/Src/system_stm32f1xx.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/system_stm32f1xx.o"
+../Core/Src/oled_ssd1306.c: In function 'print_main_menu':
+../Core/Src/oled_ssd1306.c:61:2: warning: implicit declaration of function 'print_text_on_OLED' [-Wimplicit-function-declaration]
+  print_text_on_OLED(0, 1, false, " SELECT MODE...");
+  ^~~~~~~~~~~~~~~~~~
+../Core/Src/oled_ssd1306.c: In function 'claen_oled_lines':
+../Core/Src/oled_ssd1306.c:219:2: warning: implicit declaration of function 'sprintf' [-Wimplicit-function-declaration]
+  sprintf(str,"%s", "                          ");
+  ^~~~~~~
+../Core/Src/oled_ssd1306.c:219:2: warning: incompatible implicit declaration of built-in function 'sprintf'
+../Core/Src/oled_ssd1306.c:219:2: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+../Core/Src/main.c:55:8: warning: type defaults to 'int' in declaration of 'GPGGA_data_is_ready' [-Wimplicit-int]
+ extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
+        ^~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc "../Core/Src/w25qxx.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F103xB -DDEBUG -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../FATFS/Target -I../FATFS/App -I../Middlewares/Third_Party/FatFs/src -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/w25qxx.d" -MT"Core/Src/w25qxx.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/w25qxx.o"
+../Core/Src/oled_ssd1306.c: At top level:
+../Core/Src/oled_ssd1306.c:250:6: warning: conflicting types for 'print_text_on_OLED'
+ void print_text_on_OLED(uint8_t column, uint8_t row, bool update_oled, char text[])
+      ^~~~~~~~~~~~~~~~~~
+../Core/Src/oled_ssd1306.c:61:2: note: previous implicit declaration of 'print_text_on_OLED' was here
+  print_text_on_OLED(0, 1, false, " SELECT MODE...");
+  ^~~~~~~~~~~~~~~~~~
+../Core/Src/oled_ssd1306.c: In function 'print_text_on_OLED':
+../Core/Src/oled_ssd1306.c:252:7: warning: unused variable 'message_buffer' [-Wunused-variable]
+  char message_buffer[30] = {0};
+       ^~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:311:2: warning: implicit declaration of function 'touch_bakcklight' [-Wimplicit-function-declaration]
+  touch_bakcklight(0);           // Turn off Fingerprint modeul LED
+  ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1156:7: warning: this 'if' clause does not guard... [-Wmisleading-indentation]
+       if(accepts_on_incomming_call() == 1);      // Send "pick up the phone" command in GSM module
+       ^~
+../Core/Src/main.c:1157:7: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the 'if'
+       {
+       ^
+../Core/Src/main.c:1249:6: warning: implicit declaration of function 'show_sratus_call' [-Wimplicit-function-declaration]
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1084:10: warning: unused variable 'print_oled_status' [-Wunused-variable]
+      int print_oled_status = 0;
+          ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1082:11: warning: unused variable 'first_time_after_call' [-Wunused-variable]
+      bool first_time_after_call = false;
+           ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1315:2: warning: implicit declaration of function 'touch_open'; did you mean 'funopen'? [-Wimplicit-function-declaration]
+  touch_open(0);
+  ^~~~~~~~~~
+  funopen
+../Core/Src/w25qxx.c: In function 'W25qxx_Spi':
+../Core/Src/w25qxx.c:35:7: warning: unused variable 'q' [-Wunused-variable]
+   int q=0;
+       ^
+In file included from ../Core/Src/stm32f1xx_it.c:55:0:
+../Core/Inc/Fingerprint_sensor_GT511C3.h:37:16: warning: 'command_packet' defined but not used [-Wunused-variable]
+ static uint8_t command_packet[12];
+                ^~~~~~~~~~~~~~
+../Core/Src/main.c:1358:10: warning: implicit declaration of function 'my_identification_enroll_user' [-Wimplicit-function-declaration]
+          my_identification_enroll_user(ID_set);
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1372:10: warning: implicit declaration of function 'touch_delete_all_fingerprints' [-Wimplicit-function-declaration]
+          touch_delete_all_fingerprints();
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1391:18: warning: implicit declaration of function 'identify' [-Wimplicit-function-declaration]
+             ID = identify();
+                  ^~~~~~~~
+../Core/Src/main.c:1436:19: warning: unused variable 'find_flag' [-Wunused-variable]
+              bool find_flag = true;
+                   ^~~~~~~~~
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1503:3: warning: implicit declaration of function 'W25qxx_ReadID'; did you mean 'W25qxx_ReadPage'? [-Wimplicit-function-declaration]
+   W25qxx_ReadID();
+   ^~~~~~~~~~~~~
+   W25qxx_ReadPage
+../Core/Src/main.c:1566:18: warning: implicit declaration of function 'save_data' [-Wimplicit-function-declaration]
+                  save_data(temperature_si7021, humidity_si7021);    // Save data in flash
+                  ^~~~~~~~~
+../Core/Src/main.c:1567:18: warning: implicit declaration of function 'print_all_sensors_data' [-Wimplicit-function-declaration]
+                  print_all_sensors_data(true, false, false);     // Print only si7021 data on OLED
+                  ^~~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1669:26: warning: pointer targets in passing argument 1 of 'W25qxx_ReadSector' differ in signedness [-Wpointer-sign]
+        W25qxx_ReadSector(page_read_buffer, Page_Address , 0, 0);
+                          ^~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:39:0:
+../Core/Inc/w25qxx.h:106:6: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ void W25qxx_ReadSector(uint8_t *pBuffer, uint32_t Sector_Address, uint32_t OffsetInByte, uint32_t NumByteToRead_up_to_SectorSize);
+      ^~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1681:17: warning: unused variable 'rows_caunter' [-Wunused-variable]
+        uint32_t rows_caunter = 0;          // Counter for detect sector overread
+                 ^~~~~~~~~~~~
+../Core/Src/main.c:1492:8: warning: unused variable 'str_sensors' [-Wunused-variable]
+   char str_sensors[50]={0};
+        ^~~~~~~~~~~
+../Core/Src/main.c: At top level:
+../Core/Src/main.c:1753:6: warning: conflicting types for 'show_sratus_call'
+ void show_sratus_call(int call_status, char *str_gsm, char sign, uint8_t where_call)
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c:1249:6: note: previous implicit declaration of 'show_sratus_call' was here
+      show_sratus_call (call_status, str_gsm, sign, 1);
+      ^~~~~~~~~~~~~~~~
+../Core/Src/main.c: In function 'set_ID_number':
+../Core/Src/main.c:1816:7: warning: unused variable 'entered_number_status' [-Wunused-variable]
+  bool entered_number_status = false;
+       ^~~~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:1815:7: warning: unused variable 'sing_number' [-Wunused-variable]
+  char sing_number = 0;
+       ^~~~~~~~~~~
+../Core/Src/main.c: In function 'enter_a_mobile_number':
+../Core/Src/main.c:1837:7: warning: unused variable 'str' [-Wunused-variable]
+  char str[30] = {0};
+       ^~~
+../Core/Src/main.c: In function 'gps_mode':
+../Core/Src/main.c:1049:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'gsm_mode':
+../Core/Src/main.c:1298:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'fingerprint_mode':
+../Core/Src/main.c:1482:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+../Core/Src/main.c: In function 'sensors_mode':
+../Core/Src/main.c:1749:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+In file included from ../Core/Src/main.c:41:0:
+At top level:
+../Core/Inc/Fingerprint_sensor_GT511C3.h:38:16: warning: 'response_packet' defined but not used [-Wunused-variable]
+ static uint8_t response_packet[12];
+                ^~~~~~~~~~~~~~~
+../Core/Inc/Fingerprint_sensor_GT511C3.h:37:16: warning: 'command_packet' defined but not used [-Wunused-variable]
+ static uint8_t command_packet[12];
+                ^~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list"   -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Castom_board.elf
+ 
 arm-none-eabi-size   Castom_board.elf 
    text	   data	    bss	    dec	    hex	filename
-  62612	    600	   5144	  68356	  10b04	Castom_board.elf
+  62604	    600	   5144	  68348	  10afc	Castom_board.elf
 Finished building: default.size.stdout
  
 
-18:00:09 Build Finished. 0 errors, 0 warnings. (took 628ms)
+14:33:50 Build Finished. 0 errors, 66 warnings. (took 3s.54ms)
 
