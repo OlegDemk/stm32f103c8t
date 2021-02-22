@@ -52,6 +52,9 @@
 
 #include "w25qxx.h"
 
+#include "timers.h"
+
+
 extern GPGGA_data_is_ready;   // Flag. If time data is ready then print it on OLED.
 extern uint8_t receive_gps_signal;
 /* USER CODE END Includes */
@@ -112,6 +115,7 @@ SPI_HandleTypeDef hspi2;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
@@ -145,6 +149,7 @@ static void MX_SPI2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 
@@ -191,6 +196,7 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM2_Init();
   MX_FATFS_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
 //  HAL_Delay(5000);
@@ -200,7 +206,7 @@ int main(void)
 	#endif
 
 	#if H_a_T_SI7021
-  		read_T_and_H_SI7021();
+  		//read_T_and_H_SI7021();
 	#endif
 
 	#if OLED
@@ -231,6 +237,16 @@ int main(void)
 
 
 
+  	// Green LED	////////////
+  	//HAL_TIM_Base_Init(&htim3);
+  	//HAL_TIM_Base_Start(&htim3);
+  	//HAL_TIM_Base_Start_IT(&htim3);
+  	HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_1);
+//  	for(int g =0; g<=10; g++)
+//  	{
+//  		test_timer();
+//  		HAL_Delay(200);
+//  	}
 
 
 
@@ -601,6 +617,65 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 2 */
   HAL_TIM_MspPostInit(&htim2);
+
+}
+
+/**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 7199;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 10000;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 5000;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+  HAL_TIM_MspPostInit(&htim3);
 
 }
 
@@ -1451,6 +1526,8 @@ int fingerprint_mode(char sign)
 
 	               if(sign == '*')    // If select EXIT  // Exit in main menu
 	               {
+	            	   servo_motor(false);
+
 	                   // Clear all OLED
 	                   ssd1306_Fill(Black);
 	                   ssd1306_UpdateScreen();
@@ -1467,6 +1544,7 @@ int fingerprint_mode(char sign)
 
 		   if(sign == '*')    // If select EXIT  // Exit in main menu
 		   {
+
 			    // Clear all OLED
 				ssd1306_Fill(Black);
 				ssd1306_UpdateScreen();

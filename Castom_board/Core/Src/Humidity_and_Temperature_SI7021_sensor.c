@@ -44,7 +44,7 @@ void read_T_and_H_SI7021(void)
 	STATUS = r_single_Si7021(&data, Temperature);
 	if(STATUS != 0)       	// If error
 	{
-		while(1){}
+		//while(1){}
 	}
 
 	// For avoid float print
@@ -68,10 +68,10 @@ void read_T_and_H_SI7021(void)
 	// Read humidity
 	STATUS = -1;
 	STATUS = r_single_Si7021(&data, Humidity);
-	if(STATUS != 0)       	// If error
-	{
-		while(1){}
-	}
+//	if(STATUS != 0)       	// If error
+//	{
+//		while(1){}
+//	}
 
 	//// For avoid float print
 	//// char *tmpSign = (data < 0) ? "-" : "";

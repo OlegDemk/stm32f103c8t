@@ -58,8 +58,8 @@ all: main-build
 main-build: Castom_board.elf secondary-outputs
 
 # Tool invocations
-Castom_board.elf: $(OBJS) $(USER_OBJS) /home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld
-	arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/STM32F103C8T_2/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Castom_board.elf: $(OBJS) $(USER_OBJS) /home/odemki/work/projects/my_projects/STM32/projects/stm32f103c8t/Castom_board/STM32F103C8TX_FLASH.ld
+	arm-none-eabi-gcc -o "Castom_board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/odemki/work/projects/my_projects/STM32/projects/stm32f103c8t/Castom_board/STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Castom_board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

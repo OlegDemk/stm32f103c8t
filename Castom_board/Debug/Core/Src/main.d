@@ -37,7 +37,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/Inc/GPS_NEO_6M.h \
  ../Core/Inc/Humidity_and_Temperature_AM2302_sensor.h \
  ../Core/Inc/Flash_W25Q.h ../Core/Inc/w25qxx.h ../Core/Inc/main.h \
- ../Core/Inc/Fingerprint_sensor_GT511C3.h ../Core/Inc/GSM_IOT_GA6.h
+ ../Core/Inc/Fingerprint_sensor_GT511C3.h ../Core/Inc/GSM_IOT_GA6.h \
+ ../Core/Inc/timers.h
 
 ../Core/Inc/main.h:
 
@@ -136,3 +137,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/Fingerprint_sensor_GT511C3.h:
 
 ../Core/Inc/GSM_IOT_GA6.h:
+
+../Core/Inc/timers.h:
