@@ -238,15 +238,10 @@ int main(void)
 
 
   	// Green LED	////////////
-  	//HAL_TIM_Base_Init(&htim3);
-  	//HAL_TIM_Base_Start(&htim3);
-  	//HAL_TIM_Base_Start_IT(&htim3);
-  	HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_1);
-//  	for(int g =0; g<=10; g++)
-//  	{
-//  		test_timer();
-//  		HAL_Delay(200);
-//  	}
+
+  	HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_1);			// Big green LED
+  	HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_2);			// Vibro motor
+
 
 
 
@@ -669,6 +664,10 @@ static void MX_TIM3_Init(void)
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }

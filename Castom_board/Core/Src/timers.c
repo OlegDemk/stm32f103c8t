@@ -13,6 +13,6 @@
 
 void test_timer(void)
 {
-	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_6);
+	HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 
 }
