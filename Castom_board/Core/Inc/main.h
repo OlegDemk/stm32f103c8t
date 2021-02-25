@@ -83,6 +83,8 @@ char humidity_si7021[6];
 int temperature_am3202;
 int humidity_am3202;
 
+char motion_sensor_data[8];
+
 
 /* USER CODE END Private defines */
 

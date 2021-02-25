@@ -244,7 +244,7 @@ void EXTI1_IRQHandler(void)
 void DMA1_Channel3_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel3_IRQn 0 */
-	test_timer();
+	//test_timer();
   /* USER CODE END DMA1_Channel3_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_usart3_rx);
   /* USER CODE BEGIN DMA1_Channel3_IRQn 1 */
@@ -258,7 +258,55 @@ void DMA1_Channel3_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-	//test_timer();
+	// Changing green LED duty cycle PWM/////////////////////////
+	static uint8_t i = 0;
+	static bool status_led = true;
+	if((i <= 100) && (status_led == true))
+	{
+		TIM3->CCR1 = i;
+		//TIM3->CCR2 = i;
+		i++;
+	}
+	else
+	{
+		TIM3->CCR1 = i;
+		//TIM3->CCR2 = i;
+		i--;
+	}
+	if(i == 100)
+	{
+		status_led=!status_led;
+	}
+	if(i == 0)
+	{
+		status_led=!status_led;
+	}
+	//////////////////////////////////////////////////////////////
+
+//	// Vibro motor PWM
+//	static uint8_t k = 0;
+//	static bool status_vibro_motor = true;
+//	if((k <= 100) && (status_vibro_motor == true))
+//	{
+//
+//		TIM3->CCR2 = k;
+//		k = k + 4;
+//	}
+//	else
+//	{
+//		TIM3->CCR2 = k;
+//		//TIM3->CCR2 = i;
+//		k = k-4;
+//	}
+//	if(k == 100)
+//	{
+//		status_vibro_motor =! status_vibro_motor;
+//	}
+//	if(k == 0)
+//	{
+//		status_vibro_motor =! status_vibro_motor;
+//	}
+
 
 
   /* USER CODE END TIM3_IRQn 0 */

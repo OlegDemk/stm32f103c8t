@@ -41,7 +41,6 @@
 #include "Fingerprint_sensor_GT511C3.h"
 
 #include "GSM_IOT_GA6.h"
-
 #include "stdbool.h"
 
 #include "stdio.h"
@@ -237,12 +236,38 @@ int main(void)
 
 
 
-  	// Green LED	////////////
-
+  	// Timmers
   	HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_1);			// Big green LED
-  	HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_2);			// Vibro motor
+  	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 0);
+//  	TIM3->CCR1 = 10;
 
 
+  	//HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_2);			// Vibro motor
+
+//  	int i =0;
+//  	for(i=0; i<=100; i++)
+//  	{
+//  		__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, i);
+//  		HAL_Delay(5);
+//  	}
+//  	if(i>=100)
+//  	{
+//  		for(i = 100; i>=0; i--)
+//  		{
+//  			__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, i);
+//  			HAL_Delay(5);
+//  		}
+//  	}
+
+
+
+  	//__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, 10);
+//  	int i = 0;
+//  	for(i = 0; i<= 10000; i++)
+//  	{
+//  		TIM3->CCR1 = i;
+//  		HAL_Delay(1);
+//  	}
 
 
 
@@ -637,7 +662,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 7199;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 10000;
+  htim3.Init.Period = 100;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
@@ -660,13 +685,14 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 5000;
+  sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
     Error_Handler();
   }
+  sConfigOC.Pulse = 5000;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
@@ -1596,7 +1622,18 @@ int sensors_mode(char sign)
 
             	do                                                      // Wait for the choice
             	{
-            		read_T_and_H_SI7021();								// Measure and save data in global variable
+            		read_T_and_H_SI7021();												// Measure and save data in global variable
+            		uint8_t motion_status = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);		// Read state motion sensor
+
+            		if(motion_status == 1)		// Detect motion
+            		{
+            			strcpy(motion_sensor_data, "Yes");
+            		}
+            		if(motion_status == 0)		// No any motion
+            		{
+            			strcpy(motion_sensor_data, "No ");
+            		}
+
             		int select_print_data = 4;							// Flag for print sensors data on OLED
             		OLED_prinr_all_data(select_print_data);
 
@@ -1617,6 +1654,7 @@ int sensors_mode(char sign)
             		}
             	}while (sign != '*');     								// Select EXIT
             }
+
 
             if(sign == '2')
             {
