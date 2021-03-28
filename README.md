@@ -38,3 +38,5 @@ Scheme all project is in 'Hardware diagram'.
 
 Software:
 For create project has been used STM32IDE.
+![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/screenshot_4.png)
+
