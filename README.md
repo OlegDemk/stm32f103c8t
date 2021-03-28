@@ -34,11 +34,12 @@ Scheme all project is in 'Hardware diagram'.
 
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/1.png)
 
-Project was stopped, because STM32f103 doesn't have enough FLASH memory for growing project.
 
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/2.png)
 
 Software:
 For create project has been used STM32IDE.
 ![alt text](https://github.com/OlegDemk/stm32f103c8t/blob/master/screenshot_4.png)
+
+Project was stopped, because STM32f103 doesn't have enough FLASH memory for growing project.
 
