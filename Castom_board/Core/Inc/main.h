@@ -85,6 +85,8 @@ int humidity_am3202;
 
 char motion_sensor_data[8];
 
+uint8_t vibto_motor_status;
+
 
 /* USER CODE END Private defines */
 

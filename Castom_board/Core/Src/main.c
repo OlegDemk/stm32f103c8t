@@ -1202,6 +1202,8 @@ int gsm_mode(char sign)
 
 				if(incoming_call_status == 2)											// detect incoming call
 				{
+
+
 					sign = read_one_sign_from_keyboard();								// Read sign from keyboard
 					incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM
 
@@ -1219,10 +1221,23 @@ int gsm_mode(char sign)
 
 					// Waiting for action on incoming call or sms
 					do{
+						// Start timer for generete vibration siqenses  <<<<<<<<<<<<<<<<< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+						//HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_2);			// Vibro motor
+						//vibto_motor_status =1;
+						//HAL_TIM_PWM_Start_IT(&htim3,  TIM_CHANNEL_2);						// Turn on vibro motor
+						HAL_Delay(200);
+
 						sign = read_one_sign_from_keyboard();
 						incoming_call_status = wait_incoming_call(incoming_number);			// Read answer from GSM
-						HAL_Delay(200);
+						//HAL_TIM_PWM_Stop_IT(&htim3,  TIM_CHANNEL_2);						// Turn on vibro motor
+						HAL_Delay(100);
+
+
 					}while ((sign != '*') && (sign != 'A') && (incoming_call_status != 1));
+
+					//HAL_TIM_PWM_Stop_IT
+//					HAL_TIM_PWM_Stop_IT(&htim3,  TIM_CHANNEL_2);
+//					vibto_motor_status =0;
 
 					if(sign == '*')															// Reject the call
 					{

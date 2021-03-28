@@ -260,17 +260,28 @@ void TIM3_IRQHandler(void)
   /* USER CODE BEGIN TIM3_IRQn 0 */
 	// Changing green LED duty cycle PWM/////////////////////////
 	static uint8_t i = 0;
+	static uint8_t k = 0;
 	static bool status_led = true;
 	if((i <= 100) && (status_led == true))
 	{
 		TIM3->CCR1 = i;
-		//TIM3->CCR2 = i;
+		if(vibto_motor_status == 1)
+		{
+			TIM3->CCR2 = k;
+			k++;
+		}
+
 		i++;
 	}
 	else
 	{
 		TIM3->CCR1 = i;
-		//TIM3->CCR2 = i;
+
+		if(vibto_motor_status == 1)
+		{
+			TIM3->CCR2 = k;
+			k--;
+		}
 		i--;
 	}
 	if(i == 100)
