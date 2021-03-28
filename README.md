@@ -1,7 +1,7 @@
 # stm32f103c8t
 Hardwere:
 
-Scheme all project is in 'Hardware diagram'.
+Scheme and main algorithm all project is in 'Hardware diagram'.
 'Hardware diagram' file can be opened in https://app.diagrams.net/
 
   MODULES:                                        Bus         Functions
